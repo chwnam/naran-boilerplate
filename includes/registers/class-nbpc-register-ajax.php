@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Register_Style' ) ) {
+if ( ! class_exists( 'NBPC_Register_Ajax' ) ) {
 	class NBPC_Register_Ajax implements NBPC_Register {
 		use NBPC_Hook_Impl;
 

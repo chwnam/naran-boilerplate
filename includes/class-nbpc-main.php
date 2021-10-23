@@ -45,7 +45,7 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 		}
 
 		public function get_main_file(): string {
-			return NBPC_MAIN;
+			return NBPC_MAIN_FILE;
 		}
 
 		/**

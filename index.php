@@ -32,8 +32,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-const NBPC_MAIN     = __FILE__;
-const NBPC_VERSION  = '1.0.0';
+const NBPC_MAIN_FILE = __FILE__;
+const NBPC_VERSION   = '1.0.0';
 const NBPC_PRIORITY = 100;
 
 nbpc();

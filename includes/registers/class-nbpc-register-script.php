@@ -29,7 +29,31 @@ if ( ! class_exists( 'NBPC_Register_Script' ) ) {
 		}
 
 		public function get_items(): Generator {
-			yield null;
+			yield new NBPC_Reg_Script(
+				'nbpc-foo',
+				$this->src_helper( 'script.min.js' ),
+				[],
+			);
+		}
+
+		/**
+		 * @param string $rel_path
+		 * @param bool   $replace_min
+		 *
+		 * @return string
+		 */
+		private function src_helper( string $rel_path, bool $replace_min = true ): string {
+			$rel_path = trim( $rel_path, '\\/' );
+
+			if (
+				( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) &&
+				$replace_min &&
+				substr( $rel_path, - 7 ) === '.min.js'
+			) {
+				$rel_path = substr( $rel_path, 0, strlen( $rel_path ) - 7 ) . '.js';
+			}
+
+			return plugin_dir_url( nbpc()->get_main_file() ) . "assets/js/{$rel_path}";
 		}
 	}
 }
