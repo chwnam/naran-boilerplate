@@ -1,0 +1,13 @@
+.idea
+.vscode
+.DS_Store
+
+*.log
+*.html
+*.bak
+
+.git
+
+vendor/*
+!vendor/composer
+!vendor/autoload.php

@@ -1,0 +1,39 @@
+{
+  "name": "naran/boilerplate-code",
+  "description": "Naran boilerplate code for WordPress plugins/themes.",
+  "type": "wordpress-plugin",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "changwoo",
+      "email": "ep6tri@hotmail.com",
+      "role": "author",
+      "homepage": "https://blog.changwoo.pe.kr"
+    }
+  ],
+  "scripts": {
+    "daa": "@composer dump-autoload --classmap-authoritative",
+    "make-pot": "wp i18n make-pot . ./languages/nbpc.pot --domain=nbpc",
+    "version": "@php bin/sync-version.php index.php",
+    "test": "vendor/bin/phpunit"
+  },
+  "scripts-descriptions": {
+    "daa": "Run `composer dump-autoload --classmap-authoritative`.",
+    "make-pot": "Create .pot file.",
+    "version": "Sync your plugin version string.",
+    "test": "Run phpunit."
+  },
+  "autoload": {
+    "files": [
+      "includes/functions.php"
+    ],
+    "classmap": [
+      "includes"
+    ]
+  },
+  "version": "1.0.0",
+  "require-dev": {
+    "phpunit/phpunit": "^7"
+  },
+  "license": "GPL-2.0-or-later"
+}
