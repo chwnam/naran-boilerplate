@@ -29,24 +29,21 @@ if ( ! class_exists( 'NBPC_Register_Style' ) ) {
 		}
 
 		public function get_items(): Generator {
-			yield new NBPC_Reg_Style(
-				'nbpc-foo',
-				$this->src_helper( 'style.min.css' ),
-				[],
-			);;
+			yield null;
 		}
 
 		/**
 		 * 'src' location helper.
 		 *
 		 * @param string $rel_path
+		 * @param bool   $replace_min
 		 *
 		 * @return string
 		 */
-		private function src_helper( string $rel_path ): string {
+		protected function src_helper( string $rel_path, bool $replace_min = true ): string {
 			$rel_path = trim( $rel_path, '\\/' );
 
-			if ( ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) && substr( $rel_path, - 8 ) === '.min.css' ) {
+			if ( nbpc_script_debug() && $replace_min && substr( $rel_path, - 8 ) === '.min.css' ) {
 				$rel_path = substr( $rel_path, 0, strlen( $rel_path ) - 8 ) . '.css';
 			}
 

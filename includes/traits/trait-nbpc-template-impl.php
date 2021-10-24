@@ -17,7 +17,7 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 			$ext       = ltrim( $ext, '.' );
 
 			$cache_name = "{$tmpl_type}:{$relpath}:{$variant}";
-			$cache      = nbpc()->get( 'hws:locate_file', [] );
+			$cache      = nbpc()->get( 'nbpc:locate_file', [] );
 
 			if ( isset( $cache[ $cache_name ] ) ) {
 				$located = $cache[ $cache_name ];
@@ -75,15 +75,17 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 			return '';
 		}
 
-		protected function enqueue_ejs( string $relpath, array $context = [], string $variant = '' ): void {
-			$ejs_queue = nbpc()->get( 'main:ejs_queue' );
+		protected function enqueue_ejs( string $relpath, array $context = [], string $variant = '' ): self {
+			$ejs_queue = nbpc()->get( 'nbpc:ejs_queue' );
 
 			if ( ! $ejs_queue ) {
 				$ejs_queue = new NBPC_EJS_Queue();
-				nbpc()->set( 'main:ejs_queue', $ejs_queue );
+				nbpc()->set( 'nbpc:ejs_queue', $ejs_queue );
 			}
 
 			$ejs_queue->enqueue( $relpath . ( $variant ? "-{$variant}" : '' ), compact( 'context', 'variant' ) );
+
+			return $this;
 		}
 
 		/**

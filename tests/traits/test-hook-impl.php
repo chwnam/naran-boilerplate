@@ -6,7 +6,7 @@
 
 
 /**
- * Class MainTest
+ * Class Test_Hook_Impl
  *
  * @package nbpc
  */

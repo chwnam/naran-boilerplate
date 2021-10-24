@@ -3,10 +3,7 @@
  * NBPC: functions.php
  */
 
-/* ABSPATH check */
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+/* ABSPATH check skipped because of phpunit */
 
 if ( ! function_exists( 'nbpc' ) ) {
 	/**
@@ -142,5 +139,17 @@ if ( ! function_exists( 'nbpc_user_meta' ) ) {
 	 */
 	function nbpc_user_meta(): ?NBPC_Register_User_Meta {
 		return nbpc()->registers->user_meta;
+	}
+}
+
+
+if ( ! function_exists( 'nbpc_script_debug' ) ) {
+	/**
+	 * Return SCRIPT_DEBUG.
+	 *
+	 * @return bool
+	 */
+	function nbpc_script_debug(): bool {
+		return apply_filters( 'nbpc_script_debug', defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
 	}
 }

@@ -22,24 +22,34 @@ if ( ! class_exists( 'NBPC_Sciprt_Enqueue' ) ) {
 			if ( wp_script_is( $handle, 'registered' ) && ! ( $once && wp_script_is( $handle ) ) ) {
 				wp_enqueue_script( $handle );
 			}
-
-			return $this;
 		}
 
-		public function localize( $l18n = [] ): self {
+		public function localize( $l18n = [] ) {
 			wp_localize_script( $this->handle, $this->__get_script_object_name(), $l18n );
 
-			return $this;
+			return $this->parent;
 		}
 
-		public function render(
-			string $relpath,
-			array $context = [],
-			string $variant = '',
-			bool $echo = true,
-			string $ext = 'php'
-		): string {
-			return $this->parent->render( $relpath, $context, $variant, $echo, $ext );
+		/**
+		 * @param string $handle
+		 *
+		 * @return object|NBPC_Module
+		 * @uses NBPC_Template_Impl::enqueue_ejs()
+		 */
+		public function enqueue_style( string $handle ) {
+			return $this->parent->enqueue_style( $handle );
+		}
+
+		/**
+		 * @param string $relpath
+		 * @param array  $context
+		 * @param string $variant
+		 *
+		 * @return object|NBPC_Module
+		 * @uses NBPC_Template_Impl::enqueue_ejs()
+		 */
+		public function enqueue_ejs( string $relpath, array $context = [], string $variant = '' ) {
+			return $this->parent->enqueue_ejs( $relpath, $context, $variant );
 		}
 
 		private function __get_script_object_name(): string {

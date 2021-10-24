@@ -13,11 +13,13 @@
   ],
   "scripts": {
     "daa": "@composer dump-autoload --classmap-authoritative",
-    "make-pot": "wp i18n make-pot . ./languages/nbpc.pot --domain=nbpc"
+    "make-pot": "wp i18n make-pot . ./languages/nbpc.pot --domain=nbpc",
+    "test": "vendor/bin/phpunit"
   },
   "scripts-descriptions": {
     "daa": "Run `composer dump-autoload --classmap-authoritative`.",
-    "make-pot": "Create .pot file."
+    "make-pot": "Create .pot file.",
+    "test": "Run phpunit."
   },
   "autoload": {
     "files": [
@@ -29,5 +31,6 @@
   },
   "version": "1.0.0",
   "require-dev": {
+    "phpunit/phpunit": "^7"
   }
 }

@@ -23,8 +23,6 @@ if ( ! class_exists( 'NBPC_Register_Ajax' ) ) {
 		 * @actin       init
 		 */
 		public function register() {
-			$dispatch = Closure::fromCallable( [ $this, 'dispatch' ] );
-
 			foreach ( $this->get_items() as $item ) {
 				if (
 					$item instanceof NBPC_Reg_Ajax &&
@@ -32,7 +30,7 @@ if ( ! class_exists( 'NBPC_Register_Ajax' ) ) {
 					! isset( $this->inner_handlers[ $item->action ] )
 				) {
 					$this->inner_handlers[ $item->action ] = $item->callback;
-					$item->register( $dispatch );
+					$item->register( [ $this, 'dispatch' ] );
 				}
 			}
 		}
