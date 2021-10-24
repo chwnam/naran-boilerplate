@@ -8,6 +8,6 @@
 
 .git
 
-/vendor/*
-!/vendor/composer
-!/vendor/autoload.php
+vendor/*
+!vendor/composer
+!vendor/autoload.php
