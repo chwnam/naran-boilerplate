@@ -13,9 +13,9 @@
 
 ### 설치
 composer 를 통해 간단하게 설치할 수 있습니다. 아래 예제는 워드프레스의 wp-content/plugin에서
-'my_plugin' 디렉토리를 만들고 그 안에 상용구 코드를 설치합니다.
+'boilerplate-code' 디렉토리를 만들고 그 안에 상용구 코드를 설치합니다.
 ```
-composer create-project -s alpha changwoo/naran-boilerplate-code my_plugin
+composer create-project --no-dev naran/boilerplate-code 
 ```
 
 ### 접두어 일괄 변경
@@ -25,11 +25,13 @@ composer create-project -s alpha changwoo/naran-boilerplate-code my_plugin
 먼저 플러그인의 최상위 디렉토리에서 `.prefix-change.lock` 파일을 발견하면, 이것을 제거하세요.
 `prefix-change.php` 스크립트가 의도하지 않게 파일 이름과 소스를 변경하지 않게 하기 위한 장치입니다. 
 
-`wp-content/plugin/my_plugin/bin` 디렉토리에 `prefix-change.php` 스크립트가 있습니다. 이것을 CLI에서 실행합니다.
+`wp-content/plugin/boilerplate-code/bin` 디렉토리에 `prefix-change.php` 스크립트가 있습니다. 이것을 CLI에서 실행합니다.
 
 ```
-$ cd my_plugin
-$ php bin/prefix-changer.php myplugin # npbc를 myplugin 으로 변경.
+$ cd boilerplate-code
+$ rm .prefix-change.lock              # 잠금 해제.
+$ php bin/prefix-changer.php myplugin # 접두 npbc를 myplugin 으로 변경.
+$ touch .prefix-change.lock           # 잠금.
 ```
 
 접두어는 다음 규칙을 따릅니다.
@@ -46,6 +48,3 @@ $ php bin/prefix-changer.php myplugin # npbc를 myplugin 으로 변경.
 * README.md
 * composer.json
 * .gitignore
-
-
-## 기타
