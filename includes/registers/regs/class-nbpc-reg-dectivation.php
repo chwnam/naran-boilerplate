@@ -22,7 +22,7 @@ if ( ! class_exists( 'NBPC_Reg_Deactivation' ) ) {
 		 * @param array                $args
 		 * @param bool                 $error_log
 		 */
-		public function __construct( $callback, array $args = [], bool $error_log = false ) {
+		public function __construct( $callback, array $args = [], bool $error_log = true ) {
 			$this->callback  = $callback;
 			$this->args      = $args;
 			$this->error_log = $error_log;
@@ -36,13 +36,13 @@ if ( ! class_exists( 'NBPC_Reg_Deactivation' ) ) {
 		public function register( $dispatch = null ) {
 			try {
 				$callback = nbpc_parse_callback( $this->callback );
-			} catch (Exception $e) {
+			} catch ( Exception $e ) {
 				$error = new WP_Error();
 				$error->add(
 					'nbpc_deactivation_error',
 					sprintf(
 						'Deactivation callback handler `%s` is invalid. Please check your deactivation register items.',
-						$this->callback
+						nbpc_format_callback( $this->callback )
 					)
 				);
 				wp_die( $error );
@@ -50,13 +50,13 @@ if ( ! class_exists( 'NBPC_Reg_Deactivation' ) ) {
 
 			if ( $callback ) {
 				if ( $this->error_log ) {
-					error_log( error_log( sprintf( 'Deactivation callback started: %s', $this->callback ) ) );
+					error_log( sprintf( 'Deactivation callback started: %s', nbpc_format_callback( $this->callback ) ) );
 				}
 
-				call_user_func( $callback, $this->args );
+				call_user_func_array( $callback, $this->args );
 
 				if ( $this->error_log ) {
-					error_log( sprintf( 'Deactivation callback finished: %s', $this->callback ) );
+					error_log( sprintf( 'Deactivation callback finished: %s', nbpc_format_callback( $this->callback ) ) );
 				}
 			}
 		}

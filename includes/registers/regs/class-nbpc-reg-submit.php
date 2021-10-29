@@ -8,10 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Reg_Activation' ) ) {
-	/**
-	 *
-	 */
+if ( ! class_exists( 'NBPC_Reg_Submit' ) ) {
 	class NBPC_Reg_Submit implements NBPC_Reg {
 		/** @var string */
 		public string $action;

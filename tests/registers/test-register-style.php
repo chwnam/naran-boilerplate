@@ -2,21 +2,7 @@
 /**
  * @noinspection PhpIllegalPsrClassPathInspection
  * @noinspection PhpMultipleClassDeclarationsInspection
- * @noinspection PhpMultipleClassesDeclarationsInOneFile
  */
-
-
-if ( ! class_exists( 'CPBN_Regiser_Style' ) ) {
-	class CPBN_Regiser_Style extends NBPC_Register_Style {
-		public function get_items(): Generator {
-			yield new NBPC_Reg_Style(
-				'nbpc-foo',
-				$this->src_helper( 'style.min.css' ),
-				[],
-			);
-		}
-	}
-}
 
 
 /**
@@ -25,6 +11,8 @@ if ( ! class_exists( 'CPBN_Regiser_Style' ) ) {
  * @package nbpc
  */
 class Test_Register_Style extends WP_UnitTestCase {
+	private $register;
+
 	public static function setUpBeforeClass() {
 		// Force SCRIPT_DEBUG = true
 		add_filter( 'nbpc_script_debug', '__return_true' );
@@ -34,9 +22,19 @@ class Test_Register_Style extends WP_UnitTestCase {
 		remove_filter( 'nbpc_script_debug', '__return_true' );
 	}
 
-	public function testGetItems() {
-		$style = new CPBN_Regiser_Style();
+	public function setUp() {
+		$this->register = new class() extends NBPC_Register_Style {
+			public function get_items(): Generator {
+				yield new NBPC_Reg_Style(
+					'nbpc-foo',
+					$this->src_helper( 'style.min.css' ),
+					[],
+				);
+			}
+		};
+	}
 
+	public function test_get_items() {
 		do_action( 'init' );
 
 		$url = plugin_dir_url( nbpc()->get_main_file() );
@@ -44,7 +42,7 @@ class Test_Register_Style extends WP_UnitTestCase {
 		// Check if script is correctly registered.
 		$this->assertTrue( wp_style_is( 'nbpc-foo', 'registered' ) );
 
-		$item = iterator_to_array( $style->get_items() )[0];
+		$item = iterator_to_array( $this->register->get_items() )[0];
 
 		// Check if the item handle is correct.
 		$this->assertEquals( 'nbpc-foo', $item->handle );

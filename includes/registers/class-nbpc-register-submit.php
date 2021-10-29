@@ -23,7 +23,7 @@ if ( ! class_exists( 'NBPC_Register_Submit' ) ) {
 		 * @actin       init
 		 */
 		public function register() {
-			$dispatch = Closure::fromCallable( [ $this, 'dispatch' ] );
+			$dispatch = [ $this, 'dispatch' ];
 
 			foreach ( $this->get_items() as $item ) {
 				if (

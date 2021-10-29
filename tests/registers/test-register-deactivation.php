@@ -4,12 +4,12 @@
  * @noinspection PhpMultipleClassDeclarationsInspection
  */
 
-class Test_Register_Activation extends WP_UnitTestCase {
+class Test_Register_Deactivation extends WP_UnitTestCase {
 	private $register;
 
 	public function setUp() {
-		$this->register = new class( $this ) extends NBPC_Register_Activation {
-			public Test_Register_Activation $tester;
+		$this->register = new class( $this ) extends NBPC_Register_Deactivation {
+			private Test_Register_Deactivation $tester;
 
 			/** @var string|int|bool */
 			public $old_log_errors;
@@ -22,20 +22,21 @@ class Test_Register_Activation extends WP_UnitTestCase {
 
 			public bool $method_called = false;
 
-			public function __construct( Test_Register_Activation $tester ) {
+			public function __construct( Test_Register_Deactivation $tester ) {
 				parent::__construct();
 
-				$this->tester        = $tester;
-				$this->test_log_file = __DIR__ . '/activation.log';
+				$this->tester = $tester;
+				$this->test_log_file = __DIR__ . '/deactivation.log';
 			}
 
 			public function get_items(): Generator {
-				yield new NBPC_Reg_Activation(
-					function ( $register ) { $register->closure_called = true; },
+				yield new NBPC_Reg_Deactivation(
+					function ( $register ) { $register->closure_called = true;
+					},
 					[ $this ]
 				);
 
-				yield new NBPC_Reg_Activation( [ $this->tester, 'activationCallback' ] );
+				yield new NBPC_Reg_Deactivation( [ $this->tester, 'deactivationCallback' ] );
 			}
 		};
 
@@ -47,7 +48,7 @@ class Test_Register_Activation extends WP_UnitTestCase {
 		$this->register->old_log_path   = ini_set( 'error_log', $this->register->test_log_file );
 
 		$file = plugin_basename( nbpc()->get_main_file() );
-		do_action( 'activate_' . $file );
+		do_action( 'deactivate_' . $file );
 	}
 
 	public function tearDown() {
@@ -70,21 +71,21 @@ class Test_Register_Activation extends WP_UnitTestCase {
 		$log = file_get_contents( $this->register->test_log_file );
 		$log = array_filter( array_map( 'trim', explode( "\n", $log ) ) );
 
-		$this->assertStringContainsString( 'Activation callback started: {Closure}', $log[0] );
-		$this->assertStringContainsString( 'Activation callback finished: {Closure}', $log[1] );
+		$this->assertStringContainsString( 'Deactivation callback started: {Closure}', $log[0] );
+		$this->assertStringContainsString( 'Deactivation callback finished: {Closure}', $log[1] );
 
 		$this->assertStringContainsString(
-			'Activation callback started: ' . __CLASS__ . '::' . 'activationCallback',
+			'Deactivation callback started: ' . __CLASS__ . '::' . 'deactivationCallback',
 			$log[2]
 		);
 
 		$this->assertStringContainsString(
-			'Activation callback finished: ' . __CLASS__ . '::' . 'activationCallback',
+			'Deactivation callback finished: ' . __CLASS__ . '::' . 'deactivationCallback',
 			$log[3]
 		);
 	}
 
-	public function activationCallback() {
+	public function deactivationCallback() {
 		$this->register->method_called = true;
 	}
 }

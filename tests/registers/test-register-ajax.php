@@ -2,22 +2,7 @@
 /**
  * @noinspection PhpIllegalPsrClassPathInspection
  * @noinspection PhpMultipleClassDeclarationsInspection
- * @noinspection PhpMultipleClassesDeclarationsInOneFile
  */
-
-if ( ! class_exists( 'CPBN_Register_Ajax' ) ) {
-	class CPBN_Register_Ajax extends NBPC_Register_Ajax {
-		public function get_items(): Generator {
-			yield new NBPC_Reg_Ajax( 'action_normal', 'callback_0' );
-
-			yield new NBPC_Reg_Ajax( 'action_nopriv', 'callback_1', true );
-
-			yield new NBPC_Reg_Ajax( 'action_only_nopriv', 'callback_2', 'only_nopriv' );
-
-			yield new NBPC_Reg_Ajax( 'action_wc-ajax', 'callback_3', false, true, 55 );
-		}
-	}
-}
 
 /**
  * Class Test_Register_Ajax
@@ -25,10 +10,21 @@ if ( ! class_exists( 'CPBN_Register_Ajax' ) ) {
  * @package nbpc
  */
 class Test_Register_Ajax extends WP_UnitTestCase {
-	private CPBN_Register_Ajax $register;
+	private $register;
 
 	public function setUp() {
-		$this->register = new CPBN_Register_Ajax();
+		$this->register = new class() extends NBPC_Register_Ajax {
+			public function get_items(): Generator {
+				yield new NBPC_Reg_Ajax( 'action_normal', 'callback_0' );
+
+				yield new NBPC_Reg_Ajax( 'action_nopriv', 'callback_1', true );
+
+				yield new NBPC_Reg_Ajax( 'action_only_nopriv', 'callback_2', 'only_nopriv' );
+
+				yield new NBPC_Reg_Ajax( 'action_wc-ajax', 'callback_3', false, true, 55 );
+			}
+		};
+
 		do_action( 'init' );
 	}
 
