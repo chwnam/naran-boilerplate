@@ -22,7 +22,7 @@ if ( ! class_exists( 'NBPC_Reg_Activation' ) ) {
 		 * @param array                $args
 		 * @param bool                 $error_log
 		 */
-		public function __construct( $callback, array $args = [], bool $error_log = false ) {
+		public function __construct( $callback, array $args = [], bool $error_log = true ) {
 			$this->callback  = $callback;
 			$this->args      = $args;
 			$this->error_log = $error_log;
@@ -36,7 +36,7 @@ if ( ! class_exists( 'NBPC_Reg_Activation' ) ) {
 		public function register( $dispatch = null ) {
 			try {
 				$callback = nbpc_parse_callback( $this->callback );
-			} catch (Exception $e) {
+			} catch ( Exception $e ) {
 				$error = new WP_Error();
 				$error->add(
 					'nbpc_activation_error',
@@ -50,14 +50,24 @@ if ( ! class_exists( 'NBPC_Reg_Activation' ) ) {
 
 			if ( $callback ) {
 				if ( $this->error_log ) {
-					error_log( error_log( sprintf( 'Activation callback started: %s', $this->callback ) ) );
+					error_log( sprintf( 'Activation callback started: %s', $this->format_callback() ) );
 				}
 
-				call_user_func( $callback, $this->args );
+				call_user_func_array( $callback, $this->args );
 
 				if ( $this->error_log ) {
-					error_log( sprintf( 'Activation callback finished: %s', $this->callback ) );
+					error_log( sprintf( 'Activation callback finished: %s', $this->format_callback() ) );
 				}
+			}
+		}
+
+		private function format_callback(): string {
+			if ( is_string( $this->callback ) ) {
+				return $this->callback;
+			} elseif ( is_array( $this->callback ) && 2 === count( $this->callback ) ) {
+				return get_class( $this->callback[0] ) . '::' . $this->callback[1];
+			} else {
+				return '{Closure}';
 			}
 		}
 	}
