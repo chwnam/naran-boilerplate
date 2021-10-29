@@ -39,7 +39,7 @@ if ( ! class_exists( 'NBPC_Reg_Activation' ) ) {
 			} catch (Exception $e) {
 				$error = new WP_Error();
 				$error->add(
-					'npbc_activation_error',
+					'nbpc_activation_error',
 					sprintf(
 						'Activation callback handler `%s` is invalid. Please check your activation register items.',
 						$this->callback

@@ -84,7 +84,7 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 					} catch(Exception $e) {
 						$error = new WP_Error();
 						$error->add(
-							'npbc_option_error',
+							'nbpc_option_error',
 							sprintf(
 								'Option sanitize callback handler `%s` is invalid. Please check your option register items.',
 								$this->args['sanitize_callback']

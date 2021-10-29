@@ -93,7 +93,7 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 				} catch (Exception $e) {
 					$error = new WP_Error();
 					$error->add(
-						'npbc_meta_error',
+						'nbpc_meta_error',
 						sprintf(
 							'Meta sanitize_callback handler `%s` is invalid. Please check your meta register items.',
 							$this->args['sanitize_callback']
@@ -109,7 +109,7 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 				} catch (Exception $e) {
 					$error = new WP_Error();
 					$error->add(
-						'npbc_meta_error',
+						'nbpc_meta_error',
 						sprintf(
 							'Meta auth_callback handler `%s` is invalid. Please check your meta register items.',
 							$this->args['auth_callback']
