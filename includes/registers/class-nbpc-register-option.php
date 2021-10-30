@@ -42,7 +42,6 @@ if ( ! class_exists( 'NBPC_Register_Option' ) ) {
 					$alias = is_int( $idx ) ? $item->get_option_name() : $idx;
 
 					$this->fields[ $alias ] = $item->get_option_name();
-
 				}
 			}
 		}
