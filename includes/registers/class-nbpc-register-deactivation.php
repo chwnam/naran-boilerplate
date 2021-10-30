@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'NBPC_Register_Deactivation' ) ) {
 	class NBPC_Register_Deactivation implements NBPC_Register {
 		public function __construct() {
-			register_deactivation_hook( nbpc()->get_main_file(), [$this,'register'] );
+			register_deactivation_hook( nbpc()->get_main_file(), [ $this, 'register' ] );
 		}
 
 		/**
@@ -26,6 +26,7 @@ if ( ! class_exists( 'NBPC_Register_Deactivation' ) ) {
 		}
 
 		public function get_items(): Generator {
+			// Define your deactivation regs for callback.
 			yield null;
 		}
 	}

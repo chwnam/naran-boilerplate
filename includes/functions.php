@@ -19,66 +19,30 @@ if ( ! function_exists( 'nbpc' ) ) {
 
 if ( ! function_exists( 'nbpc_parse_module' ) ) {
 	/**
+	 * Retrieve submodule by given string notaion.
+	 *
 	 * @param string $module_notation
 	 *
 	 * @return object|false;
 	 */
 	function nbpc_parse_module( string $module_notation ) {
-		static $cache = [];
-
-		if ( class_exists( $module_notation ) ) {
-			return new $module_notation();
-		} elseif ( $module_notation ) {
-			if ( ! isset( $cache[ $module_notation ] ) ) {
-				$module = nbpc();
-				foreach ( explode( '.', $module_notation ) as $crumb ) {
-					if ( isset( $module->{$crumb} ) ) {
-						$module = $module->{$crumb};
-					} else {
-						$module = false;
-						break;
-					}
-				}
-				$cache[ $module_notation ] = $module;
-			}
-			return $cache[ $module_notation ];
-		}
-
-		return false;
+		return nbpc()->get_module_by_notation( $module_notation );
 	}
 }
 
 
 if ( ! function_exists( 'nbpc_parse_callback' ) ) {
 	/**
-	 * Parse string as module's callback method.
+	 * Return submodule's callback method by given string notation.
 	 *
 	 * @param Closure|array|string $maybe_callback
 	 *
-	 * @return callable|array
-	 *
-	 * @throws Exception
+	 * @return callable|array|string
+	 * @throws NBPC_Callback_Exception
 	 * @example foo.bar@baz ---> array( nbpc()->foo->bar, 'baz )
-	 *
 	 */
 	function nbpc_parse_callback( $maybe_callback ) {
-		if ( is_callable( $maybe_callback ) ) {
-			return $maybe_callback;
-		} elseif ( is_string( $maybe_callback ) && false !== strpos( $maybe_callback, '@' ) ) {
-			[ $module_part, $method ] = explode( '@', $maybe_callback, 2 );
-
-			$module = nbpc_parse_module( $module_part );
-
-			if ( $module && method_exists( $module, $method ) ) {
-				$callback = [ $module, $method ];
-			} else {
-				throw new Exception( "`{$maybe_callback}` not found." );
-			}
-
-			return $callback;
-		}
-
-		throw new Exception( "{$maybe_callback} is invalid." );
+		return nbpc()->parse_callback( $maybe_callback );
 	}
 }
 

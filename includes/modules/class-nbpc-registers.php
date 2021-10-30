@@ -22,6 +22,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 	 * @property-read NBPC_Register_Deactivation  $deactivation
 	 * @property-read NBPC_Register_Option        $option
 	 * @property-read NBPC_Register_Post_Meta     $post_meta
+	 * @property-read NBPC_Register_Post_Type     $post_type
 	 * @property-read NBPC_Register_Script        $script
 	 * @property-read NBPC_Register_Style         $style
 	 * @property-read NBPC_Register_Submit        $submit
@@ -46,11 +47,14 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 					'deactivation'  => NBPC_Register_Deactivation::class,
 					'option'        => NBPC_Register_Option::class,
 					'post_meta'     => NBPC_Register_Post_Meta::class,
+					'post_type'     => NBPC_Register_Post_Type::class,
 					'script'        => NBPC_Register_Script::class,
 					'style'         => NBPC_Register_Style::class,
 					'submit'        => NBPC_Register_Submit::class,
 					'taxonomy'      => NBPC_Register_Taxonomy::class,
 					'term_meta'     => NBPC_Register_Term_Meta::class,
+					// NOTE: 'uninstall' is not a part of registers submodules.
+					//       Because it 'uninstall' hook requires static method callback.
 					'user_meta'     => NBPC_Register_User_Meta::class,
 				]
 			);

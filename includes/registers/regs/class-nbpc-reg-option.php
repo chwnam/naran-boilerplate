@@ -81,7 +81,7 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 				if ( $this->args['sanitize_callback'] ) {
 					try {
 						$this->args['sanitize_callback'] = nbpc_parse_callback( $this->args['sanitize_callback'] );
-					} catch ( Exception $e ) {
+					} catch ( NBPC_Callback_Exception $e ) {
 						$error = new WP_Error();
 						$error->add(
 							'nbpc_option_error',

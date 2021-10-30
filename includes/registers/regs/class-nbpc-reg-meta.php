@@ -90,7 +90,7 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 					if ( $this->args['sanitize_callback'] ) {
 						$this->args['sanitize_callback'] = nbpc_parse_callback( $this->args['sanitize_callback'] );
 					}
-				} catch ( Exception $e ) {
+				} catch ( NBPC_Callback_Exception $e ) {
 					$error = new WP_Error();
 					$error->add(
 						'nbpc_meta_error',
@@ -106,7 +106,7 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 					if ( $this->args['auth_callback'] ) {
 						$this->args['auth_callback'] = nbpc_parse_callback( $this->args['auth_callback'] );
 					}
-				} catch ( Exception $e ) {
+				} catch ( NBPC_Callback_Exception $e ) {
 					$error = new WP_Error();
 					$error->add(
 						'nbpc_meta_error',

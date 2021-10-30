@@ -36,7 +36,7 @@ if ( ! class_exists( 'NBPC_Reg_Deactivation' ) ) {
 		public function register( $dispatch = null ) {
 			try {
 				$callback = nbpc_parse_callback( $this->callback );
-			} catch ( Exception $e ) {
+			} catch ( NBPC_Callback_Exception $e ) {
 				$error = new WP_Error();
 				$error->add(
 					'nbpc_deactivation_error',

@@ -44,13 +44,13 @@ if ( ! class_exists( 'NBPC_Register_Ajax' ) ) {
 					if ( is_callable( $callback ) ) {
 						call_user_func( $callback );
 					}
-				} catch ( Exception $e ) {
+				} catch ( NBPC_Callback_Exception $e ) {
 					$error = new WP_Error();
 					$error->add(
 						'nbpc_ajax_error',
 						sprintf(
 							'AJAX callback handler `%s` is invalid. Please check your AJAX register items.',
-							$this->inner_handlers[ $action ]
+							nbpc_format_callback( $this->inner_handlers[ $action ] )
 						)
 					);
 					wp_send_json_error( $error, 404 );

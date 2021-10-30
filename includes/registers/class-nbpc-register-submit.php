@@ -46,13 +46,13 @@ if ( ! class_exists( 'NBPC_Register_Submit' ) ) {
 					if ( is_callable( $callback ) ) {
 						call_user_func( $callback );
 					}
-				} catch ( Exception $e ) {
+				} catch ( NBPC_Callback_Exception $e ) {
 					$error = new WP_Error();
 					$error->add(
 						'nbpc_submit_error',
 						sprintf(
 							'Submit callback handler `%s` is invalid. Please check your submit register items.',
-							$this->inner_handlers[ $action ]
+							nbpc_format_callback( $this->inner_handlers[ $action ] )
 						)
 					);
 					wp_die( $error, 404 );

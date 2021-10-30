@@ -50,8 +50,8 @@ if ( ! class_exists( 'NBPC_Reg_Cron' ) ) {
 		}
 
 		public function unregister() {
-			if ( wp_next_scheduled( $this->hook ) ) {
-				wp_clear_scheduled_hook( $this->hook );
+			if ( wp_next_scheduled( $this->hook, $this->args ) ) {
+				wp_clear_scheduled_hook( $this->hook, $this->args );
 			}
 		}
 	}

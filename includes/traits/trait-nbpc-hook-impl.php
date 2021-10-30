@@ -10,7 +10,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 	trait NBPC_Hook_Impl {
 		/**
-		 * Add action
+		 * Modified add_action().
+		 * - Method chaining available.
+		 * - More convenient callback designation.
 		 *
 		 * @param string                $tag
 		 * @param callable|array|string $function_to_add
@@ -27,8 +29,8 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		): self {
 			add_action(
 				$tag,
-				$this->parse_callback( $function_to_add ),
-				$this->get_priority( $priority ),
+				$this->__hook_parse_callback( $function_to_add ),
+				$this->__hook_get_priority( $priority ),
 				$accepted_args
 			);
 
@@ -36,7 +38,7 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		}
 
 		/**
-		 * Add filter
+		 * Modified add_filter().
 		 *
 		 * @param string                $tag
 		 * @param callable|array|string $function_to_add
@@ -53,8 +55,8 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		): self {
 			add_action(
 				$tag,
-				$this->parse_callback( $function_to_add ),
-				$this->get_priority( $priority ),
+				$this->__hook_parse_callback( $function_to_add ),
+				$this->__hook_get_priority( $priority ),
 				$accepted_args
 			);
 
@@ -62,7 +64,7 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		}
 
 		/**
-		 * Remove action
+		 * Modified remove_action().
 		 *
 		 * @param string                $tag
 		 * @param callable|array|string $function_to_remove
@@ -77,15 +79,15 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		): self {
 			remove_action(
 				$tag,
-				$this->parse_callback( $function_to_remove ),
-				$this->get_priority( $priority )
+				$this->__hook_parse_callback( $function_to_remove ),
+				$this->__hook_get_priority( $priority )
 			);
 
 			return $this;
 		}
 
 		/**
-		 * Remove filter
+		 * Modified remove_filter()
 		 *
 		 * @param string                $tag
 		 * @param callable|array|string $function_to_remove
@@ -100,8 +102,8 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		): self {
 			remove_filter(
 				$tag,
-				$this->parse_callback( $function_to_remove ),
-				$this->get_priority( $priority )
+				$this->__hook_parse_callback( $function_to_remove ),
+				$this->__hook_get_priority( $priority )
 			);
 
 			return $this;
@@ -114,7 +116,7 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		 *
 		 * @return callable|null
 		 */
-		protected function parse_callback( $item ): ?callable {
+		private function __hook_parse_callback( $item ): ?callable {
 			if ( is_string( $item ) && method_exists( $this, $item ) ) {
 				return [ $this, $item ];
 			} elseif ( is_callable( $item ) ) {
@@ -131,7 +133,7 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		 *
 		 * @return int
 		 */
-		protected function get_priority( $priority ): int {
+		private function __hook_get_priority( $priority ): int {
 			return is_null( $priority ) ? nbpc()->get_priority() : intval( $priority );
 		}
 	}

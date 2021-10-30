@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'NBPC_Register_Activation' ) ) {
 	class NBPC_Register_Activation implements NBPC_Register {
 		public function __construct() {
-			register_activation_hook( nbpc()->get_main_file(), [$this,'register'] );
+			register_activation_hook( nbpc()->get_main_file(), [ $this, 'register' ] );
 		}
 
 		/**
@@ -26,6 +26,7 @@ if ( ! class_exists( 'NBPC_Register_Activation' ) ) {
 		}
 
 		public function get_items(): Generator {
+			// Define your activation regs for callback.
 			yield null;
 		}
 	}

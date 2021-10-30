@@ -36,8 +36,9 @@ class Test_Register_Cron extends WP_UnitTestCase {
 		};
 	}
 
-	public function test_cron() {
-		do_action( 'init' );
+	public function test_cron_activation() {
+		$file = plugin_basename( nbpc()->get_main_file() );
+		do_action( 'activate_' . $file );
 
 		// Check if a wrong arg returns false.
 		$this->assertFalse( wp_get_scheduled_event( 'nbpc_test_cron' ) );
@@ -58,5 +59,21 @@ class Test_Register_Cron extends WP_UnitTestCase {
 		$this->assertEquals( 'nbpc_test_cron_single', $event->hook );
 		$this->assertFalse( $event->schedule ); // False means that it is a single event.
 		$this->assertEquals( $this->register->now + 20, $event->timestamp );
+	}
+
+	public function test_cron_deactivation() {
+		$file = plugin_basename( nbpc()->get_main_file() );
+		do_action( 'activate_' . $file );
+
+		$file = plugin_basename( nbpc()->get_main_file() );
+		do_action( 'deactivate_' . $file );
+
+		// Check if the schedule is removed.
+		$event = wp_get_scheduled_event( 'nbpc_test_cron', [ 'foo' => 'bar' ] );
+		$this->assertFalse( $event );
+
+		// Check if the single schedule is removed.
+		$event = wp_get_scheduled_event( 'nbpc_test_cron_single' );
+		$this->assertFalse( $event );
 	}
 }

@@ -13,16 +13,22 @@ if ( ! class_exists( 'NBPC_Register_Cron' ) ) {
 		use NBPC_Hook_Impl;
 
 		public function __construct() {
-			$this->add_action( 'init', 'register' );
+			register_activation_hook( nbpc()->get_main_file(), [ $this, 'register' ] );
+			register_deactivation_hook( nbpc()->get_main_file(), [ $this, 'unregister' ] );
 		}
 
-		/**
-		 * Method name can mislead, but it does activation callback jobs.
-		 */
 		public function register() {
 			foreach ( $this->get_items() as $item ) {
 				if ( $item instanceof NBPC_Reg_Cron ) {
 					$item->register();
+				}
+			}
+		}
+
+		public function unregister() {
+			foreach ( $this->get_items() as $item ) {
+				if ( $item instanceof NBPC_Reg_Cron ) {
+					$item->unregister();
 				}
 			}
 		}
