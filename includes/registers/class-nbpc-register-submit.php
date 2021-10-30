@@ -23,7 +23,7 @@ if ( ! class_exists( 'NBPC_Register_Submit' ) ) {
 		 * @actin       init
 		 */
 		public function register() {
-			$dispatch = Closure::fromCallable( [ $this, 'dispatch' ] );
+			$dispatch = [ $this, 'dispatch' ];
 
 			foreach ( $this->get_items() as $item ) {
 				if (
@@ -49,7 +49,7 @@ if ( ! class_exists( 'NBPC_Register_Submit' ) ) {
 				} catch ( Exception $e ) {
 					$error = new WP_Error();
 					$error->add(
-						'npbc_submit_error',
+						'nbpc_submit_error',
 						sprintf(
 							'Submit callback handler `%s` is invalid. Please check your submit register items.',
 							$this->inner_handlers[ $action ]

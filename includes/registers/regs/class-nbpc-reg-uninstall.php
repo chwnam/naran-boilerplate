@@ -39,7 +39,7 @@ if ( ! class_exists( 'NBPC_Reg_Uninstall' ) ) {
 			} catch ( Exception $e ) {
 				$error = new WP_Error();
 				$error->add(
-					'npbc_uninstall_error',
+					'nbpc_uninstall_error',
 					sprintf(
 						'Uninstall callback handler `%s` is invalid. Please check your uninstall register items.',
 						$this->callback

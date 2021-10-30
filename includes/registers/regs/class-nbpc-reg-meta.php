@@ -66,7 +66,7 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 		 *
 		 * @see register_meta()
 		 */
-		public function __construct( string $object_type, string $meta_key, array $args ) {
+		public function __construct( string $object_type, string $meta_key, array $args = [] ) {
 			$this->object_type = $object_type;
 			$this->meta_key    = $meta_key;
 			$this->args        = wp_parse_args(
@@ -90,13 +90,13 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 					if ( $this->args['sanitize_callback'] ) {
 						$this->args['sanitize_callback'] = nbpc_parse_callback( $this->args['sanitize_callback'] );
 					}
-				} catch (Exception $e) {
+				} catch ( Exception $e ) {
 					$error = new WP_Error();
 					$error->add(
-						'npbc_meta_error',
+						'nbpc_meta_error',
 						sprintf(
 							'Meta sanitize_callback handler `%s` is invalid. Please check your meta register items.',
-							$this->args['sanitize_callback']
+							nbpc_format_callback( $this->args['sanitize_callback'] )
 						)
 					);
 					wp_die( $error );
@@ -106,13 +106,13 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 					if ( $this->args['auth_callback'] ) {
 						$this->args['auth_callback'] = nbpc_parse_callback( $this->args['auth_callback'] );
 					}
-				} catch (Exception $e) {
+				} catch ( Exception $e ) {
 					$error = new WP_Error();
 					$error->add(
-						'npbc_meta_error',
+						'nbpc_meta_error',
 						sprintf(
 							'Meta auth_callback handler `%s` is invalid. Please check your meta register items.',
-							$this->args['auth_callback']
+							nbpc_format_callback( $this->args['auth_callback'] )
 						)
 					);
 					wp_die( $error );
@@ -309,11 +309,15 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 			} elseif ( $object_id instanceof WP_Term ) {
 				return $object_id->term_id;
 			} elseif ( $object_id instanceof WP_Comment ) {
-				return $object_id->comment_post_ID;
+				return $object_id->comment_ID;
 			} elseif ( is_array( $object_id ) && isset( $object_id['ID'] ) ) {
-				return $object_id['ID'];
+				return intval( $object_id['ID'] );
+			} elseif ( is_array( $object_id ) && isset( $object_id['id'] ) ) {
+				return intval( $object_id['id'] );
 			} elseif ( is_object( $object_id ) && isset( $object_id->ID ) ) {
-				return $object_id->ID;
+				return intval( $object_id->ID );
+			} elseif ( is_object( $object_id ) && isset( $object_id->id ) ) {
+				return intval( $object_id->id );
 			} elseif ( class_exists( 'WC_Product' ) && $object_id instanceof WC_Product ) {
 				return $object_id->get_id();
 			}

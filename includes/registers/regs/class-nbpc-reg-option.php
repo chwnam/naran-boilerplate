@@ -33,11 +33,7 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 				if ( ! isset( static::$options[ $option_name ] ) ) {
 					$args = $wp_registered_settings[ $option_name ];
 
-					static::$options[ $option_name ] = new NBPC_Reg_Option(
-						$args['group'],
-						$option_name,
-						$args['autoload']
-					);
+					static::$options[ $option_name ] = new NBPC_Reg_Option( $args['group'], $option_name, $args );
 				}
 
 				return static::$options[ $option_name ];
@@ -46,7 +42,11 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 			return null;
 		}
 
-		public function __construct( string $option_group, string $option_name, bool $autoload, array $args = [] ) {
+		public function __construct(
+			string $option_group,
+			string $option_name,
+			array $args = []
+		) {
 			$this->option_group = $option_group;
 			$this->option_name  = $option_name;
 			$this->args         = wp_parse_args(
@@ -58,7 +58,7 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 					'sanitize_callback' => null,
 					'show_in_rest'      => false,
 					'default'           => '',
-					'autoload'          => $autoload,
+					'autoload'          => true,  // NBPC specific.
 				]
 			);
 		}
@@ -81,13 +81,13 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 				if ( $this->args['sanitize_callback'] ) {
 					try {
 						$this->args['sanitize_callback'] = nbpc_parse_callback( $this->args['sanitize_callback'] );
-					} catch(Exception $e) {
+					} catch ( Exception $e ) {
 						$error = new WP_Error();
 						$error->add(
-							'npbc_option_error',
+							'nbpc_option_error',
 							sprintf(
 								'Option sanitize callback handler `%s` is invalid. Please check your option register items.',
-								$this->args['sanitize_callback']
+								nbpc_format_callback( $this->args['sanitize_callback'] )
 							)
 						);
 						wp_die( $error );

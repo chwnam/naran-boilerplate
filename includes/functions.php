@@ -57,9 +57,9 @@ if ( ! function_exists( 'nbpc_parse_callback' ) ) {
 	 *
 	 * @return callable|array
 	 *
+	 * @throws Exception
 	 * @example foo.bar@baz ---> array( nbpc()->foo->bar, 'baz )
 	 *
-	 * @throws Exception
 	 */
 	function nbpc_parse_callback( $maybe_callback ) {
 		if ( is_callable( $maybe_callback ) ) {
@@ -151,5 +151,30 @@ if ( ! function_exists( 'nbpc_script_debug' ) ) {
 	 */
 	function nbpc_script_debug(): bool {
 		return apply_filters( 'nbpc_script_debug', defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG );
+	}
+}
+
+
+if ( ! function_exists( 'nbpc_format_callback' ) ) {
+	/**
+	 * @param Closure|array|string $callback
+	 *
+	 * @return string
+	 */
+	function nbpc_format_callback( $callback ): string {
+		if ( is_string( $callback ) ) {
+			return $callback;
+		} elseif (
+			( is_array( $callback ) && 2 === count( $callback ) ) &&
+			( is_object( $callback[0] ) || is_string( $callback[0] ) ) &&
+			is_string( $callback[1] )
+		) {
+			return ( is_object( $callback[0] ) ? get_class( $callback[0] ) : $callback[0] ) .
+			       '::' . $callback[1];
+		} elseif ( $callback instanceof Closure ) {
+			return '{Closure}';
+		} else {
+			return '{Unknown}';
+		}
 	}
 }

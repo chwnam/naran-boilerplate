@@ -47,7 +47,7 @@ if ( ! class_exists( 'NBPC_Register_Ajax' ) ) {
 				} catch ( Exception $e ) {
 					$error = new WP_Error();
 					$error->add(
-						'npbc_ajax_error',
+						'nbpc_ajax_error',
 						sprintf(
 							'AJAX callback handler `%s` is invalid. Please check your AJAX register items.',
 							$this->inner_handlers[ $action ]
