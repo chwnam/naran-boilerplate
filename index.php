@@ -3,7 +3,7 @@
  * Plugin Name:       Naran Boilerplate Code
  * Plugin URI:        https://github.com/chwnam/naran-boilerplate-code
  * Description:       Naran boilerplate code for WordPress plugins/themes.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 5.5.0
  * Requires PHP:      7.4
  * Author:            changwoo
@@ -13,7 +13,7 @@
  * Update URI:
  * Text Domain:       nbpc
  * Domain Path:       /languages
- * CPBN version:      1.0.0
+ * CPBN version:      1.0.1
  */
 
 /* ABSPATH check */
