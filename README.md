@@ -42,3 +42,36 @@ $ touch .prefix-change.lock           # 잠금.
 ### 기타 파일 변경
 prefix-changer.php 스크립트는 `includes` 디렉토리와 메인 파일인 `index.php`만을 대상으로 동작합니다.
 이외의 파일은 필요에 맞게 적절히 변경하시기 바랍니다.
+
+
+### 버전 변경
+플러그인 메인 헤더 파일의 'version' 태그 정보를 기준으로 정의된 버전 문자열을 동기화할 수 있습니다.
+
+예를 들어, 메인의 헤더 파일이 아래처럼 되어 있다면,
+
+```php
+<?php
+/*
+ * Plugin Name: Sample
+ * Description: Sample plugin.
+ * Version:     1.1.0
+ */
+
+// 이하 생략
+```
+플러그인의 버전은 1.1.0입니다. 그런데 이에 맞춰 `package.json`, `composer.json`이나 메인 파일 자체에 있는 상수 선언도 이에 맞춰
+같은 문자열을 가져야 합니다.
+
+이 때, `bin/sync-version.php` 스크립트를 사용할 수 있습니다.
+```
+$ php bin/sync-version.php index.php # 메인 파일을 정확히 지정.
+* Target version: 1.1.0
+...
+```
+
+`composer.json`에 `version` 명령어로 기본 등록이 되어 있습니다.
+```
+$ composer version
+* Target version: 1.1.0
+...
+```
