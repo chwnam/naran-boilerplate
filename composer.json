@@ -14,13 +14,13 @@
   "scripts": {
     "daa": "@composer dump-autoload --classmap-authoritative",
     "make-pot": "wp i18n make-pot . ./languages/nbpc.pot --domain=nbpc",
-    "sync-ver": "@php bin/sync-version.php index.php",
+    "version": "@php bin/sync-version.php index.php",
     "test": "vendor/bin/phpunit"
   },
   "scripts-descriptions": {
     "daa": "Run `composer dump-autoload --classmap-authoritative`.",
     "make-pot": "Create .pot file.",
-    "sync-ver": "Sync your plugin version string.",
+    "version": "Sync your plugin version string.",
     "test": "Run phpunit."
   },
   "autoload": {

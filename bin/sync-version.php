@@ -96,15 +96,16 @@ class NBPC_Sync_Version {
 	 * @param string $file_name      File name to display.
 	 */
 	private function apply_change_json( string $json_path, string $target_version, string $file_name ) {
-		$content = $this->get_content( $json_path );
-		if ( $content ) {
-			$this->check_file_permission( $json_path, $file_name );
-			$detect = $this->detect_json( $content );
-			if ( $this->detected( $detect ) && $target_version !== $detect[0] ) {
-				echo "* Fix {$file_name} version: {$detect[0]} ---> {$target_version}\n";
-				$content = $this->replace_version( $content, $target_version, $detect );
-				file_put_contents( $json_path, $content );
+		$this->check_file_permission( $json_path, $file_name );
+		$content = json_decode( $this->get_content( $json_path ), true );
+
+		if ( is_array( $content ) ) {
+			$version = $content['version'] ?? '{empty version}';
+			if ( $version !== $target_version ) {
+				echo "* Fix {$file_name} version: {$version} ---> {$target_version}\n";
 			}
+			$content['version'] = $target_version;
+			$this->save_as_json( $json_path, $content );
 		}
 	}
 
@@ -120,6 +121,28 @@ class NBPC_Sync_Version {
 			return file_get_contents( $path );
 		} else {
 			return '';
+		}
+	}
+
+	/**
+	 * Save array as JSON file.
+	 *
+	 * @param string $path
+	 * @param array  $content
+	 */
+	private function save_as_json( string $path, array $content ) {
+		$dump = json_encode( $content, JSON_PRETTY_PRINT |  JSON_UNESCAPED_SLASHES);
+
+		if ( $dump ) {
+			// JSON_PRETTY_PRINT gets indent of 4.
+			$dump = preg_replace_callback(
+				'/^(\s+)(.+)/m',
+				function ( array $match ) { return str_pad( '', strlen( $match[1] ) / 2, ' ' ) . $match[2]; },
+				$dump
+			);
+            $dump .= PHP_EOL;
+
+			file_put_contents( $path, $dump );
 		}
 	}
 
@@ -256,33 +279,6 @@ class NBPC_Sync_Version {
 		);
 
 		if ( $m ) {
-			$version = $matches[1][0];
-			$offset  = $matches[1][1];
-			$len     = strlen( $version );
-		}
-
-		return [ $version, $offset, $len ];
-	}
-
-	/**
-	 * Detect version string from JSON.
-	 *
-	 * @param string $content
-	 *
-	 * @return array 0: string
-	 *               1: offset
-	 *               2: length
-	 */
-	private function detect_json( string $content ): array {
-		if ( ! $content ) {
-			return [ '', 0, 0 ];
-		}
-
-		$version = '';
-		$offset  = 0;
-		$len     = 0;
-
-		if ( preg_match( '/"version"\s*:\s*"(.+)"/i', $content, $matches, PREG_OFFSET_CAPTURE ) ) {
 			$version = $matches[1][0];
 			$offset  = $matches[1][1];
 			$len     = strlen( $version );
