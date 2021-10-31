@@ -121,6 +121,10 @@ if ( ! function_exists( 'nbpc_script_debug' ) ) {
 
 if ( ! function_exists( 'nbpc_format_callback' ) ) {
 	/**
+	 * Format callback method or function.
+	 *
+	 * This method does not care about $callable is actually callable.
+	 *
 	 * @param Closure|array|string $callback
 	 *
 	 * @return string
@@ -133,12 +137,25 @@ if ( ! function_exists( 'nbpc_format_callback' ) ) {
 			( is_object( $callback[0] ) || is_string( $callback[0] ) ) &&
 			is_string( $callback[1] )
 		) {
-			return ( is_object( $callback[0] ) ? get_class( $callback[0] ) : $callback[0] ) .
-			       '::' . $callback[1];
+			if ( method_exists( $callback[0], $callback[1] ) ) {
+				try {
+					$ref = new ReflectionClass( $callback[0] );
+					if ( $ref->isAnonymous() ) {
+						return "{AnonymousClass}::{$callback[1]}";
+					}
+				} catch ( ReflectionException $e ) {
+				}
+			}
+
+			if ( is_string( $callback[0] ) ) {
+				return "{$callback[0]}::{$callback[1]}";
+			} elseif ( is_object( $callback[0] ) ) {
+				return get_class( $callback[0] ) . '::' . $callback[1];
+			}
 		} elseif ( $callback instanceof Closure ) {
 			return '{Closure}';
-		} else {
-			return '{Unknown}';
 		}
+
+		return '{Unknown}';
 	}
 }

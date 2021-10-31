@@ -123,7 +123,7 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 
 				$module = $this->get_module_by_notation( $module_part );
 
-				if ( $module && method_exists( $module, $method ) ) {
+				if ( $module && is_callable( [ $module, $method ] ) ) {
 					return [ $module, $method ];
 				}
 			}
