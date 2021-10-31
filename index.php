@@ -1,14 +1,5 @@
 <?php
 /**
- * Naran Boilerplate Code
- *
- * @package           nbpc
- * @author            changwoo
- * @copyright         2021 Changwoo Nam
- * @license           GPL-2.0-or-later
- * @version           1.0.0
- * @wordpress-plugin
- *
  * Plugin Name:       Naran Boilerplate Code
  * Plugin URI:        https://github.com/chwnam/naran-boilerplate-code
  * Description:       Naran boilerplate code for WordPress plugins/themes.
@@ -33,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 const NBPC_MAIN_FILE = __FILE__;
-const NBPC_VERSION   = '1.0.0';
+const NBPC_VERSION   = '1.0.1';
 const NBPC_PRIORITY = 100;
 
 nbpc();
