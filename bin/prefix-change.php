@@ -47,7 +47,7 @@ class NBPC_Prefix_Changer {
 	}
 
 	public function change_php_file_name_prefixes() {
-		$pattern = "/^(class|interface|abstract)-{$this->old_prefix}-(.+)$/";
+		$pattern = "/^(abstract|class|interface|trait)-{$this->old_prefix}-(.+)$/";
 
 		foreach ( $this->subdirs as $subdir ) {
 			$iterator = new RegexIterator(
