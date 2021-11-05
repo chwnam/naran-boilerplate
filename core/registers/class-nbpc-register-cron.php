@@ -34,7 +34,7 @@ if ( ! class_exists( 'NBPC_Register_Cron' ) ) {
 		}
 
 		public function get_items(): Generator {
-			yield null;
+			yield call_user_func( [ NBPC_Registers::class, 'regs_cron' ], $this );
 		}
 	}
 }

@@ -43,7 +43,7 @@ if ( ! class_exists( 'NBPC_Register_Cron_Schedule' ) ) {
 		}
 
 		public function get_items(): Generator {
-			yield null;
+			yield call_user_func( [ NBPC_Registers::class, 'regs_cron_schedule' ], $this );
 		}
 	}
 }

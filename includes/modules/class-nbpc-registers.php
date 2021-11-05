@@ -59,5 +59,85 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 				]
 			);
 		}
+
+		public static function regs_activation( NBPC_Register_Activation $register ): Generator {
+			// Define your activation regs for callback.
+			yield null;
+		}
+
+		public static function regs_ajax( NBPC_Register_Ajax $register ): Generator {
+			// Define your ajax regs for callback.
+			yield null;
+		}
+
+		public static function regs_comment_meta( NBPC_Register_Comment_Meta $register ): Generator {
+			// Define your comment meta regs for callback.
+			yield null;
+		}
+
+		public static function regs_cron( NBPC_Register_Cron $register ): Generator {
+			// Define your cron regs for callback.
+			yield null;
+		}
+
+		public static function regs_cron_schedule( NBPC_Register_Cron_Schedule $register ): Generator {
+			// Define your cron schedule regs for callback.
+			yield null;
+		}
+
+		public static function regs_deactivation( NBPC_Register_Deactivation $register ): Generator {
+			// Define your deactivation regs for callback.
+			yield null;
+		}
+
+		public static function regs_option( NBPC_Register_Option $register ): Generator {
+			// Define your option regs for callback.
+			yield null;
+		}
+
+		public static function regs_post_meta( NBPC_Register_Post_Meta $register ): Generator {
+			// Define your post meta regs for callback.
+			yield null;
+		}
+
+		public static function regs_post_type( NBPC_Register_Post_Type $register ): Generator {
+			// Define your post type regs for callback.
+			yield null;
+		}
+
+		public static function regs_script( NBPC_Register_Script $register ): Generator {
+			// Define your script regs for callback.
+			yield null;
+		}
+
+		public static function regs_style( NBPC_Register_Style $register ): Generator {
+			// Define your style regs for callback.
+			yield null;
+		}
+
+		public static function regs_submit( NBPC_Register_Submit $register ): Generator {
+			// Define your submit regs for callback.
+			yield null;
+		}
+
+		public static function regs_taxonomy( NBPC_Register_Taxonomy $register ): Generator {
+			// Define your taxonomy regs for callback.
+			yield null;
+		}
+
+		public static function regs_term_meta( NBPC_Register_Term_Meta $register ): Generator {
+			// Define your term meta regs for callback.
+			yield null;
+		}
+
+		public static function regs_user_meta( NBPC_Register_User_Meta $register ): Generator {
+			// Define your user meta regs for callback.
+			yield null;
+		}
+
+		public static function regs_uninstall( NBPC_Register_Uninstall $register ): Generator {
+			// Define your user meta regs for callback.
+			yield null;
+		}
 	}
 }

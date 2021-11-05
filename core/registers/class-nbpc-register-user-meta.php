@@ -21,7 +21,7 @@ if ( ! class_exists( 'NBPC_Register_User_Meta' ) ) {
 		 * @return Generator
 		 */
 		public function get_items(): Generator {
-			yield null;
+			yield call_user_func( [ NBPC_Registers::class, 'regs_user_meta' ], $this );
 		}
 	}
 }

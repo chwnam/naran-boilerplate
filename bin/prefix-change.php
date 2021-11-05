@@ -17,7 +17,7 @@ class NBPC_Prefix_Changer {
 
 	private string $new_prefix = '';
 
-	private array $subdirs = [ 'includes' ];
+	private array $subdirs = [ 'core', 'includes' ];
 
 	public function __construct( string $root_directory, string $old_prefix, string $new_prefix ) {
 		$this->root_directory = rtrim( realpath( $root_directory ), '\\/' );

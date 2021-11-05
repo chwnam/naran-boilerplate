@@ -29,7 +29,7 @@ if ( ! class_exists( 'NBPC_Register_Post_Type' ) ) {
 		}
 
 		public function get_items(): Generator {
-			yield null;
+			yield call_user_func( [ NBPC_Registers::class, 'regs_post_type' ], $this );
 		}
 	}
 }
