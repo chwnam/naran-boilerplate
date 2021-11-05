@@ -116,12 +116,6 @@ class NBPC_Prefix_Changer {
 }
 
 
-function check_lock_file( string $root_dir ) {
-	if ( file_exists( "{$root_dir}/.prefix-change.lock" ) ) {
-		throw new RuntimeException( '`.prefix-change.lock` file found. Please remove the file and run this script again.' );
-	}
-}
-
 function help() {
 	echo "\nNaran boilerplate code prefix changer\n";
 	echo "=====================================\n\n";
@@ -130,10 +124,12 @@ function help() {
 	echo "       OLD_PREFIX current prefix string. Defaults to 'nbpc'.\n\n";
 }
 
+
 function confirm( string $message ): bool {
 	echo $message . " [Y/n] ";
 	return 'y' === trim( strtolower( readline() ) );
 }
+
 
 if ( 'cli' === php_sapi_name() ) {
 	if ( 2 > $argc || 3 < $argc ) {
@@ -146,7 +142,6 @@ if ( 'cli' === php_sapi_name() ) {
 	$old_prefix = $argv[2] ?? 'nbpc';
 
 	try {
-		check_lock_file( $root_dir );
 		if ( confirm( "Change prefix from `{$old_prefix}` to `{$new_prefix}`. Are you sure?" ) ) {
 			$change = new NBPC_Prefix_Changer( $root_dir, $old_prefix, $new_prefix );
 			$change->change_source_codes();
