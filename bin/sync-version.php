@@ -42,11 +42,11 @@ class NBPC_Sync_Version {
 	 */
 	private function check_file_permission( string $path, string $display ) {
 		if ( ! file_exists( $path ) || ! is_file( $path ) ) {
-			die( "{$display} is not found." );
+			die( "{$display} is not found.\n" );
 		} elseif ( ! is_readable( $path ) ) {
-			die( "{$display} is not readable." );
+			die( "{$display} is not readable.\n" );
 		} elseif ( ! is_writable( $path ) ) {
-			die( "{$display} is not writable." );
+			die( "{$display} is not writable.\n" );
 		}
 	}
 
