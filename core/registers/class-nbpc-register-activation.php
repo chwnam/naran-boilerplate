@@ -26,8 +26,7 @@ if ( ! class_exists( 'NBPC_Register_Activation' ) ) {
 		}
 
 		public function get_items(): Generator {
-			// Define your activation regs for callback.
-			yield null;
+			yield call_user_func( [ NBPC_Registers::class, 'regs_activation' ], $this );
 		}
 	}
 }

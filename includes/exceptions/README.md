@@ -1,7 +1,7 @@
-Directory for abstract classes
-------------------------------
+Directory for exception classes
+-------------------------------
 
-Your file names should start with `abstract-{LowercasePrefix}-`,
+Your file names should start with `class-{LowercasePrefix}-`,
 and names of classes should start with `{UppercasePrefix}_`.
 
 ---
@@ -20,8 +20,8 @@ Enclose with `if ( ! class_exists( ... ) )` to prevent class name collision,
 and give your users a final chance to customize their codes.
 ```php
 <?php
-if ( ! class_exists( 'CPBN_Foo' ) ) {
-    abstract class CPBN_Foo {
+if ( ! class_exists( 'CPBN_Foo_Exception' ) ) {
+    class CPBN_Foo_Exception extends Exception {
     }
 }
 ```

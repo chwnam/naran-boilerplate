@@ -54,7 +54,7 @@ if ( ! class_exists( 'NBPC_Register_Option' ) ) {
 		 * @return Generator
 		 */
 		public function get_items(): Generator {
-			yield null;
+			yield call_user_func( [ NBPC_Registers::class, 'regs_option' ], $this );
 		}
 	}
 }

@@ -26,9 +26,11 @@
   },
   "autoload": {
     "files": [
+      "core/core-functions.php",
       "includes/functions.php"
     ],
     "classmap": [
+      "core",
       "includes"
     ]
   },

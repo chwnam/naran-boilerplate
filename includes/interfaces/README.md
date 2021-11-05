@@ -1,4 +1,5 @@
-Directory for interfaces.
+Directory for interfaces
+------------------------
 
 Your file names should start with `interface-{LowercasePrefix}-`,
 and names of interfaces should start with `{UppercasePrefix}_`.
