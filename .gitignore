@@ -9,5 +9,7 @@
 .git
 
 vendor/*
-!vendor/composer
-!vendor/autoload.php
+
+# Uncomment below two lines to commit autoload-generated files.
+# !vendor/composer
+# !vendor/autoload.php
