@@ -119,7 +119,7 @@ class NBPC_Prefix_Changer {
 function help() {
 	echo "\nNaran boilerplate code prefix changer\n";
 	echo "=====================================\n\n";
-	echo "Usage: prefix-change.php NEW_PREFIX [OLD_PREFIX]\n\n";
+	echo "Usage: prefix-change.php [NEW_PREFIX] [OLD_PREFIX]\n\n";
 	echo "       NEW_PREFIX your new prefix string. Accepts only lowercase alphabets, and numbers.\n\n";
 	echo "       OLD_PREFIX current prefix string. Defaults to 'nbpc'.\n\n";
 }
@@ -132,17 +132,25 @@ function confirm( string $message ): bool {
 
 
 if ( 'cli' === php_sapi_name() ) {
-	if ( 2 > $argc || 3 < $argc ) {
+	$root_dir = dirname( __DIR__ );
+
+	if ( 1 === $argc ) {
+		echo 'Please input your new prefix: ';
+		$new_prefix = trim( fgets( STDIN ) );
+		$old_prefix = 'nbpc';
+	} elseif ( 2 === $argc ) {
+		$new_prefix = $argv[1];
+		$old_prefix = 'nbpc';
+	} elseif ( 3 === $argc ) {
+		$new_prefix = $argv[1];
+		$old_prefix = $argv[2];
+	} else {
 		help();
 		exit;
 	}
 
-	$root_dir   = dirname( __DIR__ );
-	$new_prefix = $argv[1];
-	$old_prefix = $argv[2] ?? 'nbpc';
-
 	try {
-		if ( confirm( "Change prefix from `{$old_prefix}` to `{$new_prefix}`. Are you sure?" ) ) {
+		if ( confirm( "Replace prefix from `{$old_prefix}` to `{$new_prefix}`. Are you sure?" ) ) {
 			$change = new NBPC_Prefix_Changer( $root_dir, $old_prefix, $new_prefix );
 			$change->change_source_codes();
 			$change->change_php_file_name_prefixes();
