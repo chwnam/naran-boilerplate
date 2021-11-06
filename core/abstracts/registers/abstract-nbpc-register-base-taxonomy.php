@@ -1,6 +1,6 @@
 <?php
 /**
- * NBPC: Custom post type register
+ * NBPC: Custom taxonomy register base
  */
 
 /* ABSPATH check */
@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Register_Post_Type' ) ) {
-	class NBPC_Register_Post_Type implements NBPC_Register {
+if ( ! class_exists( 'NBPC_Register_Base_Taxonomy' ) ) {
+	abstract class NBPC_Register_Base_Taxonomy implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
 		public function __construct() {
@@ -22,14 +22,10 @@ if ( ! class_exists( 'NBPC_Register_Post_Type' ) ) {
 		 */
 		public function register() {
 			foreach ( $this->get_items() as $item ) {
-				if ( $item instanceof NBPC_Reg_Post_Type ) {
+				if ( $item instanceof NBPC_Reg_Taxonomy ) {
 					$item->register();
 				}
 			}
-		}
-
-		public function get_items(): Generator {
-			yield call_user_func( [ NBPC_Registers::class, 'regs_post_type' ], $this );
 		}
 	}
 }

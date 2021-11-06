@@ -174,12 +174,7 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		abstract protected function get_modules(): array;
 
 		protected function initialize() {
-			$this->assign_modules(
-				[
-					'admins'    => NBPC_Admins::class,
-					'registers' => NBPC_Registers::class,
-				]
-			);
+			$this->assign_modules( $this->get_modules() );
 
 			$this->add_action( 'wp', 'init_conditional_modules' );
 

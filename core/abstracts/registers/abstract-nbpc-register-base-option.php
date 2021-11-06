@@ -1,6 +1,6 @@
 <?php
 /**
- * NBPC: Option register
+ * NBPC: Option register base
  */
 
 /* ABSPATH check */
@@ -8,11 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Register_Option' ) ) {
-	/**
-	 * NOTE: Add 'property-read' phpdoc to make your editor inspect option items properly.
-	 */
-	class NBPC_Register_Option implements NBPC_Register {
+if ( ! class_exists( 'NBPC_Register_Base_Option' ) ) {
+	abstract class NBPC_Register_Base_Option implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
 		/** @var array Key: alias, value: option_name */
@@ -44,17 +41,6 @@ if ( ! class_exists( 'NBPC_Register_Option' ) ) {
 					$this->fields[ $alias ] = $item->get_option_name();
 				}
 			}
-		}
-
-		/**
-		 * Define items here.
-		 *
-		 * To use alias, do not forget to return generator as 'key => value' form!
-		 *
-		 * @return Generator
-		 */
-		public function get_items(): Generator {
-			yield call_user_func( [ NBPC_Registers::class, 'regs_option' ], $this );
 		}
 	}
 }

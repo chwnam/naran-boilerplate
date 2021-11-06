@@ -1,6 +1,6 @@
 <?php
 /**
- * NBPC: Style register
+ * NBPC: Style register base
  */
 
 /* ABSPATH check */
@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Register_Style' ) ) {
-	class NBPC_Register_Style implements NBPC_Register {
+if ( ! class_exists( 'NBPC_Register_Base_Style' ) ) {
+	abstract class NBPC_Register_Base_Style implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
 		public function __construct() {
@@ -26,10 +26,6 @@ if ( ! class_exists( 'NBPC_Register_Style' ) ) {
 					$item->register();
 				}
 			}
-		}
-
-		public function get_items(): Generator {
-			yield call_user_func( [ NBPC_Registers::class, 'regs_style' ], $this );
 		}
 
 		/**

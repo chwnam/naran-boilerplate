@@ -1,6 +1,6 @@
 <?php
 /**
- * NBPC: Meta register (abstract)
+ * NBPC: Register meta base
  */
 
 /* ABSPATH check */
@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Reigster_Meta' ) ) {
-	abstract class NBPC_Reigster_Meta implements NBPC_Register {
+if ( ! class_exists( 'NBPC_Reigster_Base_Meta' ) ) {
+	abstract class NBPC_Reigster_Base_Meta implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
 		/**
