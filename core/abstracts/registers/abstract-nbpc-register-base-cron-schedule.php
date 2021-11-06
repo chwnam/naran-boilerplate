@@ -1,6 +1,6 @@
 <?php
 /**
- * NBPC: Cron schedule register
+ * NBPC: Cron schedule register base
  */
 
 /* ABSPATH check */
@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Register_Cron_Schedule' ) ) {
-	class NBPC_Register_Cron_Schedule implements NBPC_Register {
+if ( ! class_exists( 'NBPC_Register_Base_Cron_Schedule' ) ) {
+	abstract class NBPC_Register_Base_Cron_Schedule implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
 		public function __construct() {
@@ -40,10 +40,6 @@ if ( ! class_exists( 'NBPC_Register_Cron_Schedule' ) ) {
 			}
 
 			return $schedules;
-		}
-
-		public function get_items(): Generator {
-			yield call_user_func( [ NBPC_Registers::class, 'regs_cron_schedule' ], $this );
 		}
 	}
 }

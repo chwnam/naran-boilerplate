@@ -1,6 +1,6 @@
 <?php
 /**
- * NBPC: User meta register
+ * NBPC: Comment meta register
  */
 
 /* ABSPATH check */
@@ -8,11 +8,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Register_User_Meta' ) ) {
+if ( ! class_exists( 'NBPC_Register_Comment_Meta' ) ) {
 	/**
 	 * NOTE: Add 'property-read' phpdoc to make your editor inspect meta items.
 	 */
-	class NBPC_Register_User_Meta extends NBPC_Reigster_Meta {
+	class NBPC_Register_Comment_Meta extends NBPC_Reigster_Base_Meta {
 		/**
 		 * Define items here.
 		 *
@@ -21,7 +21,7 @@ if ( ! class_exists( 'NBPC_Register_User_Meta' ) ) {
 		 * @return Generator
 		 */
 		public function get_items(): Generator {
-			yield call_user_func( [ NBPC_Registers::class, 'regs_user_meta' ], $this );
+			yield; // yield 'alias' => new NBPC_Reg_Meta();
 		}
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * NBPC: Script register
+ * NBPC: Script register base
  */
 
 /* ABSPATH check */
@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Register_Script' ) ) {
-	class NBPC_Register_Script implements NBPC_Register {
+if ( ! class_exists( 'NBPC_Register_Base_Script' ) ) {
+	abstract class NBPC_Register_Base_Script implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
 		public function __construct() {
@@ -26,10 +26,6 @@ if ( ! class_exists( 'NBPC_Register_Script' ) ) {
 					$item->register();
 				}
 			}
-		}
-
-		public function get_items(): Generator {
-			yield call_user_func( [ NBPC_Registers::class, 'regs_script' ], $this );
 		}
 
 		/**
