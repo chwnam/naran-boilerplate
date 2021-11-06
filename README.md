@@ -16,20 +16,16 @@ composer 를 통해 간단하게 설치할 수 있습니다. 아래 예제는 `w
 composer create-project --no-dev naran/boilerplate-code 
 ```
 
-### 접두어 일괄 변경
-받아진 패키지는 그대로 새로운 플러그인의 뼈대 코드로 동작합니다. 그러나 다른 플러그인과의 충돌을 막기 위해
-WordPress 기본 방식인 접두어(prefix)를 일괄 변경해야 합니다.
+받아진 패키지는 그대로 새로운 플러그인의 뼈대 코드로 동작합니다.
+그러나 다른 플러그인과의 충돌을 막기 위해 WordPress 기본 방식인 접두어(prefix)를 일괄 변경해야 합니다.
+`compoer create-project` 명령 중 자동으로 실행됩니다.
 
-먼저 플러그인의 최상위 디렉토리에서 `.prefix-change.lock` 파일을 발견하면, 이것을 제거하세요.
-`prefix-change.php` 스크립트가 의도하지 않게 파일 이름과 소스를 변경하지 않게 하기 위한 장치입니다. 
-
-`wp-content/plugin/boilerplate-code/bin` 디렉토리에 `prefix-change.php` 스크립트가 있습니다. 이것을 CLI에서 실행합니다.
+차후 별도로 실행할 때는 `wp-content/plugin/boilerplate-code/bin/prefix-change.php`
+스크립트를 CLI에서 실행하면 됩니다.
 
 ```
 $ cd boilerplate-code
-$ rm .prefix-change.lock              # 잠금 해제.
 $ php bin/prefix-changer.php myplugin # 접두 npbc를 myplugin 으로 변경.
-$ touch .prefix-change.lock           # 잠금.
 ```
 
 접두어는 다음 규칙을 따릅니다.
