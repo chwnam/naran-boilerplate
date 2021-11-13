@@ -201,6 +201,60 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 		}
 
 		/**
+		 * Add meta value.
+		 *
+		 * @param mixed $object_id
+		 * @param mixed $meta_value
+		 * @param bool  $unique
+		 *
+		 * @return bool|int|WP_Error
+		 */
+		public function add( $object_id, $meta_value, $unique = false ) {
+			switch ( $this->object_type ) {
+				case 'comment':
+					return add_comment_meta(
+						$this->_get_id( $object_id ),
+						$this->meta_key,
+						$meta_value,
+						$unique
+					);
+
+				case 'post':
+					return add_post_meta(
+						$this->_get_id( $object_id ),
+						$this->meta_key,
+						$meta_value,
+						$unique
+					);
+
+				case 'term':
+					return add_term_meta(
+						$this->_get_id( $object_id ),
+						$this->meta_key,
+						$meta_value,
+						$unique
+					);
+
+				case 'user':
+					return add_user_meta(
+						$this->_get_id( $object_id ),
+						$this->meta_key,
+						$meta_value,
+						$unique
+					);
+
+				default:
+					return add_metadata(
+						$this->object_type,
+						$this->_get_id( $object_id ),
+						$this->meta_key,
+						$meta_value,
+						$unique
+					);
+			}
+		}
+
+		/**
 		 * Update meta field.
 		 *
 		 * @param mixed $object_id
@@ -293,7 +347,6 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 			}
 		}
 
-
 		/**
 		 * Get save object ID.
 		 *
@@ -314,12 +367,12 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 				return intval( $object_id['ID'] );
 			} elseif ( is_array( $object_id ) && isset( $object_id['id'] ) ) {
 				return intval( $object_id['id'] );
+			} elseif ( is_object( $object_id ) && method_exists( $object_id, 'get_id' ) ) {
+				return intval( $object_id->get_id() );
 			} elseif ( is_object( $object_id ) && isset( $object_id->ID ) ) {
 				return intval( $object_id->ID );
 			} elseif ( is_object( $object_id ) && isset( $object_id->id ) ) {
 				return intval( $object_id->id );
-			} elseif ( class_exists( 'WC_Product' ) && $object_id instanceof WC_Product ) {
-				return $object_id->get_id();
 			}
 
 			return false;
