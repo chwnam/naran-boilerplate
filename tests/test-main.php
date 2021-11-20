@@ -159,7 +159,47 @@ class Test_Main extends WP_UnitTestCase {
 		);
 
 		// Check if wrong notation raise exception.
-		$this->expectException(NBPC_Callback_Exception::class);
+		$this->expectException( NBPC_Callback_Exception::class );
 		$nbpc->parse_callback( 'non_exist@method' );
+	}
+
+	public function test_load_textdomain() {
+		NBPC_Main::get_instance();
+
+		// Force load ko_KR locale.
+		$locale_fix = function ( $locale, $domain ) {
+			return 'nbpc' === $domain ? 'ko_KR' : $locale;
+		};
+
+		// While running unit test, WP_PLUGIN_DIR is incorrect.
+		$plugin_path_fix = function ( $path, $domain ) {
+			if ( 'nbpc' === $domain ) {
+				$path = dirname( nbpc()->get_main_file() ) . '/languages/' . wp_basename( $path );
+			}
+			return $path;
+		};
+
+		add_filter( 'plugin_locale', $locale_fix, 10, 2 );
+		add_filter( 'load_textdomain_mofile', $plugin_path_fix, 10, 2 );
+
+		// Trigger load textdomain.
+		do_action( 'plugins_loaded' );
+
+		remove_filter( 'plugin_locale', $locale_fix );
+		remove_filter( 'load_textdomain_mofile', $plugin_path_fix );
+
+		global $l10n, $l10n_unloaded;
+
+		// Check if $l10n has 'nbpc' key.
+		$this->assertArrayHasKey( 'nbpc', $l10n );
+
+		// Check if the file is what we expect.
+		$this->assertEquals(
+			dirname( nbpc()->get_main_file() ) . '/languages/nbpc-ko_KR.mo',
+			$l10n['nbpc']->get_filename()
+		);
+
+		// Check if $l10n_unloaded does not have 'nbpc' key.
+		$this->assertArrayNotHasKey( 'nbpc', $l10n_unloaded );
 	}
 }
