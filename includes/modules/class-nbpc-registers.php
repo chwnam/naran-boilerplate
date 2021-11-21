@@ -29,6 +29,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 	 * @property-read NBPC_Register_Taxonomy      $taxonomy
 	 * @property-read NBPC_Register_Term_Meta     $term_meta
 	 * @property-read NBPC_Register_User_Meta     $user_meta
+	 * @property-read NBPC_Register_WP_CLI        $wp_cli
 	 */
 	class NBPC_Registers implements NBPC_Module {
 		use NBPC_Submodule_Impl;
@@ -56,6 +57,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 					// NOTE: 'uninstall' is not a part of registers submodules.
 					//       Because it 'uninstall' hook requires static method callback.
 					'user_meta'     => NBPC_Register_User_Meta::class,
+					'wp_cli'        => NBPC_Register_WP_CLI::class,
 				]
 			);
 		}
