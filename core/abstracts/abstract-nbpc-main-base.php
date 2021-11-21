@@ -159,6 +159,13 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		}
 
 		/**
+		 * Load textdomain
+		 */
+		public function load_textdomain() {
+			load_plugin_textdomain( 'nbpc', false, wp_basename( dirname( $this->get_main_file() ) ) . '/languages' );
+		}
+
+		/**
 		 * Initialize conditional modules.
 		 *
 		 * @return void
@@ -176,7 +183,9 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		protected function initialize() {
 			$this->assign_modules( $this->get_modules() );
 
-			$this->add_action( 'wp', 'init_conditional_modules' );
+			$this
+				->add_action( 'plugins_loaded', 'load_textdomain' )
+				->add_action( 'wp', 'init_conditional_modules' );
 
 			do_action( 'nbpc_initialized' );
 		}

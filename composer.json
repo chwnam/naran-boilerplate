@@ -2,7 +2,7 @@
   "name": "naran/boilerplate-code",
   "description": "Naran boilerplate code for WordPress plugins/themes.",
   "type": "wordpress-plugin",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "authors": [
     {
       "name": "changwoo",
