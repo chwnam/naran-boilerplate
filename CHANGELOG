@@ -1,3 +1,21 @@
+1.2.0-rc.1
+----------
+2021-11-23
+
+- Project renamed to 'naran-boilerplate'.
+- Support new registers: shortcode register, CLI register.
+- Support uninstall script.
+- Template trait change:
+  - Remove NBPC_Sciprt_Enqueue.
+  - Add script() method chains. See NBPC_Script_Helper.
+  - Add style() method chains. See NBPC_Style_Helper.
+- Main automatically loads plugin textdomain.
+- Improve `composer make-pot` command.
+- bin/prefix-change.php update.
+  - New prefix rule.
+  - Support more files: composer.json, package.json, phpunit.xml, language/*.po(t), uninstall.php.
+
+
 1.1.2
 -----
 2021-11-13

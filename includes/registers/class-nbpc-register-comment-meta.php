@@ -12,7 +12,7 @@ if ( ! class_exists( 'NBPC_Register_Comment_Meta' ) ) {
 	/**
 	 * NOTE: Add 'property-read' phpdoc to make your editor inspect meta items.
 	 */
-	class NBPC_Register_Comment_Meta extends NBPC_Reigster_Base_Meta {
+	class NBPC_Register_Comment_Meta extends NBPC_Register_Base_Meta {
 		/**
 		 * Define items here.
 		 *

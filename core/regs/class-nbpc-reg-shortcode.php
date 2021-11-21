@@ -23,9 +23,9 @@ if ( ! class_exists( 'NBPC_Reg_Shortcode' ) ) {
 		public $heading_action;
 
 		/**
-		 * @param string          $tag
-		 * @param string|callable $callback
-		 * @param null            $heading_action
+		 * @param string               $tag
+		 * @param string|callable      $callback
+		 * @param string|callable|null $heading_action
 		 */
 		public function __construct( string $tag, $callback, $heading_action = null ) {
 			$this->tag            = $tag;

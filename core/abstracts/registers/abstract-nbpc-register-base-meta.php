@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Reigster_Base_Meta' ) ) {
-	abstract class NBPC_Reigster_Base_Meta implements NBPC_Register {
+if ( ! class_exists( 'NBPC_Register_Base_Meta' ) ) {
+	abstract class NBPC_Register_Base_Meta implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
 		/**

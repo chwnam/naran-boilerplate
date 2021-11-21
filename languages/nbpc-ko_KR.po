@@ -1,0 +1,43 @@
+# Copyright (C) 2021 changwoo
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Naran Boilerplate Code 1.1.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/naran-boilerplate-"
+"code\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-11-21T00:05:27+09:00\n"
+"PO-Revision-Date: 2021-11-21 00:08+0900\n"
+"X-Generator: Poedit 2.3\n"
+"X-Domain: nbpc\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: ko_KR\n"
+
+#. Plugin Name of the plugin
+msgid "Naran Boilerplate Code"
+msgstr "나란 보일러플레이트 코드"
+
+#. Plugin URI of the plugin
+msgid "https://github.com/chwnam/naran-boilerplate-code"
+msgstr "https://github.com/chwnam/naran-boilerplate-code"
+
+#. Description of the plugin
+msgid "Naran boilerplate code for WordPress plugins/themes."
+msgstr "워드프레스 플러그인/테마 개발을 위한 나란 보일러플레이트 코드."
+
+#. Author of the plugin
+msgid "changwoo"
+msgstr "changwoo"
+
+#. Author URI of the plugin
+msgid "https://blog.changwoo.pe.kr/"
+msgstr "https://blog.changwoo.pe.kr/"
+
+#. translators: formatted module name.
+#: core/abstracts/abstract-nbpc-main-base.php:131
+msgid "%s is invalid for callback."
+msgstr "%s는 올바른 콜백이 아닙니다."
