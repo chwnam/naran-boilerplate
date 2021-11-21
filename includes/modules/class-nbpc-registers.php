@@ -28,6 +28,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 	 * @property-read NBPC_Register_Submit        $submit
 	 * @property-read NBPC_Register_Taxonomy      $taxonomy
 	 * @property-read NBPC_Register_Term_Meta     $term_meta
+	 * @property-read NBPC_Register_Uninstall     $uninstall
 	 * @property-read NBPC_Register_User_Meta     $user_meta
 	 */
 	class NBPC_Registers implements NBPC_Module {
@@ -53,8 +54,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 					'submit'        => NBPC_Register_Submit::class,
 					'taxonomy'      => NBPC_Register_Taxonomy::class,
 					'term_meta'     => NBPC_Register_Term_Meta::class,
-					// NOTE: 'uninstall' is not a part of registers submodules.
-					//       Because it 'uninstall' hook requires static method callback.
+					'uninstall'     => function () { return new NBPC_Register_Uninstall(); },
 					'user_meta'     => NBPC_Register_User_Meta::class,
 				]
 			);
