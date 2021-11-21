@@ -94,7 +94,10 @@ class NBPC_Prefix_Changer {
 			}
 		}
 
+		$this->code_patch( $this->root_directory . '/composer.json' );
 		$this->code_patch( $this->root_directory . '/index.php' );
+		$this->code_patch( $this->root_directory . '/package.json' );
+		$this->code_patch( $this->root_directory . '/phpunit.xml' );
 	}
 
 	private function code_patch( string $path ) {
@@ -122,9 +125,40 @@ class NBPC_Prefix_Changer {
 		}
 	}
 
-	private function get_uppercased_prefix( string $prefix ): string {
-		return str_replace( '-', '_', strtoupper( $prefix ) );
+	public function change_language_files() {
+		$dir = "$this->root_directory/languages";
+
+		if ( file_exists( $dir ) && is_dir( $dir ) && is_executable( $dir ) ) {
+			$iterator = new RegexIterator(
+				new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $dir ) ),
+				'/\.pot?$/i',
+				RegexIterator::MATCH
+			);
+
+			foreach ( $iterator as $info ) {
+				/** @var SplFileInfo $info */
+				$this->code_patch( $info->getRealPath() );
+
+				$base = $info->getBasename();
+				$path = $info->getPath();
+
+				$new_base = str_replace( $this->old_prefix, $this->new_prefix, $base );
+				$old_path = $info->getRealPath();
+				$new_path = "$path/$new_base";
+
+				if ( $old_path !== $new_path ) {
+					rename( $old_path, $new_path );
+					$relative_from = substr( $old_path, $this->root_len + 1 );
+					$relative_to   = substr( $new_path, $this->root_len + 1 );
+					echo "Renamed: $relative_from ==> $relative_to\n";
+				}
+			}
+		}
 	}
+  
+  private function get_uppercased_prefix( string $prefix ): string {
+		return str_replace( '-', '_', strtoupper( $prefix ) );
+  }   
 }
 
 
@@ -166,6 +200,7 @@ if ( 'cli' === php_sapi_name() ) {
 			$change = new NBPC_Prefix_Changer( $root_dir, $old_prefix, $new_prefix );
 			$change->change_source_codes();
 			$change->change_php_file_name_prefixes();
+			$change->change_language_files();
 		}
 	} catch ( RuntimeException $e ) {
 		die( 'Error: ' . $e->getMessage() . PHP_EOL );
