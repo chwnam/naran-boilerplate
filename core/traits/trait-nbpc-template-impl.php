@@ -113,8 +113,12 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 			);
 		}
 
-		protected function enqueue_script( string $handle, $once = false ): NBPC_Sciprt_Enqueue {
-			return new NBPC_Sciprt_Enqueue( $this, $handle, $once );
+		protected function enqueue_script( string $handle ): self {
+			if ( wp_script_is( $handle, 'registered' ) ) {
+				wp_enqueue_script( $handle );
+			}
+
+			return $this;
 		}
 
 		protected function enqueue_style( string $handle ): self {
@@ -123,6 +127,28 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 			}
 
 			return $this;
+		}
+
+		/**
+		 * Return a script helper.
+		 *
+		 * @param string $handle
+		 *
+		 * @return NBPC_Script_Helper
+		 */
+		protected function script( string $handle ): NBPC_Script_Helper {
+			return new NBPC_Script_Helper( $this, $handle );
+		}
+
+		/**
+		 * Return a style helper.
+		 *
+		 * @param string $handle
+		 *
+		 * @return NBPC_Style_Helper
+		 */
+		protected function style( string $handle ): NBPC_Style_Helper {
+			return new NBPC_Style_Helper( $this, $handle );
 		}
 	}
 }
