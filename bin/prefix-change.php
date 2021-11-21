@@ -37,7 +37,7 @@ class NBPC_Prefix_Changer {
 			);
 		}
 
-		$pattern = '/^[a-z0-9]+$/';
+		$pattern = '/^[a-z][\-a-z0-9]+$/';
 
 		if ( ! preg_match( $pattern, $this->old_prefix ) || ! preg_match( $pattern, $this->new_prefix ) ) {
 			throw new RuntimeException( 'Prefixes allow lowercase alphabets and numbers only.' );
@@ -102,8 +102,16 @@ class NBPC_Prefix_Changer {
 
 		if ( $content ) {
 			$content = str_replace(
-				[ strtoupper( $this->old_prefix ), $this->old_prefix ],
-				[ strtoupper( $this->new_prefix ), $this->new_prefix ],
+				[
+					// search
+					$this->get_uppercased_prefix( $this->old_prefix ),
+					$this->old_prefix
+				],
+				[
+					// replace
+					$this->get_uppercased_prefix( $this->new_prefix ),
+					$this->new_prefix
+				],
 				$content
 			);
 
@@ -113,6 +121,10 @@ class NBPC_Prefix_Changer {
 			echo "Code patched: {$relative}\n";
 		}
 	}
+
+	private function get_uppercased_prefix( string $prefix ): string {
+		return str_replace( '-', '_', strtoupper( $prefix ) );
+	}
 }
 
 
@@ -120,7 +132,7 @@ function help() {
 	echo "\nNaran boilerplate code prefix changer\n";
 	echo "=====================================\n\n";
 	echo "Usage: prefix-change.php [NEW_PREFIX] [OLD_PREFIX]\n\n";
-	echo "       NEW_PREFIX your new prefix string. Accepts only lowercase alphabets, and numbers.\n\n";
+	echo "       NEW_PREFIX your new prefix string. Accepts only lowercase alphabets, numbers, and hyphen. The first character must be an alphabet.\n\n";
 	echo "       OLD_PREFIX current prefix string. Defaults to 'nbpc'.\n\n";
 }
 
