@@ -30,6 +30,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 	 * @property-read NBPC_Register_Term_Meta     $term_meta
 	 * @property-read NBPC_Register_Uninstall     $uninstall
 	 * @property-read NBPC_Register_User_Meta     $user_meta
+	 * @property-read NBPC_Register_WP_CLI        $wp_cli
 	 */
 	class NBPC_Registers implements NBPC_Module {
 		use NBPC_Submodule_Impl;
@@ -56,6 +57,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 					'term_meta'     => NBPC_Register_Term_Meta::class,
 					'uninstall'     => function () { return new NBPC_Register_Uninstall(); },
 					'user_meta'     => NBPC_Register_User_Meta::class,
+					'wp_cli'        => NBPC_Register_WP_CLI::class,
 				]
 			);
 		}
