@@ -27,6 +27,13 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 		 */
 		private array $found_tags;
 
+		/**
+		 * Regular expression for finding shortcodes in post_content.
+		 *
+		 * @var string
+		 */
+		private string $regex;
+
 		public function __construct() {
 			$this
 				->add_action( 'init', 'register' )
@@ -36,6 +43,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 			$this->real_callbacks  = [];
 			$this->heading_actions = [];
 			$this->found_tags      = [];
+			$this->regex           = '';
 		}
 
 		public function register() {
@@ -86,7 +94,6 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 				return call_user_func_array( $callback, [ $atts, $enclosed, $tag ] );
 			} else {
 				return '';
-
 			}
 		}
 
@@ -100,28 +107,24 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 				return;
 			}
 
+			if ( !$this->regex ) {
+				$this->regex = '/' . get_shortcode_regex( array_keys( $this->heading_actions ) ) . '/';
+			}
+
 			/**
 			 * @var array $matches idx 2: shortocde name. (tag)
 			 *                     idx 5: enclosed text.
 			 *
 			 * @see get_shortcode_regex()
 			 */
-			preg_match_all(
-				'/' . get_shortcode_regex( array_keys( $this->heading_actions ) ) . '/',
-				$content,
-				$matches,
-				PREG_SET_ORDER
-			);
-
-			if ( empty( $matches ) ) {
-				return;
-			}
-
-			foreach ( $matches as $shortcode ) {
-				if ( isset( $this->heading_actions[ $shortcode[2] ] ) ) {
-					$this->found_tags[] = $shortcode[2];
-				} elseif ( ! empty( $shortcode[5] ) ) {
-					$this->find_shortcode( $shortcode[5] );
+			if ( preg_match_all( $this->regex, $content, $matches, PREG_SET_ORDER ) ) {
+				foreach ( $matches as $shortcode ) {
+					if ( isset( $this->heading_actions[ $shortcode[2] ] ) ) {
+						$this->found_tags[] = $shortcode[2];
+					}
+					if ( ! empty( $shortcode[5] ) ) {
+						$this->find_shortcode( $shortcode[5] );
+					}
 				}
 			}
 		}
