@@ -24,6 +24,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 	 * @property-read NBPC_Register_Post_Meta     $post_meta
 	 * @property-read NBPC_Register_Post_Type     $post_type
 	 * @property-read NBPC_Register_Script        $script
+	 * @property-read NBPC_Register_Shortcode     $shortcode
 	 * @property-read NBPC_Register_Style         $style
 	 * @property-read NBPC_Register_Submit        $submit
 	 * @property-read NBPC_Register_Taxonomy      $taxonomy
@@ -51,6 +52,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 					'post_meta'     => NBPC_Register_Post_Meta::class,
 					'post_type'     => NBPC_Register_Post_Type::class,
 					'script'        => NBPC_Register_Script::class,
+					'shortcode'     => NBPC_Register_Shortcode::class,
 					'style'         => NBPC_Register_Style::class,
 					'submit'        => NBPC_Register_Submit::class,
 					'taxonomy'      => NBPC_Register_Taxonomy::class,
