@@ -37,10 +37,10 @@ class NBPC_Prefix_Changer {
 			);
 		}
 
-		$pattern = '/^[a-z][\-a-z0-9]+$/';
+		$pattern = '/^[a-z][_a-z0-9]+$/';
 
 		if ( ! preg_match( $pattern, $this->old_prefix ) || ! preg_match( $pattern, $this->new_prefix ) ) {
-			throw new RuntimeException( 'Prefixes allow lowercase alphabets and numbers only.' );
+			throw new RuntimeException( 'Prefixes allow lowercase alphabets, numbers, and unserscores only.' );
 		} elseif ( $this->old_prefix === $this->new_prefix ) {
 			throw new RuntimeException( 'Old and new prefixes are the same.' );
 		}
@@ -98,25 +98,24 @@ class NBPC_Prefix_Changer {
 		$this->code_patch( $this->root_directory . '/index.php' );
 		$this->code_patch( $this->root_directory . '/package.json' );
 		$this->code_patch( $this->root_directory . '/phpunit.xml' );
+		$this->code_patch( $this->root_directory . '/uninstall.php' );
 	}
 
 	private function code_patch( string $path ) {
 		$content = file_get_contents( $path );
 
 		if ( $content ) {
-			$content = str_replace(
-				[
-					// search
-					$this->get_uppercased_prefix( $this->old_prefix ),
-					$this->old_prefix
-				],
-				[
-					// replace
-					$this->get_uppercased_prefix( $this->new_prefix ),
-					$this->new_prefix
-				],
-				$content
-			);
+			$search = [
+				strtoupper( $this->old_prefix ),
+				$this->old_prefix
+			];
+
+			$replace = [
+				strtoupper( $this->new_prefix ),
+				$this->new_prefix
+			];
+
+			$content = str_replace( $search, $replace, $content );
 
 			file_put_contents( $path, $content );
 
@@ -155,10 +154,6 @@ class NBPC_Prefix_Changer {
 			}
 		}
 	}
-  
-  private function get_uppercased_prefix( string $prefix ): string {
-		return str_replace( '-', '_', strtoupper( $prefix ) );
-  }   
 }
 
 
