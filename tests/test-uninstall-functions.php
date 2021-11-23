@@ -77,13 +77,25 @@ class Test_Uninstall_Functions extends WP_UnitTestCase {
 		remove_filter( 'query', $callback );
 	}
 
+	private function get_accessible_modules( NBPC_Module $registers ): ReflectionProperty {
+		try {
+			$ref     = new ReflectionClass( get_class( $registers ) );
+			$modules = $ref->getProperty( 'modules' );
+			$modules->setAccessible( true );
+		} catch ( ReflectionException $e ) {
+			die( $e->getMessage() );
+		}
+
+		return $modules;
+	}
+
 	public function test_nbpc_cleanup_option() {
 		global $wpdb;
 
 		$registers = nbpc()->registers;
 
 		// Change accessibility of nbpc()->registers->modules
-		$modules_ref = $this->get_accessible_modules( $registers, 'modules' );
+		$modules_ref = $this->get_accessible_modules( $registers );
 
 		$m = $modules_ref->getValue( $registers );
 
@@ -118,7 +130,7 @@ class Test_Uninstall_Functions extends WP_UnitTestCase {
 		$registers = nbpc()->registers;
 
 		// Change accessibility of nbpc()->registers->modules
-		$modules_ref = $this->get_accessible_modules( $registers, 'modules' );
+		$modules_ref = $this->get_accessible_modules( $registers );
 
 		$m = $modules_ref->getValue( $registers );
 
@@ -162,17 +174,54 @@ class Test_Uninstall_Functions extends WP_UnitTestCase {
 		$this->assertEquals( 0, $t_cnt );
 	}
 
-//	public function test_nbpc_cleanup_posts() {} TODO: implement this test.
+	public function test_nbpc_cleanup_posts() {
+		global $wpdb;
 
-	private function get_accessible_modules( NBPC_Module $registers ): ReflectionProperty {
-		try {
-			$ref     = new ReflectionClass( get_class( $registers ) );
-			$modules = $ref->getProperty( 'modules' );
-			$modules->setAccessible( true );
-		} catch ( ReflectionException $e ) {
-			die( $e->getMessage() );
+		$registers = nbpc()->registers;
+
+		// Change accessibility of nbpc()->registers->modules
+		$modules_ref = $this->get_accessible_modules( $registers );
+
+		$m = $modules_ref->getValue( $registers );
+
+		$m['post_type'] = new class() extends NBPC_Register_Base_Post_Type {
+			public function get_items(): Generator {
+				yield new NBPC_Reg_Post_Type( 'nbpc_cpt_1', [] );
+				yield new NBPC_Reg_Post_Type( 'nbpc_cpt_2', [] );
+			}
+		};
+
+		$modules_ref->setValue( $registers, $m );
+
+		$registers->post_type->register();
+
+		// Delete post types if exists.
+		$q = new WP_Query(
+			[
+				'post_type'        => [ 'nbpc_cpt_1', 'npbc_cpt_2' ],
+				'post_status'      => 'any',
+				'nopaging'         => true,
+				'suppress_filtess' => true,
+				'fields'           => 'ids',
+			]
+		);
+		foreach ( $q->posts as $post_id ) {
+			wp_delete_post( $post_id, true );
 		}
 
-		return $modules;
+		// Generate posts.
+		$p1 = $this->factory()->post->create_many( 10, [ 'post_type' => 'nbpc_cpt_1' ] );
+		$p2 = $this->factory()->post->create_many( 10, [ 'post_type' => 'nbpc_cpt_2' ] );
+
+		// Check if count is okay.
+		$query  = "SELECT COUNT(*) FROM $wpdb->posts WHERE post_type IN ('nbpc_cpt_1', 'nbpc_cpt_2')";
+		$result = $wpdb->get_var( $query );
+		$this->assertEquals( 20, $result );
+
+		nbpc_cleanup_posts();
+
+		// Check if posts are actually gone.
+		$result = $wpdb->get_var( $query );
+		$this->assertEquals( 0, $result );
 	}
 }

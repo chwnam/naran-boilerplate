@@ -142,7 +142,7 @@ if ( ! function_exists( 'nbpc_cleanup_posts' ) ) {
 
 		$post_types = array_filter( array_unique( $post_types ) );
 		if ( $post_types ) {
-			$placeholder = array_pad( [], '%s', count( $post_types ) );
+			$placeholder = implode( ', ', array_pad( [], count( $post_types ), '%s' ) );
 			$query       = "DELETE FROM {$wpdb->posts} WHERE post_type IN ({$placeholder})";
 			$wpdb->query( $wpdb->prepare( $query, $post_types ) );
 		}
