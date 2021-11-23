@@ -1,5 +1,5 @@
 {
-  "name": "naran/boilerplate-code",
+  "name": "naran/boilerplate",
   "description": "Naran boilerplate code for WordPress plugins/themes.",
   "type": "wordpress-plugin",
   "minimum-stability": "dev",
