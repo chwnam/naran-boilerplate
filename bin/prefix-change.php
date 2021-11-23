@@ -94,11 +94,18 @@ class NBPC_Prefix_Changer {
 			}
 		}
 
-		$this->code_patch( $this->root_directory . '/composer.json' );
-		$this->code_patch( $this->root_directory . '/index.php' );
-		$this->code_patch( $this->root_directory . '/package.json' );
-		$this->code_patch( $this->root_directory . '/phpunit.xml' );
-		$this->code_patch( $this->root_directory . '/uninstall.php' );
+		$root_files = [
+			'composer.json',
+			'custom.dic',
+			'index.php',
+			'package.json',
+			'phpunit.xml',
+			'uninstall.php',
+		];
+
+		foreach ( $root_files as $root_file ) {
+			$this->code_patch( $this->root_directory . '/' . $root_file );
+		}
 	}
 
 	private function code_patch( string $path ) {
