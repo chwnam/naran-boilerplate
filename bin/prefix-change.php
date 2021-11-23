@@ -22,8 +22,8 @@ class NBPC_Prefix_Changer {
 	public function __construct( string $root_directory, string $old_prefix, string $new_prefix ) {
 		$this->root_directory = rtrim( realpath( $root_directory ), '\\/' );
 		$this->root_len       = strlen( $this->root_directory );
-		$this->old_prefix     = strtolower( trim( $old_prefix, '_-' ) );
-		$this->new_prefix     = strtolower( trim( $new_prefix, '-_' ) );
+		$this->old_prefix     = $old_prefix;
+		$this->new_prefix     = $new_prefix;
 
 		if (
 			! file_exists( $this->root_directory ) ||
@@ -37,17 +37,46 @@ class NBPC_Prefix_Changer {
 			);
 		}
 
-		$pattern = '/^[a-z][_a-z0-9]+$/';
-
-		if ( ! preg_match( $pattern, $this->old_prefix ) || ! preg_match( $pattern, $this->new_prefix ) ) {
-			throw new RuntimeException( 'Prefixes allow lowercase alphabets, numbers, and unserscores only.' );
-		} elseif ( $this->old_prefix === $this->new_prefix ) {
+		if ( $this->old_prefix === $this->new_prefix ) {
 			throw new RuntimeException( 'Old and new prefixes are the same.' );
 		}
+
+		if ( $this->old_prefix !== 'nbpc' ) {
+			self::validate_prefix( $this->old_prefix );
+		}
+
+		self::validate_prefix( $this->new_prefix );
+	}
+
+	/**
+	 * @param string $prefix
+	 *
+	 * @return bool
+	 * @throws RuntimeException
+	 */
+	public static function validate_prefix( string $prefix ): bool {
+		/*
+		 * 1. It accepts lowercase alphabets, numbers, dashes, and underscores.
+		 * 2. The first character must be a lowercase alphabet.
+		 * 3. A dash and underscore cannot be used more than once in a row, e.g. st__gx, hp--1t.
+		 * 4. Prefix cannot end with a dash or a underscore.
+		 * 5. Prefix cannot contain 'npbc', or 'cpbn'.
+		 */
+		$pattern = '/^([a-z][a-z0-9]*)((_|-)[a-z0-9]+)*$/';
+
+		if ( ! preg_match( $pattern, $prefix ) ) {
+			throw new RuntimeException( "Prefix `$prefix` is invalid." );
+		} elseif ( false !== strpos( $prefix, 'nbpc' ) || false !== strpos( $prefix, 'cpbn' ) ) {
+			throw new RuntimeException( "Prefix cannot contain 'nbpc' or 'cpbn'." );
+		}
+
+		return true;
 	}
 
 	public function change_php_file_name_prefixes() {
-		$pattern = "/^(abstract|class|interface|trait)-{$this->old_prefix}-(.+)$/";
+		$old_prefix = $this->lower_dash( $this->old_prefix );
+		$new_prefix = $this->lower_dash( $this->new_prefix );
+		$pattern    = "/^(abstract|class|interface|trait)-$old_prefix-(.+)$/";
 
 		foreach ( $this->subdirs as $subdir ) {
 			$iterator = new RegexIterator(
@@ -64,7 +93,7 @@ class NBPC_Prefix_Changer {
 				$path = $info->getPath();
 
 				if ( preg_match( $pattern, $base, $matches ) ) {
-					$new_base = "$matches[1]-{$this->new_prefix}-$matches[2]";
+					$new_base = "$matches[1]-$new_prefix-$matches[2]";
 					$old_path = $info->getRealPath();
 					$new_path = "{$path}/{$new_base}";
 
@@ -72,7 +101,8 @@ class NBPC_Prefix_Changer {
 
 					$relative_from = substr( $old_path, $this->root_len + 1 );
 					$relative_to   = substr( $new_path, $this->root_len + 1 );
-					echo "Renamed: {$relative_from} ==> {$relative_to}\n";
+
+					echo "Renamed: $relative_from ==> $relative_to" . PHP_EOL;
 				}
 			}
 		}
@@ -108,31 +138,10 @@ class NBPC_Prefix_Changer {
 		}
 	}
 
-	private function code_patch( string $path ) {
-		$content = file_get_contents( $path );
-
-		if ( $content ) {
-			$search = [
-				strtoupper( $this->old_prefix ),
-				$this->old_prefix
-			];
-
-			$replace = [
-				strtoupper( $this->new_prefix ),
-				$this->new_prefix
-			];
-
-			$content = str_replace( $search, $replace, $content );
-
-			file_put_contents( $path, $content );
-
-			$relative = substr( $path, $this->root_len + 1 );
-			echo "Code patched: {$relative}\n";
-		}
-	}
-
 	public function change_language_files() {
-		$dir = "$this->root_directory/languages";
+		$old_prefix = $this->lower_dash( $this->old_prefix );
+		$new_prefix = $this->lower_dash( $this->new_prefix );
+		$dir        = "$this->root_directory/languages";
 
 		if ( file_exists( $dir ) && is_dir( $dir ) && is_executable( $dir ) ) {
 			$iterator = new RegexIterator(
@@ -148,18 +157,60 @@ class NBPC_Prefix_Changer {
 				$base = $info->getBasename();
 				$path = $info->getPath();
 
-				$new_base = str_replace( $this->old_prefix, $this->new_prefix, $base );
+				$new_base = str_replace( $old_prefix, $new_prefix, $base );
 				$old_path = $info->getRealPath();
 				$new_path = "$path/$new_base";
 
 				if ( $old_path !== $new_path ) {
 					rename( $old_path, $new_path );
+
 					$relative_from = substr( $old_path, $this->root_len + 1 );
 					$relative_to   = substr( $new_path, $this->root_len + 1 );
-					echo "Renamed: $relative_from ==> $relative_to\n";
+
+					echo "Renamed: $relative_from ==> $relative_to" . PHP_EOL;
 				}
 			}
 		}
+	}
+
+	private function code_patch( string $path ) {
+		$content = file_get_contents( $path );
+
+		if ( $content ) {
+			$search = [
+				"'" . $this->lower_dash( $this->old_prefix ) . "'",
+				'"' . $this->lower_dash( $this->old_prefix ) . '"',
+				$this->lower_underscore( $this->old_prefix ),
+				$this->upper_underscore( $this->old_prefix ),
+			];
+
+			$replace = [
+				"'" . $this->lower_dash( $this->new_prefix ) . "'",
+				'"' . $this->lower_dash( $this->new_prefix ) . '"',
+				$this->lower_underscore( $this->new_prefix ),
+				$this->upper_underscore( $this->new_prefix ),
+			];
+
+			$content = str_replace( $search, $replace, $content );
+
+			file_put_contents( $path, $content );
+
+			$relative = substr( $path, $this->root_len + 1 );
+
+			echo "Code patched: $relative" . PHP_EOL;
+		}
+	}
+
+	private function lower_dash( string $string ): string {
+		return strtolower( str_replace( '_', '-', $string ) );
+	}
+
+	private function lower_underscore( string $string ): string {
+		return strtolower( str_replace( '-', '_', $string ) );
+	}
+
+	private function upper_underscore( string $string ): string {
+		return strtoupper( str_replace( '-', '_', $string ) );
 	}
 }
 
@@ -175,7 +226,24 @@ function help() {
 
 function confirm( string $message ): bool {
 	echo $message . " [Y/n] ";
-	return 'y' === trim( strtolower( readline() ) );
+	return 'y' === trim( strtolower( fgets( STDIN ) ) );
+}
+
+
+function get_new_prefix(): string {
+	while ( true ) {
+		try {
+			echo 'Please enter your new prefix: ';
+			$new_prefix = trim( fgets( STDIN ) );
+			if ( true === NBPC_Prefix_Changer::validate_prefix( $new_prefix ) ) {
+				break;
+			}
+		} catch ( RuntimeException $e ) {
+			echo 'Error: ' . $e->getMessage() . PHP_EOL;
+		}
+	}
+
+	return $new_prefix;
 }
 
 
@@ -183,8 +251,7 @@ if ( 'cli' === php_sapi_name() ) {
 	$root_dir = dirname( __DIR__ );
 
 	if ( 1 === $argc ) {
-		echo 'Please input your new prefix: ';
-		$new_prefix = trim( fgets( STDIN ) );
+		$new_prefix = get_new_prefix();
 		$old_prefix = 'nbpc';
 	} elseif ( 2 === $argc ) {
 		$new_prefix = $argv[1];
