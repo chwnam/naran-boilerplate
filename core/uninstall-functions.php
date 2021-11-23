@@ -94,21 +94,20 @@ if ( ! function_exists( 'nbpc_cleanup_terms' ) ) {
 
 		$taxonomies = array_filter( array_unique( $taxonomies ) );
 		if ( $taxonomies ) {
-			$terms = get_terms(
-				[
-					'taxonomy'        => $taxonomies,
-					'hide_empty'      => false,
-					'suppress_filter' => true,
-				]
-			);
+			$placeholder = implode( ', ', array_pad( [], count( $taxonomies ), '%s' ) );
 
-			if ( is_array( $terms ) ) {
+			$sql = "SELECT term_taxonomy_id, term_id FROM {$wpdb->term_taxonomy}" .
+			       " WHERE taxonomy IN ({$placeholder})";
+
+			$terms = $wpdb->get_results( $wpdb->prepare( $sql, $taxonomies ) );
+
+			if ( is_array( $terms ) && count( $terms ) ) {
 				// delete term_relationships, term_taxonomies, terms.
 				$tax_ids         = wp_list_pluck( $terms, 'term_taxonomy_id' );
-				$tax_placeholder = array_pad( [], '%d', count( $tax_ids ) );
+				$tax_placeholder = implode( ', ', array_pad( [], count( $tax_ids ), '%d' ) );
 
 				$t_ids         = wp_list_pluck( $terms, 'term_id' );
-				$t_placeholder = array_pad( [], '%d', count( $t_ids ) );
+				$t_placeholder = implode( ', ', array_pad( [], count( $t_ids ), '%d' ) );
 
 				$obj_query = "DELETE FROM {$wpdb->term_relationships} WHERE term_taxonomy_id IN ({$tax_placeholder})";
 				$tax_query = "DELETE FROM {$wpdb->term_taxonomy} WHERE term_taxonomy_id IN ({$tax_placeholder})";
