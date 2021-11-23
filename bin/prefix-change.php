@@ -233,7 +233,7 @@ function confirm( string $message ): bool {
 function get_new_prefix(): string {
 	while ( true ) {
 		try {
-			echo 'Please enter your new prefix: ';
+			echo 'Please enter your new prefix (Ctrl+C to exit): ';
 			$new_prefix = trim( fgets( STDIN ) );
 			if ( true === NBPC_Prefix_Changer::validate_prefix( $new_prefix ) ) {
 				break;
@@ -251,6 +251,7 @@ if ( 'cli' === php_sapi_name() ) {
 	$root_dir = dirname( __DIR__ );
 
 	if ( 1 === $argc ) {
+		question:
 		$new_prefix = get_new_prefix();
 		$old_prefix = 'nbpc';
 	} elseif ( 2 === $argc ) {
@@ -270,6 +271,8 @@ if ( 'cli' === php_sapi_name() ) {
 			$change->change_source_codes();
 			$change->change_php_file_name_prefixes();
 			$change->change_language_files();
+		} elseif ( 1 === $argc ) {
+			goto question;
 		}
 	} catch ( RuntimeException $e ) {
 		die( 'Error: ' . $e->getMessage() . PHP_EOL );
