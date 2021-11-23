@@ -24,6 +24,15 @@ composer create-project --no-dev naran/boilerplate my-plugin
 ```
 
 성공적으로 받아지면 composer는 새로운 접두어 적용을 위해 사용자에게 입력을 받습니다.
+```
+Please enter your new prefix (Ctrl+C to exit): 
+```
+여기서 적절한 접두어를 정해 입력합니다. 만약 'foo'를 접두로 입력하면 아래처럼 확인을 받습니다. 'y'를 누르면
+받아진 코드에 대해 파일 이름과 코드에 대해 접두어 변경을 실행하게 됩니다. 
+```
+Replace prefix from `npbc` to `foo`. Are you sure? [Y/n]
+```
+
 접두어는 다음 규칙을 따릅니다.
 
 1. 입력시 영소문자, 숫자, 대시(-), 밑줄(_)만 사용할 수 있습니다.
