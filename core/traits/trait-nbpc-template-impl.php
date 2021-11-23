@@ -16,7 +16,7 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 			$variant   = sanitize_key( $variant );
 			$ext       = ltrim( $ext, '.' );
 
-			$cache_name = "{$tmpl_type}:{$relpath}:{$variant}";
+			$cache_name = "$tmpl_type:$relpath:$variant:$ext";
 			$cache      = nbpc()->get( 'nbpc:locate_file', [] );
 
 			if ( isset( $cache[ $cache_name ] ) ) {
@@ -29,16 +29,20 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 					$dir = '.';
 				}
 
+				$styl = get_stylesheet_directory();
+				$tmpl = get_template_directory();
+				$plug = dirname(nbpc()->get_main_file());
+
 				$paths = [
-					$variant ? STYLESHEETPATH . "/nbpc/{$dir}/{$file_name}-{$variant}.{$ext}" : false,
-					STYLESHEETPATH . "/nbpc/{$dir}/{$file_name}.{$ext}",
-					$variant ? TEMPLATEPATH . "/nbpc/{$dir}/{$file_name}-{$variant}.{$ext}" : false,
-					TEMPLATEPATH . "/nbpc/{$dir}/{$file_name}.{$ext}",
-					$variant ? plugin_dir_path( nbpc()->get_main_file() ) . "includes/templates/{$dir}/{$file_name}-{$variant}.{$ext}" : false,
-					plugin_dir_path( nbpc()->get_main_file() ) . "includes/templates/{$dir}/{$file_name}.{$ext}",
+					$variant ? "$styl/nbpc/$dir/$file_name-$variant.$ext" : false,
+					"$styl/nbpc/$dir/$file_name.$ext",
+					$variant ? "$tmpl/nbpc/$dir/$file_name-$variant.$ext" : false,
+					"$tmpl/nbpc/$dir}/$file_name.$ext",
+					$variant ? "$plug/includes/templates/$dir/$file_name-$variant.$ext" : false,
+					"$plug/includes/templates/$dir/$file_name.$ext",
 				];
 
-				$paths   = apply_filters( 'nbpc_locate_file_paths', array_filter( $paths ) );
+				$paths   = apply_filters( 'nbpc_locate_file_paths', array_filter( $paths ), $cache_name );
 				$located = false;
 
 				foreach ( (array) $paths as $path ) {
