@@ -53,7 +53,7 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 			?int $priority = null,
 			int $accepted_args = 1
 		): self {
-			add_action(
+			add_filter(
 				$tag,
 				$this->__hook_parse_callback( $function_to_add ),
 				$this->__hook_get_priority( $priority ),
