@@ -17,7 +17,10 @@
     "make-json": "@php $(which wp) i18n make-json ./languages --no-purge",
     "version": "@php bin/sync-version.php index.php",
     "test": "vendor/bin/phpunit",
-    "post-create-project-cmd": "@php bin/prefix-change.php && @composer daa"
+    "post-create-project-cmd": [
+      "@php bin/prefix-change.php",
+      "@composer daa"
+    ]
   },
   "scripts-descriptions": {
     "daa": "Run `composer dump-autoload --classmap-authoritative --no-dev`.",
