@@ -85,41 +85,8 @@ if ( ! class_exists( 'NBPC_Script_Helper' ) ) {
 			return $this;
 		}
 
-		/**
-		 * Enqueue EJS template.
-		 *
-		 * @param string $relpath
-		 * @param array  $context
-		 * @param string $variant
-		 *
-		 * @return self
-		 */
-		public function ejs( string $relpath, array $context = [], string $variant = '' ): self {
-			$this->parent->enqueue_ejs( $relpath, $context, $variant );
-			return $this;
-		}
-
-		/**
-		 * Render wrapper.
-		 *
-		 * @param string $relpath
-		 * @param array  $context
-		 * @param string $variant
-		 * @param bool   $echo
-		 * @param string $ext
-		 *
-		 * @return string|self If $echo is true, return self. Return rendered output string on false.
-		 */
-		public function render(
-			string $relpath,
-			array $context = [],
-			string $variant = '',
-			bool $echo = true,
-			string $ext = 'php'
-		) {
-			$output = $this->parent->render( $relpath, $context, $variant, $echo, $ext );
-
-			return $echo ? $this : $output;
+		public function then() {
+			return $this->parent;
 		}
 	}
 }

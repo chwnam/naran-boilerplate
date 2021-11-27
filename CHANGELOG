@@ -1,3 +1,14 @@
+1.2.1
+-----
+2021-11-27
+
+- Add 'npbc_located_path' filter to NBPC_Template_Impl::locate_file() method.
+- Fix NBPC_Hook_Impl::add_filter() was calling add_action() insted of add_filter().
+- Fix error that occured after calling 'composer create-project'.
+- Remove NBPC_Script_Helper::ejs(), and NBPC_Script_Helper::render().
+- Add NBPC_Script_Helper::then(), and NBPC_Style_Helper::then().
+
+
 1.2.0
 -----
 2021-11-23

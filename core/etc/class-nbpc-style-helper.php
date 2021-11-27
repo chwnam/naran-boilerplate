@@ -51,5 +51,9 @@ if ( ! class_exists( 'NBPC_Style_Helper' ) ) {
 			wp_enqueue_style( $this->handle );
 			return $this;
 		}
+
+		public function then() {
+			return $this->parent;
+		}
 	}
 }
