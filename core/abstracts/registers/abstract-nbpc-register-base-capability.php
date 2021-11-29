@@ -17,5 +17,13 @@ if ( ! class_exists( 'NBPC_Register_Base_Capability' ) ) {
 				}
 			}
 		}
+
+		public function unregister() {
+			foreach ( $this->get_items() as $item ) {
+				if ( $item instanceof NBPC_Reg_Capability ) {
+					$item->unregister();
+				}
+			}
+		}
 	}
 }

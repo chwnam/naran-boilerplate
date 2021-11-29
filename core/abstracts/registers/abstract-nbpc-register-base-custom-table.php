@@ -20,5 +20,13 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 				}
 			}
 		}
+
+		public function unregister() {
+			foreach( $this->get_items() as $item ) {
+				if ( $item instanceof NBPC_Reg_Custom_Table ) {
+					$item->unregister();
+				}
+			}
+		}
 	}
 }
