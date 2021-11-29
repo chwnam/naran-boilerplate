@@ -1,3 +1,15 @@
+1.2.2
+-----
+2021-11-29
+
+- NBPC_Main::extra_initialize() added.
+- New registers/regs added.
+  - Capability, Role: manage roles and caps.
+  - Custom Table: manage custom table creation, and drop.
+  - Sidebar: manage sidebar.
+  - Widget: manage widget.
+
+
 1.2.1
 -----
 2021-11-27
