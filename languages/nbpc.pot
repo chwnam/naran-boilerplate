@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Naran Boilerplate Code 1.1.2\n"
+"Project-Id-Version: Naran Boilerplate Code 1.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/naran-boilerplate-code\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-11-21T00:05:27+09:00\n"
+"POT-Creation-Date: 2021-11-29T16:12:48+09:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: nbpc\n"
@@ -37,4 +37,12 @@ msgstr ""
 #. translators: formatted module name.
 #: core/abstracts/abstract-nbpc-main-base.php:131
 msgid "%s is invalid for callback."
+msgstr ""
+
+#: includes/class-nbpc-main.php:45
+msgid "NBPC settings"
+msgstr ""
+
+#: includes/class-nbpc-main.php:46
+msgid "Settings"
 msgstr ""

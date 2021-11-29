@@ -173,6 +173,19 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		public function init_conditional_modules() {
 		}
 
+		protected function initialize() {
+			$this->assign_modules( $this->get_modules() );
+
+			$this
+				->add_action( 'plugins_loaded', 'load_textdomain' )
+				->add_action( 'wp', 'init_conditional_modules' )
+			;
+
+			$this->extra_initialize();
+
+			do_action( 'nbpc_initialized' );
+		}
+
 		/**
 		 * Return root modules
 		 *
@@ -180,14 +193,9 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 */
 		abstract protected function get_modules(): array;
 
-		protected function initialize() {
-			$this->assign_modules( $this->get_modules() );
-
-			$this
-				->add_action( 'plugins_loaded', 'load_textdomain' )
-				->add_action( 'wp', 'init_conditional_modules' );
-
-			do_action( 'nbpc_initialized' );
-		}
+		/**
+		 * Do NBPC_Main specific initialization.
+		 */
+		abstract protected function extra_initialize(): void;
 	}
 }
