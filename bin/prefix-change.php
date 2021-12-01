@@ -146,7 +146,7 @@ class NBPC_Prefix_Changer {
 		if ( file_exists( $dir ) && is_dir( $dir ) && is_executable( $dir ) ) {
 			$iterator = new RegexIterator(
 				new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $dir ) ),
-				'/\.pot?$/i',
+				'/\.(pot?|mo)$/i',
 				RegexIterator::MATCH
 			);
 
