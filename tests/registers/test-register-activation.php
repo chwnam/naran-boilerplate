@@ -8,7 +8,7 @@ class Test_Register_Activation extends WP_UnitTestCase {
 	private $register;
 
 	public function setUp() {
-		$this->register = new class( $this ) extends NBPC_Register_Activation {
+		$this->register = new class( $this ) extends NBPC_Register_Base_Activation {
 			public Test_Register_Activation $tester;
 
 			/** @var string|int|bool */
@@ -46,8 +46,7 @@ class Test_Register_Activation extends WP_UnitTestCase {
 		$this->register->old_log_errors = ini_set( 'log_errors', 1 );
 		$this->register->old_log_path   = ini_set( 'error_log', $this->register->test_log_file );
 
-		$file = plugin_basename( nbpc()->get_main_file() );
-		do_action( 'activate_' . $file );
+		$this->register->register();
 	}
 
 	public function tearDown() {

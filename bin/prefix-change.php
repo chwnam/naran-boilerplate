@@ -61,6 +61,7 @@ class NBPC_Prefix_Changer {
 		 * 3. A dash and underscore cannot be used more than once in a row, e.g. st__gx, hp--1t.
 		 * 4. Prefix cannot end with a dash or a underscore.
 		 * 5. Prefix cannot contain 'npbc', or 'cpbn'.
+		 * 6. Maximum length: 25
 		 */
 		$pattern = '/^([a-z][a-z0-9]*)((_|-)[a-z0-9]+)*$/';
 
@@ -68,7 +69,9 @@ class NBPC_Prefix_Changer {
 			throw new RuntimeException( "Prefix `$prefix` is invalid." );
 		} elseif ( false !== strpos( $prefix, 'nbpc' ) || false !== strpos( $prefix, 'cpbn' ) ) {
 			throw new RuntimeException( "Prefix cannot contain 'nbpc' or 'cpbn'." );
-		}
+		} elseif ( 25 < strlen( $prefix ) ) {
+			throw new RuntimeException( "Maximum length exceeded." );
+        }
 
 		return true;
 	}
@@ -146,7 +149,7 @@ class NBPC_Prefix_Changer {
 		if ( file_exists( $dir ) && is_dir( $dir ) && is_executable( $dir ) ) {
 			$iterator = new RegexIterator(
 				new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $dir ) ),
-				'/\.pot?$/i',
+				'/\.(pot?|mo)$/i',
 				RegexIterator::MATCH
 			);
 
@@ -233,9 +236,12 @@ function confirm( string $message ): bool {
 function get_new_prefix(): string {
 	while ( true ) {
 		try {
-			echo 'Please enter your new prefix (Ctrl+C to exit): ';
+			echo 'Please enter your new prefix (Enter \'exit\' to skip): ';
 			$new_prefix = trim( fgets( STDIN ) );
-			if ( true === NBPC_Prefix_Changer::validate_prefix( $new_prefix ) ) {
+			if ( 'exit' === $new_prefix ) {
+				echo 'prefix-change.php skipped.' . PHP_EOL;
+				exit;
+			} elseif ( true === NBPC_Prefix_Changer::validate_prefix( $new_prefix ) ) {
 				break;
 			}
 		} catch ( RuntimeException $e ) {
@@ -245,7 +251,6 @@ function get_new_prefix(): string {
 
 	return $new_prefix;
 }
-
 
 if ( 'cli' === php_sapi_name() ) {
 	$root_dir = dirname( __DIR__ );

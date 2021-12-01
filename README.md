@@ -25,7 +25,7 @@ composer create-project --no-dev naran/boilerplate my-plugin
 
 성공적으로 받아지면 composer는 새로운 접두어 적용을 위해 사용자에게 입력을 받습니다.
 ```
-Please enter your new prefix (Ctrl+C to exit): 
+Please enter your new prefix (Enter 'exit' to skip): 
 ```
 여기서 적절한 접두어를 정해 입력합니다. 만약 'foo'를 접두로 입력하면 아래처럼 확인을 받습니다. 'y'를 누르면
 받아진 코드에 대해 파일 이름과 코드에 대해 접두어 변경을 실행하게 됩니다. 
@@ -40,6 +40,7 @@ Replace prefix from `npbc` to `foo`. Are you sure? [Y/n]
 3. 대시나 밑줄은 두번이상 연속으로 사용해서는 안됩니다.
 4. 접두어는 대시나 밑줄로 끝나서는 안됩니다.
 5. 새로운 접두어는 'nbpc'나 'cpbn'이라는 단어를 포함하면 안됩니다.
+6. 접두의 최대 길이는 25자입니다.
 
 접두어는 코드나 파일 이름 치환시 다음처럼 사용됟니다.
 1. 클래스 이름과 상수를 위해 영대문자와 밑줄을 사용합니다. 대시는 밑줄로 치환됩니다. (예: ABC_DEF)

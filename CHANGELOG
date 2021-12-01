@@ -1,3 +1,13 @@
+1.2.3
+-----
+2021-12-01
+
+- Fix: 'creat-project' command can finish without prefix changing.
+- Fix: Clean test codes and CHANGELOG file after 'creat-project' command
+- Fix: *.mo files are also prefix-changed.
+- Add: NBPC_HTML, simple HTML output helper.
+
+
 1.2.2
 -----
 2021-11-29
