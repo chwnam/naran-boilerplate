@@ -1,3 +1,12 @@
+1.2.3
+-----
+2021-12-00
+
+- Fix: 'creat-project' command can finish without prefix changing.
+- Fix: Clean test codes and CHANGELOG file after 'creat-project' command
+- Fix: *.mo files are also prefix-changed.
+
+
 1.2.2
 -----
 2021-11-29
