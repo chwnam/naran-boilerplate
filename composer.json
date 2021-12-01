@@ -19,6 +19,7 @@
     "test": "vendor/bin/phpunit",
     "post-create-project-cmd": [
       "@php bin/prefix-change.php",
+      "@php bin/cleanup.php",
       "@composer daa"
     ]
   },
