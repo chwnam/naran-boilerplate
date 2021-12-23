@@ -74,7 +74,7 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		}
 
 		/**
-		 * Retrieve submodule by given string notaion.
+		 * Retrieve submodule by given string notation.
 		 *
 		 * @param string $module_notation
 		 *
@@ -160,6 +160,8 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 
 		/**
 		 * Load textdomain
+		 *
+		 * @used-by initialize()
 		 */
 		public function load_textdomain() {
 			load_plugin_textdomain( 'nbpc', false, wp_basename( dirname( $this->get_main_file() ) ) . '/languages' );
@@ -173,6 +175,10 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		public function init_conditional_modules() {
 		}
 
+		/**
+		 * @uses NBPC_Main_Base::init_conditional_modules()
+		 * @uses NBPC_Main_Base::load_textdomain()
+		 */
 		protected function initialize() {
 			$this->assign_modules( $this->get_modules() );
 

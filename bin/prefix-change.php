@@ -5,17 +5,15 @@
  * NBPC: Prefix change
  *
  * Change all prefix strings.
- *
- * @noinspection PhpIllegalPsrClassPathInspection
  */
 class NBPC_Prefix_Changer {
-	private string $root_directory = '';
+	private string $root_directory;
 
 	private int $root_len;
 
-	private string $old_prefix = '';
+	private string $old_prefix;
 
-	private string $new_prefix = '';
+	private string $new_prefix;
 
 	private array $subdirs = [ 'core', 'includes' ];
 
@@ -33,7 +31,7 @@ class NBPC_Prefix_Changer {
 			! is_readable( $this->root_directory )
 		) {
 			throw new RuntimeException(
-				"{$this->root_directory} is not a directory, or does not have enough permission."
+				"$this->root_directory is not a directory, or does not have enough permission."
 			);
 		}
 
@@ -59,11 +57,11 @@ class NBPC_Prefix_Changer {
 		 * 1. It accepts lowercase alphabets, numbers, dashes, and underscores.
 		 * 2. The first character must be a lowercase alphabet.
 		 * 3. A dash and underscore cannot be used more than once in a row, e.g. st__gx, hp--1t.
-		 * 4. Prefix cannot end with a dash or a underscore.
-		 * 5. Prefix cannot contain 'npbc', or 'cpbn'.
+		 * 4. Prefix cannot end with a dash or an underscore.
+		 * 5. Prefix cannot contain 'nbpc', or 'cpbn'.
 		 * 6. Maximum length: 25
 		 */
-		$pattern = '/^([a-z][a-z0-9]*)((_|-)[a-z0-9]+)*$/';
+		$pattern = '/^([a-z][a-z0-9]*)(([_\-])[a-z0-9]+)*$/';
 
 		if ( ! preg_match( $pattern, $prefix ) ) {
 			throw new RuntimeException( "Prefix `$prefix` is invalid." );
@@ -98,7 +96,7 @@ class NBPC_Prefix_Changer {
 				if ( preg_match( $pattern, $base, $matches ) ) {
 					$new_base = "$matches[1]-$new_prefix-$matches[2]";
 					$old_path = $info->getRealPath();
-					$new_path = "{$path}/{$new_base}";
+					$new_path = "$path/$new_base";
 
 					rename( $old_path, $new_path );
 
@@ -271,7 +269,7 @@ if ( 'cli' === php_sapi_name() ) {
 	}
 
 	try {
-		if ( confirm( "Replace prefix from `{$old_prefix}` to `{$new_prefix}`. Are you sure?" ) ) {
+		if ( confirm( "Replace prefix from `$old_prefix` to `$new_prefix`. Are you sure?" ) ) {
 			$change = new NBPC_Prefix_Changer( $root_dir, $old_prefix, $new_prefix );
 			$change->change_source_codes();
 			$change->change_php_file_name_prefixes();

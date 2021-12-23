@@ -37,16 +37,16 @@ class Test_Register_Submit extends WP_UnitTestCase {
 		// Check if action is correctly added.
 		$this->assertEquals(
 			$item->priority,
-			has_action( "admin_post_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "admin_post_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
 		// 'nopriv' must be skipped.
 		$this->assertEquals(
 			0,
-			has_action( "admin_post_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "admin_post_nopriv_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( nbpc()->get_priority(), $item->priority );
 	}
 
@@ -66,16 +66,16 @@ class Test_Register_Submit extends WP_UnitTestCase {
 		// Check if actions are correctly added.
 		$this->assertEquals(
 			$item->priority,
-			has_action( "admin_post_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "admin_post_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
 		// 'nopriv' is also added.
 		$this->assertEquals(
 			$item->priority,
-			has_action( "admin_post_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "admin_post_nopriv_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( nbpc()->get_priority(), $item->priority );
 	}
 
@@ -95,16 +95,16 @@ class Test_Register_Submit extends WP_UnitTestCase {
 		// Check if actions are correctly added.
 		$this->assertEquals(
 			0,
-			has_action( "admin_post_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "admin_post_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
 		// only 'nopriv' is added.
 		$this->assertEquals(
 			$item->priority,
-			has_action( "admin_post_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "admin_post_nopriv_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( 50, $item->priority );
 	}
 }

@@ -68,20 +68,20 @@ class Test_Register_Option extends WP_UnitTestCase {
 		global $wpdb;
 
 		$value = $wpdb->get_var(
-			$wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name=%s", 'test_option_red' )
+			$wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name=%s", 'test_option_red' )
 		);
 		$this->assertEquals( 'X', $value );
 
 		// Check if autoload is set to 'no'.
 		$value = $wpdb->get_var(
-			$wpdb->prepare( "SELECT autoload FROM {$wpdb->options} WHERE option_name=%s", 'test_option_red' )
+			$wpdb->prepare( "SELECT autoload FROM $wpdb->options WHERE option_name=%s", 'test_option_red' )
 		);
 		$this->assertEquals( 'no', $value );
 
 		// Check if the option is removed.
 		$option->delete();
 		$value = $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$wpdb->options} WHERE option_name=%s", 'test_option_red' )
+			$wpdb->prepare( "SELECT * FROM $wpdb->options WHERE option_name=%s", 'test_option_red' )
 		);
 		$this->assertNull( $value );
 

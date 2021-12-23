@@ -1,6 +1,6 @@
 Directory for traits
 --------------------
-Naran boilerplace code (hereafter, CPBN. 'CPBN' is a term used call the project itself, because every 'N-B-P-C' terms is
+Naran boilerplate code (hereafter, CPBN. 'CPBN' is a term used call the project itself, because every 'N-B-P-C' terms is
 going to be replaced.) defines some useful traits.
 
 ## Trait for actions and filters in modules

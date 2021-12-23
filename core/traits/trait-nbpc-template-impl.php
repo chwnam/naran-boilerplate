@@ -90,7 +90,7 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 				nbpc()->set( 'nbpc:ejs_queue', $ejs_queue );
 			}
 
-			$ejs_queue->enqueue( $relpath . ( $variant ? "-{$variant}" : '' ), compact( 'context', 'variant' ) );
+			$ejs_queue->enqueue( $relpath . ( $variant ? "-$variant" : '' ), compact( 'context', 'variant' ) );
 
 			return $this;
 		}

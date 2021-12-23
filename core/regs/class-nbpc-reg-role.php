@@ -19,7 +19,7 @@ if ( ! class_exists( 'NBPC_Reg_Role' ) ) {
 		/**
 		 * @param string              $role         Role identifier
 		 * @param string              $display_name Display name, human-friendly string.
-		 * @param array<string, bool> $capabilities Capabilities. Key: capability, value: boolen value.
+		 * @param array<string, bool> $capabilities Capabilities. Key: capability, value: boolean value.
 		 */
 		public function __construct( string $role, string $display_name, array $capabilities = [] ) {
 			$this->role         = $role;

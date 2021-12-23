@@ -10,7 +10,7 @@ class Test_Register_Sidebar extends WP_UnitTestCase {
 			public function get_items(): Generator {
 				yield new NBPC_Reg_Sidebar(
 					[
-						'id'   => 'nbpc_teset_sidebar',
+						'id'   => 'nbpc_test_sidebar',
 						'name' => 'NBPC Test Sidebar',
 					]
 				);

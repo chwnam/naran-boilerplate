@@ -33,7 +33,7 @@ if ( ! class_exists( 'NBPC_EJS_Queue' ) ) {
 			foreach ( $this->queue as $relpath => $data ) {
 				$tmpl_id = 'tmpl-' . pathinfo( wp_basename( $relpath ), PATHINFO_FILENAME );
 				$content = $this->render_file(
-					$this->locate_file( 'ejs', $relpath, $data['variant'], 'php' ),
+					$this->locate_file( 'ejs', $relpath, $data['variant'] ),
 					$data['context'],
 					false
 				);

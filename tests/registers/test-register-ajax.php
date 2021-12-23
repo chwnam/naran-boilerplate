@@ -44,16 +44,16 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 		// Check if action is correctly added.
 		$this->assertEquals(
 			$item->priority,
-			has_action( "wp_ajax_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "wp_ajax_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
 		// 'nopriv' must be skipped.
 		$this->assertEquals(
 			0,
-			has_action( "wp_ajax_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "wp_ajax_nopriv_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( nbpc()->get_priority(), $item->priority );
 	}
 
@@ -73,16 +73,16 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 		// Check if actions are correctly added.
 		$this->assertEquals(
 			$item->priority,
-			has_action( "wp_ajax_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "wp_ajax_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
 		// 'nopriv' is also added.
 		$this->assertEquals(
 			$item->priority,
-			has_action( "wp_ajax_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "wp_ajax_nopriv_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( nbpc()->get_priority(), $item->priority );
 	}
 
@@ -102,16 +102,16 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 		// Check if actions are correctly added.
 		$this->assertEquals(
 			0,
-			has_action( "wp_ajax_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "wp_ajax_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
 		// only 'nopriv' is added.
 		$this->assertEquals(
 			$item->priority,
-			has_action( "wp_ajax_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "wp_ajax_nopriv_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( nbpc()->get_priority(), $item->priority );
 	}
 
@@ -131,22 +131,22 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 		// Check if wp_ajax_ is excluded.
 		$this->assertEquals(
 			0,
-			has_action( "wp_ajax_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "wp_ajax_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
 		// Check if wp_ajax_nopriv_ is excluded.
 		$this->assertEquals(
 			0,
-			has_action( "wp_ajax_nopriv{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "wp_ajax_nopriv$item->action", [ $this->register, 'dispatch' ] )
 		);
 
 		// Check if 'wc_ajax_' is added.
 		$this->assertEquals(
 			$item->priority,
-			has_action( "wc_ajax_{$item->action}", [ $this->register, 'dispatch' ] )
+			has_action( "wc_ajax_$item->action", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( 55, $item->priority );
 	}
 }

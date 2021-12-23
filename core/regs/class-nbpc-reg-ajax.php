@@ -47,13 +47,13 @@ if ( ! class_exists( 'NBPC_Reg_Ajax' ) ) {
 		public function register( $dispatch = null ) {
 			if ( $this->action && $this->callback && $dispatch ) {
 				if ( $this->is_wc_ajax ) {
-					add_action( "wc_ajax_{$this->action}", $dispatch, $this->priority );
+					add_action( "wc_ajax_$this->action", $dispatch, $this->priority );
 				} else {
 					if ( 'only_nopriv' !== $this->allow_nopriv ) {
-						add_action( "wp_ajax_{$this->action}", $dispatch, $this->priority );
+						add_action( "wp_ajax_$this->action", $dispatch, $this->priority );
 					}
 					if ( true === $this->allow_nopriv || 'only_nopriv' === $this->allow_nopriv ) {
-						add_action( "wp_ajax_nopriv_{$this->action}", $dispatch, $this->priority );
+						add_action( "wp_ajax_nopriv_$this->action", $dispatch, $this->priority );
 					}
 				}
 			}

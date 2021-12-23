@@ -17,7 +17,7 @@ $labels = [
 ```php
 <?php
 $args = [
-    'description'        => _x( 'Taxonomy description.', 'taxonomy_description', 'npbc' ),
+    'description'        => _x( 'Taxonomy description.', 'taxonomy_description', 'nbpc' ),
     'public'             => true,
     'publicly_queryable' => true,
     'hierarchical'       => true,

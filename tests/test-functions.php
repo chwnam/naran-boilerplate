@@ -19,6 +19,9 @@ class Test_Functions extends WP_UnitTestCase {
 		$this->assertInstanceOf( NBPC_Register_Ajax::class, nbpc_parse_module( 'registers.ajax' ) );
 	}
 
+	/**
+	 * @throws NBPC_Callback_Exception
+	 */
 	public function test_nbpc_parse_callback() {
 		$anon = new class { public function cb() { } };
 		$func = function () { };
@@ -37,9 +40,9 @@ class Test_Functions extends WP_UnitTestCase {
 		$output = nbpc_parse_callback( 'registers.ajax@register' );
 		$this->assertEquals( [ nbpc()->registers->ajax, 'register' ], $output );
 
-		// Check if nonexist callables throws an exception
+		// Check if non-exist callables throws an exception
 		$this->expectException( NBPC_Callback_Exception::class );
-		nbpc_parse_callback( [ $this, 'nonexist' ] );
+		nbpc_parse_callback( [ $this, 'non_exist' ] );
 	}
 
 	public function test_nbpc_option() {
@@ -81,7 +84,7 @@ class Test_Functions extends WP_UnitTestCase {
 	}
 
 	public function test_nbpc_format_callback() {
-		// anonymouse fuction callback
+		// anonymous function callback
 		$output = nbpc_format_callback( function () { } );
 		$this->assertEquals( '{Closure}', $output );
 
@@ -91,11 +94,11 @@ class Test_Functions extends WP_UnitTestCase {
 			public static function stcb() { }
 		};
 
-		// anonymouse method callback
+		// anonymous method callback
 		$output = nbpc_format_callback( [ $anon, 'cb' ] );
 		$this->assertEquals( '{AnonymousClass}::cb', $output );
 
-		// anonymouse static method callback
+		// anonymous static method callback
 		$output = nbpc_format_callback( [ $anon, 'stcb' ] );
 		$this->assertEquals( '{AnonymousClass}::stcb', $output );
 

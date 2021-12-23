@@ -23,17 +23,17 @@ if ( ! class_exists( 'Submodule_Impl_Test' ) ) {
  * @package nbpc
  */
 class Test_Submodule_Impl extends WP_UnitTestCase {
-	public function test_module_assing() {
+	public function test_module_assign() {
 		$test = self::get_test_class();
 
 		// Check if assign is forbidden.
-		$exception_catched = false;
+		$exception_caught = false;
 		try {
 			$test->runtime_assign = 'is forbidden';
 		} catch ( RuntimeException $e ) {
-			$exception_catched = true;
+			$exception_caught = true;
 		}
-		$this->assertTrue( $exception_catched );
+		$this->assertTrue( $exception_caught );
 	}
 
 	private static function get_test_class( array $modules = [] ): object {
@@ -48,7 +48,7 @@ class Test_Submodule_Impl extends WP_UnitTestCase {
 		};
 	}
 
-	public function test_module_assign() {
+	public function test_module_assign_2() {
 		$obj = self::get_test_class(
 			[
 				'foo'  => 'bar',
@@ -56,7 +56,7 @@ class Test_Submodule_Impl extends WP_UnitTestCase {
 			]
 		);
 
-		// Check if unassigned module retuns null
+		// Check if unassigned module returns null
 		$this->assertNull( $obj->unassigned );
 
 		// Check if test->foo is bar
@@ -81,18 +81,18 @@ class Test_Submodule_Impl extends WP_UnitTestCase {
 		$modules->setAccessible( true );
 
 		// Check if module 'test' is stored as closure and not converted.
-		$value = $modules->getValue( $obj );
-		$this->assertArrayHasKey( 'test', $value );
-		$this->assertIsCallable( $value['test'] );
-		$this->assertInstanceOf( Closure::class, $value['test'] );
+		$v1 = $modules->getValue( $obj );
+		$this->assertArrayHasKey( 'test', $v1 );
+		$this->assertIsCallable( $v1['test'] );
+		$this->assertInstanceOf( Closure::class, $v1['test'] );
 
 		// Check if module 'test' is called, and it is now stored as Dock instance.
-		$test  = $obj->test;
-		$value = $modules->getValue( $obj );
-		$this->assertArrayHasKey( 'test', $value );
-		$this->assertTrue( $value['test'] === $test ); // Test if two objects are the same.
+		$test = $obj->test;
+		$v2   = $modules->getValue( $obj );
+		$this->assertArrayHasKey( 'test', $v2 );
+		$this->assertTrue( $v2['test'] === $test ); // Test if two objects are the same.
 		$this->assertInstanceOf( Submodule_Impl_Test::class, $obj->test );
-		$this->assertInstanceOf( Submodule_Impl_Test::class, $value['test'] ); // Now we expect 'test' is converted.
+		$this->assertInstanceOf( Submodule_Impl_Test::class, $v2['test'] ); // Now we expect 'test' is converted.
 		$this->assertEquals( 'Dock::get_string() called.', $test->get_string() );
 	}
 

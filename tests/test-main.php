@@ -134,6 +134,9 @@ class Test_Main extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * @throws NBPC_Callback_Exception
+	 */
 	public function test_parse_callback() {
 		$nbpc = NBPC_Main::get_instance();
 

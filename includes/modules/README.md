@@ -1,10 +1,10 @@
 Directory for modules
 ---------------------
-Naran boilerplace code (hereafter, CPBN. 'CPBN' is a term used call the project
+Naran boilerplate code (hereafter, CPBN. 'CPBN' is a term used call the project
 itself, because every 'N-B-P-C' term is going to be replaced.) supports loose-coupled modules.
 
 All modules are stored in this directory.
-To find files quickly and easily, please group your files into a sub-directory.
+To find files quickly and easily, please group your files into a subdirectory.
 
 CPBN modules follow WordPress coding style.
 

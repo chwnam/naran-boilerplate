@@ -213,7 +213,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		/**
 		 * select tag.
 		 *
-		 * @param array        $options    Associative array, where keys are for 'value' attributes of optiton tags,
+		 * @param array        $options    Associative array, where keys are for 'value' attributes of option tags,
 		 *                                 values are for text node inside of option tags.
 		 *                                 Value may also be an associative array that is for optgroup tags.
 		 * @param string|array $selected   Selected value string. If select tag has multiple attribute, it can be an array of selected values.

@@ -4,7 +4,7 @@
  * @noinspection PhpMultipleClassDeclarationsInspection
  */
 
-class Test_Register_Texonomy extends WP_UnitTestCase {
+class Test_Register_Taxonomy extends WP_UnitTestCase {
 	private $register;
 
 	public function setUp() {

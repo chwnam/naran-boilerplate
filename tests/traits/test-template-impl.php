@@ -6,11 +6,11 @@
 
 
 /**
- * Class Test_Teplate_Impl
+ * Class Test_Template_Impl
  *
  * @package nbpc
  */
-class Test_Teplate_Impl extends WP_UnitTestCase {
+class Test_Template_Impl extends WP_UnitTestCase {
 	use NBPC_Template_Impl;
 
 	private static string $dir;
@@ -51,16 +51,16 @@ class Test_Teplate_Impl extends WP_UnitTestCase {
 			$dir = self::$dir;
 
 			// Check template without variant.
-			$file = "{$dir}/a.php";
+			$file = "$dir/a.php";
 			touch( $file );
-			$located = $this->locate_file( 'template', 'a', '' );
+			$located = $this->locate_file( 'template', 'a' );
 			$this->assertEquals( "$dir/a.php", realpath( $located ) );
 			unlink( $file );
 
 			// Check template in subdirectory without variant.
-			$file = "{$dir}/sub/dir/a.php";
+			$file = "$dir/sub/dir/a.php";
 			touch( $file );
-			$located = $this->locate_file( 'template', 'sub/dir/a', '' );
+			$located = $this->locate_file( 'template', 'sub/dir/a' );
 			$this->assertEquals( $file, realpath( $located ) );
 			unlink( $file );
 		}
@@ -69,7 +69,7 @@ class Test_Teplate_Impl extends WP_UnitTestCase {
 	public function test_locate_file_variant() {
 		if ( $this->is_test_available() ) {
 			$dir  = self::$dir;
-			$file = "{$dir}/a-v.php";
+			$file = "$dir/a-v.php";
 
 			// Check template with variant.
 			touch( $file );
@@ -78,7 +78,7 @@ class Test_Teplate_Impl extends WP_UnitTestCase {
 			unlink( $file );
 
 			// Check template in subdirectory with variant.
-			$file = "{$dir}/sub/dir/a-v.php";
+			$file = "$dir/sub/dir/a-v.php";
 			touch( $file );
 			$located = $this->locate_file( 'template', 'sub/dir/a', 'v' );
 			$this->assertEquals( $file, realpath( $located ) );
@@ -91,14 +91,14 @@ class Test_Teplate_Impl extends WP_UnitTestCase {
 			$dir = self::$dir;
 
 			// Check template with variant, b.php is created, not b-v.php.
-			$file = "{$dir}/b.php";  // evade locate file cache.
+			$file = "$dir/b.php";  // evade locate file cache.
 			touch( $file );
 			$located = $this->locate_file( 'template', 'b', 'v' );
 			$this->assertEquals( "$dir/b.php", realpath( $located ) );
 			unlink( $file );
 
 			// Check template with variant in subdirectory.
-			$file = "{$dir}/sub/dir/b-v.php";  // evade locate file cache.
+			$file = "$dir/sub/dir/b-v.php";  // evade locate file cache.
 			touch( $file );
 			$located = $this->locate_file( 'template', 'sub/dir/b', 'v' );
 			$this->assertEquals( $file, realpath( $located ) );

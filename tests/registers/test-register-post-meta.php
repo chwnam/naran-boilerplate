@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @noinspection PhpIllegalPsrClassPathInspection
- * @noinspection PhpMultipleClassDeclarationsInspection
- * @noinspection PhpMultipleClassesDeclarationsInOneFile
- */
 if ( ! class_exists( 'WC_Product' ) ) {
 	class WC_Product {
 		private int $id;
@@ -19,6 +14,9 @@ if ( ! class_exists( 'WC_Product' ) ) {
 	}
 }
 
+/**
+ * @noinspection PhpIllegalPsrClassPathInspection
+ */
 class Test_Register_Post_Meta extends WP_UnitTestCase {
 	private $register;
 
@@ -103,7 +101,7 @@ class Test_Register_Post_Meta extends WP_UnitTestCase {
 
 		$value = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id=%d AND meta_key=%s",
+				"SELECT meta_value FROM $wpdb->postmeta WHERE post_id=%d AND meta_key=%s",
 				$this->post->ID,
 				'nbpc_meta_red'
 			)
@@ -125,7 +123,7 @@ class Test_Register_Post_Meta extends WP_UnitTestCase {
 
 		$meta->update( $this->post->ID, 'BLUE' );
 
-		// Check if the value is retrived as an array, because single = false.
+		// Check if the value is retrieved as an array, because single = false.
 		$value = $meta->get_value( $this->post->ID );
 
 		$this->assertIsArray( $value );
