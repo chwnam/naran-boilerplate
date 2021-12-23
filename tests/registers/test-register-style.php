@@ -47,7 +47,7 @@ class Test_Register_Style extends WP_UnitTestCase {
 		// Check if the item handle is correct.
 		$this->assertEquals( 'nbpc-foo', $item->handle );
 
-		// Check if .min.css is correcly replaced.
+		// Check if .min.css is correctly replaced.
 		$this->assertEquals( "{$url}assets/css/style.css", $item->src );
 	}
 }

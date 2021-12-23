@@ -23,17 +23,17 @@ if ( ! class_exists( 'Submodule_Impl_Test' ) ) {
  * @package nbpc
  */
 class Test_Submodule_Impl extends WP_UnitTestCase {
-	public function test_module_assing() {
+	public function test_module_assign() {
 		$test = self::get_test_class();
 
 		// Check if assign is forbidden.
-		$exception_catched = false;
+		$exception_caught = false;
 		try {
 			$test->runtime_assign = 'is forbidden';
 		} catch ( RuntimeException $e ) {
-			$exception_catched = true;
+			$exception_caught = true;
 		}
-		$this->assertTrue( $exception_catched );
+		$this->assertTrue( $exception_caught );
 	}
 
 	private static function get_test_class( array $modules = [] ): object {
@@ -48,7 +48,7 @@ class Test_Submodule_Impl extends WP_UnitTestCase {
 		};
 	}
 
-	public function test_module_assign() {
+	public function test_module_assign_2() {
 		$obj = self::get_test_class(
 			[
 				'foo'  => 'bar',
@@ -56,7 +56,7 @@ class Test_Submodule_Impl extends WP_UnitTestCase {
 			]
 		);
 
-		// Check if unassigned module retuns null
+		// Check if unassigned module returns null
 		$this->assertNull( $obj->unassigned );
 
 		// Check if test->foo is bar

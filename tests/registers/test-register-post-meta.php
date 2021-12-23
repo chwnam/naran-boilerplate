@@ -125,7 +125,7 @@ class Test_Register_Post_Meta extends WP_UnitTestCase {
 
 		$meta->update( $this->post->ID, 'BLUE' );
 
-		// Check if the value is retrived as an array, because single = false.
+		// Check if the value is retrieved as an array, because single = false.
 		$value = $meta->get_value( $this->post->ID );
 
 		$this->assertIsArray( $value );

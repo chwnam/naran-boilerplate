@@ -1,6 +1,6 @@
 <?php
 /**
- * NBPC: Registerable interface
+ * NBPC: Registrable interface
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -74,7 +74,7 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		}
 
 		/**
-		 * Retrieve submodule by given string notaion.
+		 * Retrieve submodule by given string notation.
 		 *
 		 * @param string $module_notation
 		 *

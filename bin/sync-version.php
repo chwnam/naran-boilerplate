@@ -27,7 +27,7 @@ class NBPC_Sync_Version {
 		// Change main file const or define version.
 		$this->apply_change_main( $main_path, $target_version );
 
-		// Change composer.json verision.
+		// Change composer.json version.
 		$this->apply_change_json( $composer, $target_version, 'composer.json' );
 
 		// Change package.json version.
@@ -65,7 +65,7 @@ class NBPC_Sync_Version {
 	}
 
 	/**
-	 * Main file vesion change.
+	 * Main file version change.
 	 *
 	 * @param string $main_path
 	 * @param string $target_version

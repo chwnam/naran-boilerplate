@@ -333,7 +333,7 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 		}
 
 		/**
-		 * Update meta field with valeu form request.
+		 * Update meta field with value form request.
 		 *
 		 * @param $object_id
 		 *

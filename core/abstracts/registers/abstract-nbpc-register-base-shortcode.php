@@ -112,7 +112,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 			}
 
 			/**
-			 * @var array $matches idx 2: shortocde name. (tag)
+			 * @var array $matches idx 2: shortcode name. (tag)
 			 *                     idx 5: enclosed text.
 			 *
 			 * @see get_shortcode_regex()

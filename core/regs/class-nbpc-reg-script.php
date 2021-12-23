@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 	class NBPC_Reg_Script implements NBPC_Reg {
-		const WP_SCRIPT = 'nbpc-wp-script-generted';
+		const WP_SCRIPT = 'nbpc-wp-script-generated';
 
 		public string $handle;
 

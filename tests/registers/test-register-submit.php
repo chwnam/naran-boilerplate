@@ -46,7 +46,7 @@ class Test_Register_Submit extends WP_UnitTestCase {
 			has_action( "admin_post_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( nbpc()->get_priority(), $item->priority );
 	}
 
@@ -75,7 +75,7 @@ class Test_Register_Submit extends WP_UnitTestCase {
 			has_action( "admin_post_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( nbpc()->get_priority(), $item->priority );
 	}
 
@@ -104,7 +104,7 @@ class Test_Register_Submit extends WP_UnitTestCase {
 			has_action( "admin_post_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( 50, $item->priority );
 	}
 }

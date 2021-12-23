@@ -59,11 +59,11 @@ class NBPC_Prefix_Changer {
 		 * 1. It accepts lowercase alphabets, numbers, dashes, and underscores.
 		 * 2. The first character must be a lowercase alphabet.
 		 * 3. A dash and underscore cannot be used more than once in a row, e.g. st__gx, hp--1t.
-		 * 4. Prefix cannot end with a dash or a underscore.
-		 * 5. Prefix cannot contain 'npbc', or 'cpbn'.
+		 * 4. Prefix cannot end with a dash or an underscore.
+		 * 5. Prefix cannot contain 'nbpc', or 'cpbn'.
 		 * 6. Maximum length: 25
 		 */
-		$pattern = '/^([a-z][a-z0-9]*)((_|-)[a-z0-9]+)*$/';
+		$pattern = '/^([a-z][a-z0-9]*)(([_\-])[a-z0-9]+)*$/';
 
 		if ( ! preg_match( $pattern, $prefix ) ) {
 			throw new RuntimeException( "Prefix `$prefix` is invalid." );

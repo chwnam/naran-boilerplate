@@ -6,11 +6,11 @@
 
 
 /**
- * Class Test_Teplate_Impl
+ * Class Test_Template_Impl
  *
  * @package nbpc
  */
-class Test_Teplate_Impl extends WP_UnitTestCase {
+class Test_Template_Impl extends WP_UnitTestCase {
 	use NBPC_Template_Impl;
 
 	private static string $dir;

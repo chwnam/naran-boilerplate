@@ -53,7 +53,7 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 			has_action( "wp_ajax_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( nbpc()->get_priority(), $item->priority );
 	}
 
@@ -82,7 +82,7 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 			has_action( "wp_ajax_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( nbpc()->get_priority(), $item->priority );
 	}
 
@@ -111,7 +111,7 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 			has_action( "wp_ajax_nopriv_{$item->action}", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( nbpc()->get_priority(), $item->priority );
 	}
 
@@ -146,7 +146,7 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 			has_action( "wc_ajax_{$item->action}", [ $this->register, 'dispatch' ] )
 		);
 
-		// Check priority vaulue.
+		// Check priority value.
 		$this->assertEquals( 55, $item->priority );
 	}
 }

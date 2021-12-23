@@ -101,15 +101,15 @@ class Test_Uninstall_Functions extends WP_UnitTestCase {
 
 		$m['option'] = new class() extends NBPC_Register_Base_Option {
 			public function get_items(): Generator {
-				yield 'opt1' => new NBPC_Reg_Option( 'opt_grp', 'npbc_option_1' );
-				yield 'opt2' => new NBPC_Reg_Option( 'opt_grp', 'npbc_option_2' );
+				yield 'opt1' => new NBPC_Reg_Option( 'opt_grp', 'nbpc_option_1' );
+				yield 'opt2' => new NBPC_Reg_Option( 'opt_grp', 'nbpc_option_2' );
 			}
 		};
 
 		$modules_ref->setValue( $registers, $m );
 
 		// Expected query.
-		$expected = "DELETE FROM $wpdb->options WHERE option_name IN ('npbc_option_1', 'npbc_option_2')";
+		$expected = "DELETE FROM $wpdb->options WHERE option_name IN ('nbpc_option_1', 'nbpc_option_2')";
 
 		$callback = function ( $actual ) use ( $expected ) {
 			$this->assertEquals( $expected, $actual );
@@ -198,10 +198,10 @@ class Test_Uninstall_Functions extends WP_UnitTestCase {
 		// Delete post types if exists.
 		$q = new WP_Query(
 			[
-				'post_type'        => [ 'nbpc_cpt_1', 'npbc_cpt_2' ],
+				'post_type'        => [ 'nbpc_cpt_1', 'nbpc_cpt_2' ],
 				'post_status'      => 'any',
 				'nopaging'         => true,
-				'suppress_filtess' => true,
+				'suppress_filters' => true,
 				'fields'           => 'ids',
 			]
 		);

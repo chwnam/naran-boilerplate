@@ -25,8 +25,8 @@
 2021-11-27
 
 - Add 'npbc_located_path' filter to NBPC_Template_Impl::locate_file() method.
-- Fix NBPC_Hook_Impl::add_filter() was calling add_action() insted of add_filter().
-- Fix error that occured after calling 'composer create-project'.
+- Fix NBPC_Hook_Impl::add_filter() was calling add_action() instead of add_filter().
+- Fix error that occurred after calling 'composer create-project'.
 - Remove NBPC_Script_Helper::ejs(), and NBPC_Script_Helper::render().
 - Add NBPC_Script_Helper::then(), and NBPC_Style_Helper::then().
 
@@ -39,7 +39,7 @@
 - Support new registers: shortcode register, CLI register.
 - Support uninstall script.
 - Template trait change:
-  - Remove NBPC_Sciprt_Enqueue.
+  - Remove NBPC_Script_Enqueue.
   - Add script() method chains. See NBPC_Script_Helper.
   - Add style() method chains. See NBPC_Style_Helper.
 - Main automatically loads plugin textdomain.

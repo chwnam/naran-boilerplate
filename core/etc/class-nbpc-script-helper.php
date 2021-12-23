@@ -52,7 +52,7 @@ if ( ! class_exists( 'NBPC_Script_Helper' ) ) {
 		}
 
 		/**
-		 * Fuction wp_localize_script() wrapper.
+		 * Function wp_localize_script() wrapper.
 		 *
 		 * @param array  $l10n        Localization data.
 		 * @param string $object_name JS object name.
