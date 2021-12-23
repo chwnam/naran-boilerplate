@@ -68,7 +68,7 @@ if ( ! class_exists( 'NBPC_Reg_Custom_Table' ) ) {
 		public function drop_table() {
 			global $wpdb;
 
-			$wpdb->query( "DROP TABLE IF EXISTS {$this->table}" );
+			$wpdb->query( "DROP TABLE IF EXISTS $this->table" );
 		}
 	}
 }

@@ -54,12 +54,12 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 				if ( self::WP_SCRIPT === $this->deps ) {
 					$dir  = trim( dirname( $this->src ), '/\\' );
 					$file = pathinfo( $this->src, PATHINFO_FILENAME ) . '.asset.php';
-					$path = path_join( dirname( nbpc()->get_main_file() ), "assets/js/{$dir}/{$file}" );
+					$path = path_join( dirname( nbpc()->get_main_file() ), "assets/js/$dir/$file" );
 
 					if ( file_exists( $path ) && is_readable( $path ) ) {
 						$info = include $path;
 
-						$this->src       = plugins_url( "assets/js/{$this->src}", nbpc()->get_main_file() );
+						$this->src       = plugins_url( "assets/js/$this->src", nbpc()->get_main_file() );
 						$this->deps      = $info['dependencies'] ?? [];
 						$this->ver       = $info['version'] ?? nbpc()->get_version();
 						$this->in_footer = true;

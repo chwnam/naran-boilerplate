@@ -36,6 +36,7 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 		}
 
 		public function add_plugin_action_links( array $actions ): array {
+			/** @noinspection HtmlUnknownTarget */
 			return array_merge(
 				[
 					'settings' => sprintf(

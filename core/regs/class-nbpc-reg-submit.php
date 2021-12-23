@@ -42,10 +42,10 @@ if ( ! class_exists( 'NBPC_Reg_Submit' ) ) {
 		public function register( $dispatch = null ) {
 			if ( $this->action && $this->callback && $dispatch ) {
 				if ( 'only_nopriv' !== $this->allow_nopriv ) {
-					add_action( "admin_post_{$this->action}", $dispatch, $this->priority );
+					add_action( "admin_post_$this->action", $dispatch, $this->priority );
 				}
 				if ( true === $this->allow_nopriv || 'only_nopriv' === $this->allow_nopriv ) {
-					add_action( "admin_post_nopriv_{$this->action}", $dispatch, $this->priority );
+					add_action( "admin_post_nopriv_$this->action", $dispatch, $this->priority );
 				}
 			}
 		}

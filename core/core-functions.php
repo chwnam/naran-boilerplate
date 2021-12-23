@@ -141,14 +141,14 @@ if ( ! function_exists( 'nbpc_format_callback' ) ) {
 				try {
 					$ref = new ReflectionClass( $callback[0] );
 					if ( $ref->isAnonymous() ) {
-						return "{AnonymousClass}::{$callback[1]}";
+						return "{AnonymousClass}::$callback[1]";
 					}
 				} catch ( ReflectionException $e ) {
 				}
 			}
 
 			if ( is_string( $callback[0] ) ) {
-				return "{$callback[0]}::{$callback[1]}";
+				return "$callback[0]::$callback[1]";
 			} elseif ( is_object( $callback[0] ) ) {
 				return get_class( $callback[0] ) . '::' . $callback[1];
 			}

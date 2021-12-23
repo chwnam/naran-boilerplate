@@ -160,17 +160,17 @@ class Test_Uninstall_Functions extends WP_UnitTestCase {
 
 		$obj_cnt = $wpdb->get_var(
 			"SELECT COUNT(*) FROM $wpdb->term_relationships" .
-			" WHERE term_taxonomy_id IN ({$t->term_taxonomy_id})"
+			" WHERE term_taxonomy_id IN ($t->term_taxonomy_id)"
 		);
 		$this->assertEquals( 0, $obj_cnt );
 
 		$tt_cnt = $wpdb->get_var(
 			"SELECT COUNT(*) FROM $wpdb->term_taxonomy" .
-			" WHERE term_taxonomy_id IN ({$t->term_taxonomy_id})"
+			" WHERE term_taxonomy_id IN ($t->term_taxonomy_id)"
 		);
 		$this->assertEquals( 0, $tt_cnt );
 
-		$t_cnt = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->terms WHERE term_id IN ({$t->term_id})" );
+		$t_cnt = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->terms WHERE term_id IN ($t->term_id)" );
 		$this->assertEquals( 0, $t_cnt );
 	}
 

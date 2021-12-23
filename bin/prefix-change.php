@@ -5,17 +5,15 @@
  * NBPC: Prefix change
  *
  * Change all prefix strings.
- *
- * @noinspection PhpIllegalPsrClassPathInspection
  */
 class NBPC_Prefix_Changer {
-	private string $root_directory = '';
+	private string $root_directory;
 
 	private int $root_len;
 
-	private string $old_prefix = '';
+	private string $old_prefix;
 
-	private string $new_prefix = '';
+	private string $new_prefix;
 
 	private array $subdirs = [ 'core', 'includes' ];
 
@@ -33,7 +31,7 @@ class NBPC_Prefix_Changer {
 			! is_readable( $this->root_directory )
 		) {
 			throw new RuntimeException(
-				"{$this->root_directory} is not a directory, or does not have enough permission."
+				"$this->root_directory is not a directory, or does not have enough permission."
 			);
 		}
 
@@ -98,7 +96,7 @@ class NBPC_Prefix_Changer {
 				if ( preg_match( $pattern, $base, $matches ) ) {
 					$new_base = "$matches[1]-$new_prefix-$matches[2]";
 					$old_path = $info->getRealPath();
-					$new_path = "{$path}/{$new_base}";
+					$new_path = "$path/$new_base";
 
 					rename( $old_path, $new_path );
 
@@ -271,7 +269,7 @@ if ( 'cli' === php_sapi_name() ) {
 	}
 
 	try {
-		if ( confirm( "Replace prefix from `{$old_prefix}` to `{$new_prefix}`. Are you sure?" ) ) {
+		if ( confirm( "Replace prefix from `$old_prefix` to `$new_prefix`. Are you sure?" ) ) {
 			$change = new NBPC_Prefix_Changer( $root_dir, $old_prefix, $new_prefix );
 			$change->change_source_codes();
 			$change->change_php_file_name_prefixes();

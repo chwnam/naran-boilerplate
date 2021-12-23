@@ -81,18 +81,18 @@ class Test_Submodule_Impl extends WP_UnitTestCase {
 		$modules->setAccessible( true );
 
 		// Check if module 'test' is stored as closure and not converted.
-		$value = $modules->getValue( $obj );
-		$this->assertArrayHasKey( 'test', $value );
-		$this->assertIsCallable( $value['test'] );
-		$this->assertInstanceOf( Closure::class, $value['test'] );
+		$v1 = $modules->getValue( $obj );
+		$this->assertArrayHasKey( 'test', $v1 );
+		$this->assertIsCallable( $v1['test'] );
+		$this->assertInstanceOf( Closure::class, $v1['test'] );
 
 		// Check if module 'test' is called, and it is now stored as Dock instance.
-		$test  = $obj->test;
-		$value = $modules->getValue( $obj );
-		$this->assertArrayHasKey( 'test', $value );
-		$this->assertTrue( $value['test'] === $test ); // Test if two objects are the same.
+		$test = $obj->test;
+		$v2   = $modules->getValue( $obj );
+		$this->assertArrayHasKey( 'test', $v2 );
+		$this->assertTrue( $v2['test'] === $test ); // Test if two objects are the same.
 		$this->assertInstanceOf( Submodule_Impl_Test::class, $obj->test );
-		$this->assertInstanceOf( Submodule_Impl_Test::class, $value['test'] ); // Now we expect 'test' is converted.
+		$this->assertInstanceOf( Submodule_Impl_Test::class, $v2['test'] ); // Now we expect 'test' is converted.
 		$this->assertEquals( 'Dock::get_string() called.', $test->get_string() );
 	}
 

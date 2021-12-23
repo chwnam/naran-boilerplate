@@ -1,8 +1,5 @@
 #!/usr/bin/env php
 <?php
-/**
- * @noinspection PhpIllegalPsrClassPathInspection
- */
 
 class NBPC_Sync_Version {
 	/**
@@ -21,7 +18,7 @@ class NBPC_Sync_Version {
 		if ( empty( $target_version ) ) {
 			die( "[Error] Version info not found from the main file header comment.\n" );
 		} else {
-			echo "* Target version: {$target_version}\n";
+			echo "* Target version: $target_version\n";
 		}
 
 		// Change main file const or define version.
@@ -42,11 +39,11 @@ class NBPC_Sync_Version {
 	 */
 	private function check_file_permission( string $path, string $display ) {
 		if ( ! file_exists( $path ) || ! is_file( $path ) ) {
-			die( "{$display} is not found.\n" );
+			die( "$display is not found.\n" );
 		} elseif ( ! is_readable( $path ) ) {
-			die( "{$display} is not readable.\n" );
+			die( "$display is not readable.\n" );
 		} elseif ( ! is_writable( $path ) ) {
-			die( "{$display} is not writable.\n" );
+			die( "$display is not writable.\n" );
 		}
 	}
 
@@ -75,13 +72,13 @@ class NBPC_Sync_Version {
 		$detect  = $this->detect_constant( $content );
 
 		if ( $this->detected( $detect ) && $target_version !== $detect[0] ) {
-			echo "* Fix main [const] version: {$detect[0]} ---> {$target_version}\n";
+			echo "* Fix main [const] version: $detect[0] ---> $target_version\n";
 			$content = $this->replace_version( $content, $target_version, $detect );
 			file_put_contents( $main_path, $content );
 		} else {
 			$detect = $this->detect_define( $content );
 			if ( $this->detected( $detect ) && $target_version !== $detect[0] ) {
-				echo "* Fix main [define] version: {$detect[0]} ---> {$target_version}\n";
+				echo "* Fix main [define] version: $detect[0] ---> $target_version\n";
 				$content = $this->replace_version( $content, $target_version, $detect );
 				file_put_contents( $main_path, $content );
 			}
@@ -102,7 +99,7 @@ class NBPC_Sync_Version {
 		if ( is_array( $content ) ) {
 			$version = $content['version'] ?? '{empty version}';
 			if ( $version !== $target_version ) {
-				echo "* Fix {$file_name} version: {$version} ---> {$target_version}\n";
+				echo "* Fix $file_name version: $version ---> $target_version\n";
 			}
 			$content['version'] = $target_version;
 			$this->save_as_json( $json_path, $content );
@@ -137,7 +134,7 @@ class NBPC_Sync_Version {
 			// JSON_PRETTY_PRINT gets indent of 4.
 			$dump = preg_replace_callback(
 				'/^(\s+)(.+)/m',
-				function ( array $match ) { return str_pad( '', strlen( $match[1] ) / 2, ' ' ) . $match[2]; },
+				function ( array $match ) { return str_pad( '', strlen( $match[1] ) / 2 ) . $match[2]; },
 				$dump
 			);
             $dump .= PHP_EOL;

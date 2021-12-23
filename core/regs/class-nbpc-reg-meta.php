@@ -22,9 +22,9 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 	class NBPC_Reg_Meta implements NBPC_Reg {
 		private static array $meta = [];
 
-		private string $object_type = '';
+		private string $object_type;
 
-		private string $meta_key = '';
+		private string $meta_key;
 
 		private array $args;
 
@@ -209,7 +209,7 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 		 *
 		 * @return bool|int|WP_Error
 		 */
-		public function add( $object_id, $meta_value, $unique = false ) {
+		public function add( $object_id, $meta_value, bool $unique = false ) {
 			switch ( $this->object_type ) {
 				case 'comment':
 					return add_comment_meta(
@@ -311,8 +311,8 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 		/**
 		 * Delete meta value of an object.
 		 *
-		 * @param mixed  $object_id
-		 * @param string $meta_value
+		 * @param mixed $object_id
+		 * @param mixed $meta_value
 		 *
 		 * @return bool
 		 */

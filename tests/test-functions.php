@@ -19,6 +19,9 @@ class Test_Functions extends WP_UnitTestCase {
 		$this->assertInstanceOf( NBPC_Register_Ajax::class, nbpc_parse_module( 'registers.ajax' ) );
 	}
 
+	/**
+	 * @throws NBPC_Callback_Exception
+	 */
 	public function test_nbpc_parse_callback() {
 		$anon = new class { public function cb() { } };
 		$func = function () { };

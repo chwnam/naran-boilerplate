@@ -37,7 +37,7 @@ if ( ! function_exists( 'nbpc_cleanup_meta' ) ) {
 		foreach ( $meta_keys as $object_type => $keys ) {
 			if ( ! empty( $keys ) ) {
 				$placeholder = implode( ', ', array_pad( [], count( $keys ), '%s' ) );
-				$query       = "DELETE FROM {$wpdb->prefix}{$object_type}meta WHERE meta_key IN ({$placeholder})";
+				$query       = "DELETE FROM $wpdb->prefix{$object_type}meta WHERE meta_key IN ($placeholder)";
 				$wpdb->query( $wpdb->prepare( $query, $keys ) );
 			}
 		}
@@ -67,7 +67,7 @@ if ( ! function_exists( 'nbpc_cleanup_option' ) ) {
 
 		if ( $option_names ) {
 			$placeholder = implode( ', ', array_pad( [], count( $option_names ), '%s' ) );
-			$query       = "DELETE FROM {$wpdb->options} WHERE option_name IN ({$placeholder})";
+			$query       = "DELETE FROM $wpdb->options WHERE option_name IN ($placeholder)";
 			$wpdb->query( $wpdb->prepare( $query, $option_names ) );
 		}
 	}
@@ -96,8 +96,8 @@ if ( ! function_exists( 'nbpc_cleanup_terms' ) ) {
 		if ( $taxonomies ) {
 			$placeholder = implode( ', ', array_pad( [], count( $taxonomies ), '%s' ) );
 
-			$sql = "SELECT term_taxonomy_id, term_id FROM {$wpdb->term_taxonomy}" .
-			       " WHERE taxonomy IN ({$placeholder})";
+			$sql = "SELECT term_taxonomy_id, term_id FROM $wpdb->term_taxonomy" .
+			       " WHERE taxonomy IN ($placeholder)";
 
 			$terms = $wpdb->get_results( $wpdb->prepare( $sql, $taxonomies ) );
 
@@ -109,9 +109,9 @@ if ( ! function_exists( 'nbpc_cleanup_terms' ) ) {
 				$t_ids         = wp_list_pluck( $terms, 'term_id' );
 				$t_placeholder = implode( ', ', array_pad( [], count( $t_ids ), '%d' ) );
 
-				$obj_query = "DELETE FROM {$wpdb->term_relationships} WHERE term_taxonomy_id IN ({$tax_placeholder})";
-				$tax_query = "DELETE FROM {$wpdb->term_taxonomy} WHERE term_taxonomy_id IN ({$tax_placeholder})";
-				$t_query   = "DELETE FROM {$wpdb->terms} WHERE term_id IN ({$t_placeholder})";
+				$obj_query = "DELETE FROM $wpdb->term_relationships WHERE term_taxonomy_id IN ($tax_placeholder)";
+				$tax_query = "DELETE FROM $wpdb->term_taxonomy WHERE term_taxonomy_id IN ($tax_placeholder)";
+				$t_query   = "DELETE FROM $wpdb->terms WHERE term_id IN ($t_placeholder)";
 
 				$wpdb->query( $wpdb->prepare( $obj_query, $tax_ids ) );
 				$wpdb->query( $wpdb->prepare( $tax_query, $tax_ids ) );
@@ -143,7 +143,7 @@ if ( ! function_exists( 'nbpc_cleanup_posts' ) ) {
 		$post_types = array_filter( array_unique( $post_types ) );
 		if ( $post_types ) {
 			$placeholder = implode( ', ', array_pad( [], count( $post_types ), '%s' ) );
-			$query       = "DELETE FROM {$wpdb->posts} WHERE post_type IN ({$placeholder})";
+			$query       = "DELETE FROM $wpdb->posts WHERE post_type IN ($placeholder)";
 			$wpdb->query( $wpdb->prepare( $query, $post_types ) );
 		}
 	}
