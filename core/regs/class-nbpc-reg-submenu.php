@@ -40,7 +40,7 @@ if ( ! class_exists( 'NBPC_Reg_Submenu' ) ) {
 			string $capability,
 			string $menu_slug,
 			$callback,
-			?int $position = null,
+			?int $position = null
 		) {
 			$this->parent_slug = $parent_slug;
 			$this->page_title  = $page_title;
