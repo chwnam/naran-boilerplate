@@ -1,3 +1,11 @@
+1.2.5
+-----
+2021-12-25
+
+- Add: Menu reg, register.
+- Fix: Better NBPC_Reg_Script::WP_SCRIPT $src support (#54).
+
+
 1.2.4
 -----
 2021-12-23

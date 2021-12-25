@@ -22,15 +22,26 @@ class Test_Register_Script extends WP_UnitTestCase {
 	}
 
 	public function setUp() {
-		$this->register = new class() extends NBPC_Register_Script {
+		$this->register = new class() extends NBPC_Register_Base_Script {
 			public function get_items(): Generator {
 				yield new NBPC_Reg_Script(
 					'nbpc-foo',
 					$this->src_helper( 'script.min.js' ),
 					[],
 				);
+
+				yield new NBPC_Reg_Script(
+					'nbpc-bar',
+					$this->src_helper( 'dist/bar.js' ),
+					NBPC_Reg_Script::WP_SCRIPT
+				);
 			}
 		};
+	}
+
+	public function tearDown() {
+		wp_deregister_script( 'nbpc-foo' );
+		wp_deregister_script( 'nbpc-bar' );
 	}
 
 	public function test_get_items() {
@@ -48,5 +59,24 @@ class Test_Register_Script extends WP_UnitTestCase {
 
 		// Check if .min.js is correctly replaced when SCRIPT_DEBUG=true.
 		$this->assertEquals( "{$url}assets/js/script.js", $item->src );
+	}
+
+	public function test_wp_script() {
+		$path = plugin_dir_path( nbpc()->get_main_file() ) . 'assets/js/dist/';
+
+		file_put_contents( $path . 'bar.js', '' );
+		file_put_contents( $path . 'bar.asset.php', '<?php return [];' );
+
+		do_action( 'init' );
+
+		// Check if absolute URL of WP_SCRIPT is handled and is correct.
+		$wp_scripts   = wp_scripts();
+		$src_expected = plugins_url( 'assets/js/dist/bar.js', nbpc()->get_main_file() );
+		$src_actual   = $wp_scripts->registered['nbpc-bar']->src;
+
+		unlink( $path . 'bar.js' );
+		unlink( $path . 'bar.asset.php' );
+
+		$this->assertEquals( $src_expected, $src_actual );
 	}
 }
