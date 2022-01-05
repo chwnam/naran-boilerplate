@@ -3,10 +3,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Naran Boilerplate Code 1.1.2\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/naran-boilerplate-"
-"code\n"
-"POT-Creation-Date: 2021-11-29T16:12:48+09:00\n"
-"PO-Revision-Date: 2021-11-29 16:13+0900\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/naran-"
+"boilerplate\n"
+"POT-Creation-Date: 2022-01-05T11:14:43+09:00\n"
+"PO-Revision-Date: 2022-01-05 11:16+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ko_KR\n"
@@ -42,10 +42,19 @@ msgstr "https://blog.changwoo.pe.kr/"
 msgid "%s is invalid for callback."
 msgstr "%s는 올바른 콜백이 아닙니다."
 
-#: includes/class-nbpc-main.php:45
+#. translators: formatted callback
+#: core/abstracts/registers/abstract-nbpc-register-base-rewrite-rule.php:64
+msgid ""
+"Rewrite rule binding `%s` is invalid. Please check your rewrite rule "
+"register items."
+msgstr ""
+"다시쓰기 규칙 바인딩 `%s`은(는) 올바르지 않습니다. 다시쓰기  규칙 레"
+"지스터 항목을 다시 확인하세요."
+
+#: includes/class-nbpc-main.php:46
 msgid "NBPC settings"
 msgstr "NBPC 설정"
 
-#: includes/class-nbpc-main.php:46
+#: includes/class-nbpc-main.php:47
 msgid "Settings"
 msgstr "설정"
