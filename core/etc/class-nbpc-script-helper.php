@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Script_Helper' ) ) {
 	class NBPC_Script_Helper {
-		/** @var NBPC_Module|object */
+		/** @var NBPC_Template_Impl|NBPC_Module */
 		private $parent;
 
 		/** @var string */
@@ -85,6 +85,9 @@ if ( ! class_exists( 'NBPC_Script_Helper' ) ) {
 			return $this;
 		}
 
+		/**
+		 * @return NBPC_Template_Impl|NBPC_Module
+		 */
 		public function then() {
 			return $this->parent;
 		}
