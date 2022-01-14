@@ -1,3 +1,11 @@
+1.2.7
+-----
+2022-01-14
+
+- Fix: better type hint when method chaining NBPC_Script_Helper::then() with NBPC_Template_Impl::render().
+- Fix: Fix NBPC_Register_Widget::get_items() typo.
+
+
 1.2.6
 -----
 2022-01-05
