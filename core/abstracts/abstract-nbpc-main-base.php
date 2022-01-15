@@ -37,6 +37,15 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		private array $parsed_cache = [];
 
 		/**
+		 * Module's constructor parameters.
+		 * Key:   module name
+		 * Value: Array for constructor.
+		 *
+		 * @var array
+		 */
+		private array $constructor_params = [];
+
+		/**
 		 * Get instance method.
 		 *
 		 * @return NBPC_Main_Base
@@ -82,7 +91,7 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 */
 		public function get_module_by_notation( string $module_notation ) {
 			if ( class_exists( $module_notation ) ) {
-				return new $module_notation();
+				return $this->new_instance( $module_notation );
 			} elseif ( $module_notation ) {
 				if ( ! isset( $this->parsed_cache[ $module_notation ] ) ) {
 					$module = $this;
@@ -168,11 +177,12 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		}
 
 		/**
-		 * Initialize conditional modules.
+		 * Return constructor params.
 		 *
-		 * @return void
+		 * @return array
 		 */
-		public function init_conditional_modules() {
+		public function get_constructor_params(): array {
+			return $this->constructor_params;
 		}
 
 		/**
@@ -180,16 +190,25 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 * @uses NBPC_Main_Base::load_textdomain()
 		 */
 		protected function initialize() {
-			$this->assign_modules( $this->get_modules() );
-
 			$this
+				->assign_constructors( $this->get_constructors() )
+				->assign_modules( $this->get_modules() )
 				->add_action( 'plugins_loaded', 'load_textdomain' )
-				->add_action( 'wp', 'init_conditional_modules' )
 			;
+
+			// Add 'init_conditional_modules' method if exists.
+			if ( method_exists( $this, 'init_conditional_modules' ) ) {
+				$this->add_action( 'wp', 'init_conditional_modules' );
+			}
 
 			$this->extra_initialize();
 
 			do_action( 'nbpc_initialized' );
+		}
+
+		protected function assign_constructors( array $constructors ): NBPC_Main_Base {
+			$this->constructor_params = $constructors;
+			return $this;
 		}
 
 		/**
@@ -198,6 +217,13 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 * @return array
 		 */
 		abstract protected function get_modules(): array;
+
+		/**
+		 * Return constructor params
+		 *
+		 * @return array
+		 */
+		abstract protected function get_constructors(): array;
 
 		/**
 		 * Do NBPC_Main specific initialization.

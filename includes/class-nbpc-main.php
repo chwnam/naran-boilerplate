@@ -26,6 +26,18 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 			return [
 				'admins'    => NBPC_Admins::class,
 				'registers' => NBPC_Registers::class,
+				'child'=> NBPC_Child::class,
+			];
+		}
+
+		/**
+		 * Return module's constructor.
+		 *
+		 * @return array
+		 */
+		protected function get_constructors(): array {
+			return [
+				NBPC_Parent::class => [1, 2]
 			];
 		}
 
@@ -45,7 +57,7 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 						admin_url( 'options-general.php?page=nbpc' ), // NOTE: You need to implement the page.
 						esc_attr__( 'NBPC settings', 'nbpc' ),
 						esc_html__( 'Settings', 'nbpc' )
-					)
+					),
 				],
 				$actions
 			);

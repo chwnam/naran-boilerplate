@@ -1,3 +1,15 @@
+1.3.0
+-----
+2022-01-16
+
+- Add: Very simple dependency injector.
+- Add: NBPC_Hook_Impl::add_action_once(), NBPC_Hook_Impl::add_filter_once() are added.
+- Add: make-zip script.
+- Mod: NBPC_Main_Base::init_conditional_modules() is removed. Implement it in NBPC_Main when it is needed.
+- Mod: The seconds parameters of NBPC_Hook_Impl::add_action(), and NBPC_Hook_Impl::add_filter() may be omitted.
+- Mod: NBPC_Submodule_Impl::assign_modules() returns self.
+
+
 1.2.7
 -----
 2022-01-14

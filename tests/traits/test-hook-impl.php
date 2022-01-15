@@ -39,6 +39,12 @@ class Test_Hook_Impl extends WP_UnitTestCase {
 		// remove action
 		$this->remove_action( 'nbpc_test_hook_action', 'fake_action_callback' );
 		$this->assertEquals( 0, has_action( 'nbpc_test_hook_action', 'fake_action_callback' ) );
+
+		// Check if calling add_action() without $function_to_add is works.
+		$this->action_value = 0;
+		$this->add_action( 'fake_action_callback' );
+		do_action( 'fake_action_callback' );
+		$this->assertEquals( 1, $this->action_value );
 	}
 
 	public function test_add_filter_remove_filter() {
@@ -63,6 +69,38 @@ class Test_Hook_Impl extends WP_UnitTestCase {
 		// remove action
 		$this->remove_action( 'nbpc_test_hook_filter', 'fake_filter_callback' );
 		$this->assertEquals( 0, has_action( 'nbpc_test_hook_filter', 'fake_filter_callback' ) );
+
+		// Check if calling add_filter() without $function_to_add is works.
+		$this->add_action( 'fake_filter_callback' );
+		$this->assertEquals( 2, apply_filters( 'fake_filter_callback', 1 ) );
+	}
+
+	public function test_add_action_once() {
+		$counter = 0;
+
+		// Callback: increase $counter.
+		$this->add_action_once( 'test_action_once', function () use ( &$counter ) { $counter += 1; } );
+
+		// Call the action twice.
+		do_action( 'test_action_once' );
+		do_action( 'test_action_once' );
+
+		// Check if $counter is one even if the action is called twice.
+		$this->assertEquals( 1, $counter );
+	}
+
+	public function test_add_filter_once() {
+		$counter = 0;
+
+		// Filter: increase $counter.
+		$this->add_filter_once( 'test_filter_once', function ( $c ) { return $c + 1; } );
+
+		// Apply the filter twice.
+		$counter = apply_filters( 'test_filter_once', $counter );
+		$counter = apply_filters( 'test_filter_once', $counter );
+
+		// Check if $counter is one even if the filter is called twice.
+		$this->assertEquals( 1, $counter );
 	}
 
 	public function fake_action_callback() {

@@ -29,9 +29,6 @@ class Test_Main extends WP_UnitTestCase {
 		$this->assertEquals( '1', $nbpc->get( 'foo' ) );
 		$this->assertEquals( '', $nbpc->get( 'bar' ) );
 
-		// Check if conditional module callback is added.
-		$this->assertEquals( $nbpc->get_priority(), has_action( 'wp', [ $nbpc, 'init_conditional_modules' ] ) );
-
 		// Check if 'nbpc_initialized' action is done.
 		$this->assertTrue( boolval( did_action( 'nbpc_initialized' ) ) );
 		// Check if 'get_module_by_notation' method works.
