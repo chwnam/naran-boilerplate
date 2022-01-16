@@ -26,7 +26,6 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 			return [
 				'admins'    => NBPC_Admins::class,
 				'registers' => NBPC_Registers::class,
-				'child'=> NBPC_Child::class,
 			];
 		}
 
@@ -36,9 +35,7 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 		 * @return array
 		 */
 		protected function get_constructors(): array {
-			return [
-				NBPC_Parent::class => [1, 2]
-			];
+			return [];
 		}
 
 		protected function extra_initialize(): void {
