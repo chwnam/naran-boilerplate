@@ -31,7 +31,7 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 
 				$styl = get_stylesheet_directory();
 				$tmpl = get_template_directory();
-				$plug = dirname(nbpc()->get_main_file());
+				$plug = dirname( nbpc()->get_main_file() );
 
 				$paths = [
 					$variant ? "$styl/nbpc/$dir/$file_name-$variant.$ext" : false,
@@ -62,17 +62,21 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 			return $located;
 		}
 
-		protected function render_file( string $file_name, array $context = [], bool $echo = true ): string {
-			if ( file_exists( $file_name ) && is_readable( $file_name ) ) {
-				if ( ! empty( $context ) ) {
-					extract( $context, EXTR_SKIP );
-				}
-
+		protected function render_file( string $___file_name___, array $context = [], bool $echo = true ): string {
+			if ( file_exists( $___file_name___ ) && is_readable( $___file_name___ ) ) {
 				if ( ! $echo ) {
 					ob_start();
 				}
 
-				include $file_name;
+				// static lambda immediately invoked.
+				// This prevents from accessing from the template inside.
+				( static function () use ( $context, $___file_name___ ) {
+					if ( ! empty( $context ) ) {
+						extract( $context, EXTR_SKIP );
+					}
+					unset( $context );
+					include $___file_name___;
+				} )();
 
 				if ( ! $echo ) {
 					return ob_get_clean();
