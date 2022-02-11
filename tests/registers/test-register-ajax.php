@@ -22,7 +22,13 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 				yield new NBPC_Reg_Ajax( 'action_only_nopriv', 'callback_2', 'only_nopriv' );
 
 				yield new NBPC_Reg_Ajax( 'action_wc-ajax', 'callback_3', false, true, 55 );
+
+				yield new NBPC_Reg_Ajax( 'action_wc_ajax_test', function () {
+					$this->test_called = true;
+					}, false, true );
 			}
+
+			public bool $test_called = false;
 		};
 
 		do_action( 'init' );
@@ -148,5 +154,16 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 
 		// Check priority value.
 		$this->assertEquals( 55, $item->priority );
+	}
+
+	public function test_wc_ajax_invocation() {
+		// Check if wc-ajax callback is really invoked. (Issue #61)
+		$_GET['wc-ajax'] = 'action_wc_ajax_test';
+
+		$this->register->test_called = false;
+
+		do_action( 'wc_ajax_action_wc_ajax_test' );
+
+		$this->assertTrue( $this->register->test_called );
 	}
 }

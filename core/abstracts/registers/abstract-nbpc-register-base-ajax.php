@@ -14,6 +14,8 @@ if ( ! class_exists( 'NBPC_Register_Base_Ajax' ) ) {
 
 		private array $inner_handlers = [];
 
+		private array $wc_ajax = [];
+
 		public function __construct() {
 			$this->add_action( 'init', 'register' );
 		}
@@ -30,6 +32,9 @@ if ( ! class_exists( 'NBPC_Register_Base_Ajax' ) ) {
 					! isset( $this->inner_handlers[ $item->action ] )
 				) {
 					$this->inner_handlers[ $item->action ] = $item->callback;
+					if ( $item->is_wc_ajax ) {
+						$this->wc_ajax[ $item->action ] = true;
+					}
 					$item->register( [ $this, 'dispatch' ] );
 				}
 			}
@@ -37,6 +42,11 @@ if ( ! class_exists( 'NBPC_Register_Base_Ajax' ) ) {
 
 		public function dispatch() {
 			$action = $_REQUEST['action'] ?? '';
+
+			// Action value may come from wc-ajax.
+			if ( ! $action && $this->wc_ajax[ $_GET['wc-ajax'] ?? '' ] ?? false ) {
+				$action = $_GET['wc-ajax'];
+			}
 
 			if ( $action && isset( $this->inner_handlers[ $action ] ) ) {
 				try {

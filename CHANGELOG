@@ -1,6 +1,7 @@
 ongoing
 -------
 - Mod: NBPC_Template_Impl::render_file() protects accessing class' object variables from template code.
+- Fix: wc-ajax callback was not called properly (Issue #61).
 
 
 1.3.1
