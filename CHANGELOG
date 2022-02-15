@@ -1,5 +1,7 @@
-ongoing
--------
+1.3.2
+-----
+2022-02-15
+
 - Mod: NBPC_Template_Impl::render_file() protects accessing class' object variables from template code.
 - Fix: wc-ajax callback was not called properly (Issue #61).
 - Fix: prefix-change.php now accepts uppercase letters entered via standard input (Issue #60).
@@ -8,6 +10,7 @@ ongoing
 1.3.1
 -----
 2022-01-16
+
 - Mod: Update composer 'post-create-project-cmd' command.
 - Mod: Update README.md.
 - Fix: NBPC_Main class typo.
