@@ -2,6 +2,7 @@ ongoing
 -------
 - Mod: NBPC_Template_Impl::render_file() protects accessing class' object variables from template code.
 - Fix: wc-ajax callback was not called properly (Issue #61).
+- Fix: prefix-change.php now accepts uppercase letters entered via standard input (Issue #60).
 
 
 1.3.1

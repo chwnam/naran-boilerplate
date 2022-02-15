@@ -235,7 +235,7 @@ function get_new_prefix(): string {
 	while ( true ) {
 		try {
 			echo 'Please enter your new prefix (Enter \'exit\' to skip): ';
-			$new_prefix = trim( fgets( STDIN ) );
+			$new_prefix = strtolower( trim( fgets( STDIN ) ) );
 			if ( 'exit' === $new_prefix ) {
 				echo 'prefix-change.php skipped.' . PHP_EOL;
 				exit;
