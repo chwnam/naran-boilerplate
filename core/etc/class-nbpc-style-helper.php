@@ -10,11 +10,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Style_Helper' ) ) {
 	class NBPC_Style_Helper {
-		/** @var NBPC_Module|object */
+		/**
+		 * Parent module object
+		 *
+		 * @var NBPC_Template_Impl|NBPC_Module
+		 */
 		private $parent;
 
+		/**
+		 * Script handle
+		 *
+		 * @var string
+		 */
 		private string $handle;
 
+		/**
+		 * Constructor method
+		 *
+		 * @param NBPC_Template_Impl|NBPC_Module $parent Parent module object.
+		 * @param string                         $handle Script handle.
+		 */
 		public function __construct( $parent, string $handle ) {
 			$this->parent = $parent;
 			$this->handle = $handle;
@@ -52,6 +67,11 @@ if ( ! class_exists( 'NBPC_Style_Helper' ) ) {
 			return $this;
 		}
 
+		/**
+		 * Finish call chain
+		 *
+		 * @return NBPC_Module|NBPC_Template_Impl
+		 */
 		public function then() {
 			return $this->parent;
 		}

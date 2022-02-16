@@ -12,11 +12,16 @@ if ( ! class_exists( 'NBPC_Register_Base_Cron_Schedule' ) ) {
 	abstract class NBPC_Register_Base_Cron_Schedule implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
+		/**
+		 * Constructor method.
+		 */
 		public function __construct() {
 			$this->add_filter( 'cron_schedules', 'register' );
 		}
 
 		/**
+		 * Register cron schedule regs.
+		 *
 		 * @callback
 		 * @filter   cron_schedules
 		 *

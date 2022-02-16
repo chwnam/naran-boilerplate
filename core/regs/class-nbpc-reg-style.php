@@ -22,10 +22,12 @@ if ( ! class_exists( 'NBPC_Reg_Style' ) ) {
 		public string $media;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param string           $handle
 		 * @param string           $src
 		 * @param array            $deps
-		 * @param string|bool|null $ver null: Use plugin version / true: Use WordPress version / false: No version
+		 * @param string|bool|null $ver null: Use plugin version / true: Use WordPress version / false: No version.
 		 * @param string           $media
 		 */
 		public function __construct(
@@ -42,7 +44,7 @@ if ( ! class_exists( 'NBPC_Reg_Style' ) ) {
 			$this->media  = $media;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			if ( $this->handle && $this->src && ! wp_style_is( $this->handle, 'registered' ) ) {
 				wp_register_style(
 					$this->handle,

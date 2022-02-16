@@ -133,7 +133,7 @@ class Test_Register_Post_Meta extends WP_UnitTestCase {
 		try {
 			$meta       = new NBPC_Reg_Meta( 'post', 'test' );
 			$reflection = new ReflectionClass( NBPC_Reg_Meta::class );
-			$method     = $reflection->getMethod( '_get_id' );
+			$method     = $reflection->getMethod( 'safe_get_id' );
 			$method->setAccessible( true );
 
 			$std     = new stdClass();

@@ -6,8 +6,10 @@ class NBPC_Sync_Version {
 	 * Run version change.
 	 *
 	 * @param string $main_path Plugin main file path.
+	 *
+	 * @throws JsonException
 	 */
-	public function sync( string $main_path ) {
+	public function sync( string $main_path ): void {
 		$this->check_file_permission( $main_path, 'Main file' );
 
 		$composer = dirname( $main_path ) . '/composer.json';
@@ -17,9 +19,9 @@ class NBPC_Sync_Version {
 		$target_version = $this->get_main_file_version( $main_path );
 		if ( empty( $target_version ) ) {
 			die( "[Error] Version info not found from the main file header comment.\n" );
-		} else {
-			echo "* Target version: $target_version\n";
 		}
+
+		echo "* Target version: $target_version\n";
 
 		// Change main file const or define version.
 		$this->apply_change_main( $main_path, $target_version );
@@ -36,13 +38,19 @@ class NBPC_Sync_Version {
 	 *
 	 * @param string $path
 	 * @param string $display
+	 *
+	 * @return void
 	 */
-	private function check_file_permission( string $path, string $display ) {
+	private function check_file_permission( string $path, string $display ): void {
 		if ( ! file_exists( $path ) || ! is_file( $path ) ) {
 			die( "$display is not found.\n" );
-		} elseif ( ! is_readable( $path ) ) {
+		}
+
+		if ( ! is_readable( $path ) ) {
 			die( "$display is not readable.\n" );
-		} elseif ( ! is_writable( $path ) ) {
+		}
+
+		if ( ! is_writable( $path ) ) {
 			die( "$display is not writable.\n" );
 		}
 	}
@@ -66,8 +74,10 @@ class NBPC_Sync_Version {
 	 *
 	 * @param string $main_path
 	 * @param string $target_version
+	 *
+	 * @return void
 	 */
-	private function apply_change_main( string $main_path, string $target_version ) {
+	private function apply_change_main( string $main_path, string $target_version ): void {
 		$content = $this->get_content( $main_path );
 		$detect  = $this->detect_constant( $content );
 
@@ -91,10 +101,13 @@ class NBPC_Sync_Version {
 	 * @param string $json_path      'composer.json' path.
 	 * @param string $target_version Version to change.
 	 * @param string $file_name      File name to display.
+	 *
+	 * @return void
+	 * @throws JsonException
 	 */
-	private function apply_change_json( string $json_path, string $target_version, string $file_name ) {
+	private function apply_change_json( string $json_path, string $target_version, string $file_name ): void {
 		$this->check_file_permission( $json_path, $file_name );
-		$content = json_decode( $this->get_content( $json_path ), true );
+		$content = json_decode( $this->get_content( $json_path ), true, 512, JSON_THROW_ON_ERROR );
 
 		if ( is_array( $content ) ) {
 			$version = $content['version'] ?? '{empty version}';
@@ -116,9 +129,9 @@ class NBPC_Sync_Version {
 	private function get_content( string $path ): string {
 		if ( file_exists( $path ) && is_readable( $path ) ) {
 			return file_get_contents( $path );
-		} else {
-			return '';
 		}
+
+		return '';
 	}
 
 	/**
@@ -126,18 +139,21 @@ class NBPC_Sync_Version {
 	 *
 	 * @param string $path
 	 * @param array  $content
+	 *
+	 * @return void
+	 * @throws JsonException
 	 */
-	private function save_as_json( string $path, array $content ) {
-		$dump = json_encode( $content, JSON_PRETTY_PRINT |  JSON_UNESCAPED_SLASHES);
+	private function save_as_json( string $path, array $content ): void {
+		$dump = json_encode( $content, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
 
 		if ( $dump ) {
 			// JSON_PRETTY_PRINT gets indent of 4.
 			$dump = preg_replace_callback(
 				'/^(\s+)(.+)/m',
-				function ( array $match ) { return str_pad( '', strlen( $match[1] ) / 2 ) . $match[2]; },
+				static function ( array $match ) { return str_pad( '', strlen( $match[1] ) / 2 ) . $match[2]; },
 				$dump
 			);
-            $dump .= PHP_EOL;
+			$dump .= PHP_EOL;
 
 			file_put_contents( $path, $dump );
 		}
@@ -162,8 +178,8 @@ class NBPC_Sync_Version {
 			return [ '', 0, 0 ];
 		}
 
-		$headers = $matches[1][0];
-		$offset  = $matches[1][1];
+		[ $headers, $offset ] = $matches[1];
+
 		$len     = 0;
 		$version = '';
 
@@ -204,9 +220,9 @@ class NBPC_Sync_Version {
 		);
 
 		if ( $m ) {
-			$version = $matches[1][0];
-			$offset  = $matches[1][1];
-			$len     = strlen( $version );
+			[ $version, $offset ] = $matches[1];
+
+			$len = strlen( $version );
 		}
 
 		return [ $version, $offset, $len ];
@@ -233,16 +249,13 @@ class NBPC_Sync_Version {
 	 * @return string
 	 */
 	private function replace_version( string $content, string $version, array $detect ): string {
-		if ( $this->detected( $detect ) ) {
-			if (
-				strlen( $content ) > $detect[1] + $detect[2] &&
-				$detect[0] &&
-				$detect[0] === substr( $content, $detect[1], $detect[2] )
-			) {
-				$before  = substr( $content, 0, $detect[1] );
-				$after   = substr( $content, $detect[1] + $detect[2] );
-				$content = $before . $version . $after;
-			}
+		if (
+			$this->detected( $detect ) &&
+			strlen( $content ) > $detect[1] + $detect[2] &&
+			$detect[0] === substr( $content, $detect[1], $detect[2] ) ) {
+			$before  = substr( $content, 0, $detect[1] );
+			$after   = substr( $content, $detect[1] + $detect[2] );
+			$content = $before . $version . $after;
 		}
 
 		return $content;
@@ -276,9 +289,9 @@ class NBPC_Sync_Version {
 		);
 
 		if ( $m ) {
-			$version = $matches[1][0];
-			$offset  = $matches[1][1];
-			$len     = strlen( $version );
+			[ $version, $offset ] = $matches[1];
+
+			$len = strlen( $version );
 		}
 
 		return [ $version, $offset, $len ];
@@ -292,9 +305,13 @@ function help() {
 	echo "       MAIN_FILE your plugin main file.\n\n";
 }
 
-if ( 'cli' === php_sapi_name() ) {
+if ( 'cli' === PHP_SAPI ) {
 	if ( 2 === $argc ) {
-		( new NBPC_Sync_Version() )->sync( realpath( $argv[1] ) );
+		try {
+			( new NBPC_Sync_Version() )->sync( realpath( $argv[1] ) );
+		} catch ( JsonException $e ) {
+			die( $e->getMessage() );
+		}
 	} else {
 		help();
 	}

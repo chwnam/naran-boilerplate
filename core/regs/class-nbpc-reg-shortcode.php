@@ -23,6 +23,8 @@ if ( ! class_exists( 'NBPC_Reg_Shortcode' ) ) {
 		public $heading_action;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param string               $tag
 		 * @param string|callable      $callback
 		 * @param string|callable|null $heading_action
@@ -33,7 +35,7 @@ if ( ! class_exists( 'NBPC_Reg_Shortcode' ) ) {
 			$this->heading_action = $heading_action;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			add_shortcode( $this->tag, $dispatch );
 		}
 	}

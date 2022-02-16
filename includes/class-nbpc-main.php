@@ -38,14 +38,30 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 			return [];
 		}
 
+		/**
+		 * Do extra initialization.
+		 *
+		 * @return void
+		 */
 		protected function extra_initialize(): void {
+			// phpcs:disable Squiz.PHP.CommentedOutCode, Squiz.Commenting.InlineComment.InvalidEndChar
+
 			// Do some plugin-specific initialization tasks.
 			// $plugin = plugin_basename( $this->get_main_file() );
 			// $this->add_filter( "plugin_action_links_$plugin", 'add_plugin_action_links' );
+
+			// phpcs:enable Squiz.PHP.CommentedOutCode, Squiz.Commenting.InlineComment.InvalidEndChar
 		}
 
+		/**
+		 * Predefined action links callback method.
+		 *
+		 * @param array $actions List of current plugin action links.
+		 *
+		 * @return array
+		 */
 		public function add_plugin_action_links( array $actions ): array {
-			/** @noinspection HtmlUnknownTarget */
+			/* @noinspection HtmlUnknownTarget */
 			return array_merge(
 				[
 					'settings' => sprintf(

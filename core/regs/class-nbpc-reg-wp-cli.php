@@ -17,6 +17,8 @@ if ( ! class_exists( 'NBPC_Reg_WP_CLI' ) ) {
 		public array $args;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param string          $name
 		 * @param callable|string $callback
 		 * @param array           $args
@@ -32,9 +34,10 @@ if ( ! class_exists( 'NBPC_Reg_WP_CLI' ) ) {
 		/**
 		 * @param null $dispatch
 		 *
-		 * @throws Exception
+		 * @return void
+		 * @throws Exception Thrown from WP_CLI.
 		 */
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			WP_CLI::add_command( $this->name, $this->callback, $this->args );
 		}
 	}

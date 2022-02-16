@@ -14,12 +14,18 @@ if ( ! class_exists( 'NBPC_Reg_Capability' ) ) {
 
 		public array $capabilities;
 
+		/**
+		 * Constructor method
+		 *
+		 * @param string $role
+		 * @param array  $capabilities
+		 */
 		public function __construct( string $role, array $capabilities ) {
 			$this->role         = $role;
 			$this->capabilities = $capabilities;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			$role = get_role( $this->role );
 
 			if ( $role ) {
@@ -29,7 +35,7 @@ if ( ! class_exists( 'NBPC_Reg_Capability' ) ) {
 			}
 		}
 
-		public function unregister() {
+		public function unregister(): void {
 			$role = get_role( $this->role );
 
 			if ( $role ) {

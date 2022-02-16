@@ -10,17 +10,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Reg_Activation' ) ) {
 	class NBPC_Reg_Activation implements NBPC_Reg {
-		/** @var Closure|array|string */
+		/**
+		 * Callback for activation.
+		 *
+		 * @var Closure|array|string
+		 */
 		public $callback;
 
+		/**
+		 * Arguments for callback function.
+		 *
+		 * @var array
+		 */
 		public array $args;
 
+		/**
+		 * Use error_log.
+		 *
+		 * @var bool
+		 */
 		public bool $error_log;
 
 		/**
-		 * @param Closure|array|string $callback
-		 * @param array                $args
-		 * @param bool                 $error_log
+		 * Constructor method.
+		 *
+		 * @param Closure|array|string $callback  Callback for activation.
+		 * @param array                $args      Arguments for callback function.
+		 * @param bool                 $error_log Use error_log.
 		 */
 		public function __construct( $callback, array $args = [], bool $error_log = true ) {
 			$this->callback  = $callback;
@@ -31,9 +47,11 @@ if ( ! class_exists( 'NBPC_Reg_Activation' ) ) {
 		/**
 		 * Method name can mislead, but it does its activation callback job.
 		 *
-		 * @param null $dispatch
+		 * @param null $dispatch Unused.
+		 *
+		 * @return void
 		 */
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			try {
 				$callback = nbpc_parse_callback( $this->callback );
 			} catch ( NBPC_Callback_Exception $e ) {
@@ -45,6 +63,8 @@ if ( ! class_exists( 'NBPC_Reg_Activation' ) ) {
 						nbpc_format_callback( $this->callback )
 					)
 				);
+				// $error is a WP_Error instance.
+				// phpcs:ignore WordPress.Security.EscapeOutput
 				wp_die( $error );
 			}
 

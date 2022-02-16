@@ -25,6 +25,16 @@ if ( ! class_exists( 'NBPC_Reg_Cron' ) ) {
 
 		public int $is_single_event;
 
+		/**
+		 * Constructor method
+		 *
+		 * @param int    $timestamp
+		 * @param string $schedule
+		 * @param string $hook
+		 * @param array  $args
+		 * @param bool   $wp_error
+		 * @param bool   $is_single_event
+		 */
 		public function __construct(
 			int $timestamp,
 			string $schedule,
@@ -41,7 +51,7 @@ if ( ! class_exists( 'NBPC_Reg_Cron' ) ) {
 			$this->is_single_event = $is_single_event;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			if ( $this->is_single_event ) {
 				wp_schedule_single_event( $this->timestamp, $this->hook, $this->args, $this->wp_error );
 			} else {
@@ -49,7 +59,7 @@ if ( ! class_exists( 'NBPC_Reg_Cron' ) ) {
 			}
 		}
 
-		public function unregister() {
+		public function unregister(): void {
 			if ( wp_next_scheduled( $this->hook, $this->args ) ) {
 				wp_clear_scheduled_hook( $this->hook, $this->args );
 			}

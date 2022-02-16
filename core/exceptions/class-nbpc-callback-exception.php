@@ -9,6 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'NBPC_Callback_Exception' ) ) {
-	class NBPC_Callback_Exception extends Exception{
+	class NBPC_Callback_Exception extends Exception {
 	}
 }

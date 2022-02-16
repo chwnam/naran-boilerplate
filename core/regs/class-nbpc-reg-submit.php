@@ -22,6 +22,8 @@ if ( ! class_exists( 'NBPC_Reg_Submit' ) ) {
 		public int $priority;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param string               $action       Action name.
 		 * @param Closure|array|string $callback     Callback.
 		 * @param string|bool          $allow_nopriv true, false, or 'only_nopriv'.
@@ -39,7 +41,7 @@ if ( ! class_exists( 'NBPC_Reg_Submit' ) ) {
 			$this->priority     = is_null( $priority ) ? nbpc()->get_priority() : $priority;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			if ( $this->action && $this->callback && $dispatch ) {
 				if ( 'only_nopriv' !== $this->allow_nopriv ) {
 					add_action( "admin_post_$this->action", $dispatch, $this->priority );

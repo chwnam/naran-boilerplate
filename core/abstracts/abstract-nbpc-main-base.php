@@ -16,6 +16,8 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		use NBPC_Submodule_Impl;
 
 		/**
+		 * Singleton instance
+		 *
 		 * @var NBPC_Main_Base|null
 		 */
 		private static ?NBPC_Main_Base $instance = null;
@@ -85,14 +87,16 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		/**
 		 * Retrieve submodule by given string notation.
 		 *
-		 * @param string $module_notation
+		 * @param string $module_notation Notation string.
 		 *
 		 * @return object|false
 		 */
 		public function get_module_by_notation( string $module_notation ) {
 			if ( class_exists( $module_notation ) ) {
 				return $this->new_instance( $module_notation );
-			} elseif ( $module_notation ) {
+			}
+
+			if ( $module_notation ) {
 				if ( ! isset( $this->parsed_cache[ $module_notation ] ) ) {
 					$module = $this;
 					foreach ( explode( '.', $module_notation ) as $crumb ) {
@@ -115,16 +119,18 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		/**
 		 * Return submodule's callback method by given string notation.
 		 *
-		 * @param Closure|array|string $item
+		 * @param Closure|array|string $item Module and callback notation string.
 		 *
 		 * @return Closure|array|string
-		 * @throws NBPC_Callback_Exception
+		 * @throws NBPC_Callback_Exception Thrown if callback is invalid.
 		 * @example foo.bar@baz ---> array( nbpc()->foo->bar, 'baz )
 		 */
 		public function parse_callback( $item ) {
 			if ( is_callable( $item ) ) {
 				return $item;
-			} elseif ( is_string( $item ) && false !== strpos( $item, '@' ) ) {
+			}
+
+			if ( is_string( $item ) && false !== strpos( $item, '@' ) ) {
 				[ $module_part, $method ] = explode( '@', $item, 2 );
 
 				$module = $this->get_module_by_notation( $module_part );
@@ -155,6 +161,9 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 
 		/**
 		 * Get something from storage.
+		 *
+		 * @param string $key     Indexing key string.
+		 * @param mixed  $default Value when key is missing in the storage.
 		 */
 		public function get( string $key, $default = '' ) {
 			return $this->storage[ $key ] ?? $default;
@@ -162,8 +171,11 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 
 		/**
 		 * Set something to storage.
+		 *
+		 * @param string $key   Indexing key string.
+		 * @param mixed  $value Value to store.
 		 */
-		public function set( string $key, $value ) {
+		public function set( string $key, $value ): void {
 			$this->storage[ $key ] = $value;
 		}
 
@@ -172,7 +184,7 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 *
 		 * @used-by initialize()
 		 */
-		public function load_textdomain() {
+		public function load_textdomain(): void {
 			load_plugin_textdomain( 'nbpc', false, wp_basename( dirname( $this->get_main_file() ) ) . '/languages' );
 		}
 
@@ -186,10 +198,14 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		}
 
 		/**
+		 * Initialize plugin.
+		 *
+		 * This method is called only once.
+		 *
 		 * @uses NBPC_Main_Base::init_conditional_modules()
 		 * @uses NBPC_Main_Base::load_textdomain()
 		 */
-		protected function initialize() {
+		protected function initialize(): void {
 			$this
 				->assign_constructors( $this->get_constructors() )
 				->assign_modules( $this->get_modules() )

@@ -14,6 +14,9 @@ if ( ! class_exists( 'NBPC_Register_Base_Submit' ) ) {
 
 		private array $inner_handlers = [];
 
+		/**
+		 * Constructor method.
+		 */
 		public function __construct() {
 			$this->add_action( 'init', 'register' );
 		}
@@ -21,8 +24,10 @@ if ( ! class_exists( 'NBPC_Register_Base_Submit' ) ) {
 		/**
 		 * @callback
 		 * @actin       init
+		 *
+		 * @return void
 		 */
-		public function register() {
+		public function register(): void {
 			$dispatch = [ $this, 'dispatch' ];
 
 			foreach ( $this->get_items() as $item ) {
@@ -37,14 +42,16 @@ if ( ! class_exists( 'NBPC_Register_Base_Submit' ) ) {
 			}
 		}
 
-		public function dispatch() {
-			$action = $_REQUEST['action'] ?? '';
+		public function dispatch(): void {
+			// Boilerplate code cannot check nonce values.
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended
+			$action = sanitize_key( $_REQUEST['action'] ?? '' );
 
 			if ( $action && isset( $this->inner_handlers[ $action ] ) ) {
 				try {
 					$callback = nbpc_parse_callback( $this->inner_handlers[ $action ] );
 					if ( is_callable( $callback ) ) {
-						call_user_func( $callback );
+						$callback();
 					}
 				} catch ( NBPC_Callback_Exception $e ) {
 					$error = new WP_Error();
@@ -55,9 +62,13 @@ if ( ! class_exists( 'NBPC_Register_Base_Submit' ) ) {
 							nbpc_format_callback( $this->inner_handlers[ $action ] )
 						)
 					);
+					// $error is a WP_Error instance.
+					// phpcs:ignore WordPress.Security.EscapeOutput
 					wp_die( $error, 404 );
 				}
 			}
+
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		}
 	}
 }

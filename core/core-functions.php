@@ -21,7 +21,7 @@ if ( ! function_exists( 'nbpc_parse_module' ) ) {
 	/**
 	 * Retrieve submodule by given string notation.
 	 *
-	 * @param string $module_notation
+	 * @param string $module_notation Module notation string.
 	 *
 	 * @return object|false;
 	 */
@@ -35,10 +35,10 @@ if ( ! function_exists( 'nbpc_parse_callback' ) ) {
 	/**
 	 * Return submodule's callback method by given string notation.
 	 *
-	 * @param Closure|array|string $maybe_callback
+	 * @param Closure|array|string $maybe_callback Maybe something can be callback function.
 	 *
 	 * @return callable|array|string
-	 * @throws NBPC_Callback_Exception
+	 * @throws NBPC_Callback_Exception Thrown if callback is invalid.
 	 * @example foo.bar@baz ---> array( nbpc()->foo->bar, 'baz )
 	 */
 	function nbpc_parse_callback( $maybe_callback ) {
@@ -125,14 +125,16 @@ if ( ! function_exists( 'nbpc_format_callback' ) ) {
 	 *
 	 * This method does not care about $callable is actually callable.
 	 *
-	 * @param Closure|array|string $callback
+	 * @param Closure|array|string $callback Callback method to be formatted.
 	 *
 	 * @return string
 	 */
 	function nbpc_format_callback( $callback ): string {
 		if ( is_string( $callback ) ) {
 			return $callback;
-		} elseif (
+		}
+
+		if (
 			( is_array( $callback ) && 2 === count( $callback ) ) &&
 			( is_object( $callback[0] ) || is_string( $callback[0] ) ) &&
 			is_string( $callback[1] )
@@ -144,13 +146,16 @@ if ( ! function_exists( 'nbpc_format_callback' ) ) {
 						return "{AnonymousClass}::$callback[1]";
 					}
 				} catch ( ReflectionException $e ) {
+					return "Error while reflecting $callback[0].";
 				}
 			}
 
 			if ( is_string( $callback[0] ) ) {
 				return "$callback[0]::$callback[1]";
-			} elseif ( is_object( $callback[0] ) ) {
-				return get_class( $callback[0] ) . '::' . $callback[1];
+			}
+
+			if ( is_object( $callback[0] ) && 'stdClass' !== get_class( (object) $callback[0] ) ) {
+				return get_class( (object) $callback[0] ) . '::' . $callback[1];
 			}
 		} elseif ( $callback instanceof Closure ) {
 			return '{Closure}';

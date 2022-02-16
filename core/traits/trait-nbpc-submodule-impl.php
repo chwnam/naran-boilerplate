@@ -3,13 +3,17 @@
  * NBPC: Submodule trait
  */
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 	trait NBPC_Submodule_Impl {
+		/**
+		 * Submodules
+		 *
+		 * @var array
+		 */
 		private array $modules = [];
 
 		/**
@@ -23,7 +27,8 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 			if ( ! is_numeric( $name ) ) {
 				$module = $this->modules[ $name ] ?? null;
 				if ( $module instanceof Closure ) {
-					$this->modules[ $name ] = $module = $this->invoke_module( $name, $module );
+					$module                 = $this->invoke_module( $name, $module );
+					$this->modules[ $name ] = $module;
 				}
 			} else {
 				$module = null;
@@ -35,7 +40,7 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		/**
 		 * Check if submodule exists
 		 *
-		 * @param string $name
+		 * @param string $name Module name.
 		 *
 		 * @return bool
 		 */
@@ -46,8 +51,10 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		/**
 		 * Block __set() magic method.
 		 *
-		 * @param string $name
-		 * @param mixed  $value
+		 * @param string $name  Module name.
+		 * @param mixed  $value Unused.
+		 *
+		 * @throws RuntimeException Do not assign.
 		 */
 		public function __set( string $name, $value ) {
 			throw new RuntimeException( 'Assigning object at runtime is not allowed.' );
@@ -56,7 +63,7 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		/**
 		 * Assign modules.
 		 *
-		 * @param array $modules
+		 * @param array $modules Modules
 		 *
 		 * @return self
 		 */
@@ -75,32 +82,35 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		}
 
 		/**
-		 * @param string     $class_name
-		 * @param array|null $constructor_params
+		 * Get a new instance.
+		 *
+		 * @param string     $class_name       Class name string.
+		 * @param array|null $constructor_args Class construct arguments.
 		 *
 		 * @return object|NBPC_Module
 		 */
-		protected function new_instance( string $class_name, ?array $constructor_params = null ) {
-			if ( is_null( $constructor_params ) ) {
-				$constructor_params = nbpc()->get_constructor_params();
+		protected function new_instance( string $class_name, ?array $constructor_args = null ) {
+			if ( is_null( $constructor_args ) ) {
+				$constructor_args = nbpc()->get_constructor_params();
 			}
 
-			if ( $constructor_params ) {
-				if ( isset( $constructor_params[ $class_name ] ) ) {
-					$constructor = $this->__call_if_callable_or_as_is( $constructor_params[ $class_name ] );
+			if ( $constructor_args ) {
+				if ( isset( $constructor_args[ $class_name ] ) ) {
+					$constructor = $this->call_if_callable_or_as_is( $constructor_args[ $class_name ] );
 					return new $class_name( ...$constructor );
-				} else {
-					$items = array_filter(
-						array_merge(
-							(array) class_parents( $class_name ),
-							(array) class_implements( $class_name )
-						)
-					);
-					foreach ( $items as $item ) {
-						if ( isset( $constructor_params[ $item ] ) ) {
-							$constructor = $this->__call_if_callable_or_as_is( $constructor_params[ $item ] );
-							return new $class_name( ... $constructor );
-						}
+				}
+
+				$items = array_filter(
+					array_merge(
+						(array) class_parents( $class_name ),
+						(array) class_implements( $class_name )
+					)
+				);
+
+				foreach ( $items as $item ) {
+					if ( isset( $constructor_args[ $item ] ) ) {
+						$constructor = $this->call_if_callable_or_as_is( $constructor_args[ $item ] );
+						return new $class_name( ... $constructor );
 					}
 				}
 			}
@@ -109,8 +119,10 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		}
 
 		/**
-		 * @param string  $name
-		 * @param Closure $module
+		 * Call module.
+		 *
+		 * @param string  $name   Module name.
+		 * @param Closure $module Closure module to call.
 		 *
 		 * @return object|NBPC_Module
 		 */
@@ -118,19 +130,21 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 			$cps = nbpc()->get_constructor_params();
 
 			if ( isset( $cps[ $name ] ) ) {
-				$params = $this->__call_if_callable_or_as_is( $cps[ $name ] );
+				$params = $this->call_if_callable_or_as_is( $cps[ $name ] );
 				return $module( ...$params );
-			} else {
-				return $module();
 			}
+
+			return $module();
 		}
 
 		/**
-		 * @param mixed $object
+		 * Call or return as-is.
+		 *
+		 * @param mixed $object Input object.
 		 *
 		 * @return mixed
 		 */
-		private function __call_if_callable_or_as_is( $object ) {
+		private function call_if_callable_or_as_is( $object ) {
 			return is_callable( $object ) ? $object() : $object;
 		}
 	}

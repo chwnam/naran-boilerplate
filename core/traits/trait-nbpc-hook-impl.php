@@ -33,8 +33,8 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		): self {
 			add_action(
 				$tag,
-				$this->__hook_parse_callback( $function_to_add, $tag ),
-				$this->__hook_get_priority( $priority ),
+				$this->hook_parse_callback( $function_to_add, $tag ),
+				$this->hook_get_priority( $priority ),
 				$accepted_args
 			);
 
@@ -59,8 +59,8 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		): self {
 			add_filter(
 				$tag,
-				$this->__hook_parse_callback( $function_to_add, $tag ),
-				$this->__hook_get_priority( $priority ),
+				$this->hook_parse_callback( $function_to_add, $tag ),
+				$this->hook_get_priority( $priority ),
 				$accepted_args
 			);
 
@@ -83,8 +83,8 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		): self {
 			remove_action(
 				$tag,
-				$this->__hook_parse_callback( $function_to_remove, $tag ),
-				$this->__hook_get_priority( $priority )
+				$this->hook_parse_callback( $function_to_remove, $tag ),
+				$this->hook_get_priority( $priority )
 			);
 
 			return $this;
@@ -106,8 +106,8 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		): self {
 			remove_filter(
 				$tag,
-				$this->__hook_parse_callback( $function_to_remove, $tag ),
-				$this->__hook_get_priority( $priority )
+				$this->hook_parse_callback( $function_to_remove, $tag ),
+				$this->hook_get_priority( $priority )
 			);
 
 			return $this;
@@ -129,11 +129,11 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 			?int $priority = null,
 			int $accepted_args = 1
 		): self {
-			$callback = $this->__hook_parse_callback( $function_to_add, $tag );
-			$priority = $this->__hook_get_priority( $priority );
+			$callback = $this->hook_parse_callback( $function_to_add, $tag );
+			$priority = $this->hook_get_priority( $priority );
 
 			if ( $callback ) {
-				$wrap = function () use ( $tag, $callback, $priority, &$wrap ) {
+				$wrap = static function () use ( $tag, $callback, $priority, &$wrap ) {
 					remove_action( $tag, $wrap, $priority );
 					call_user_func_array( $callback, func_get_args() );
 				};
@@ -159,11 +159,11 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 			?int $priority = null,
 			int $accepted_args = 1
 		): self {
-			$callback = $this->__hook_parse_callback( $function_to_add, $tag );
-			$priority = $this->__hook_get_priority( $priority );
+			$callback = $this->hook_parse_callback( $function_to_add, $tag );
+			$priority = $this->hook_get_priority( $priority );
 
 			if ( $callback ) {
-				$wrap = function () use ( $tag, $callback, $priority, &$wrap ) {
+				$wrap = static function () use ( $tag, $callback, $priority, &$wrap ) {
 					remove_filter( $tag, $wrap, $priority );
 					return call_user_func_array( $callback, func_get_args() );
 				};
@@ -181,12 +181,16 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		 *
 		 * @return callable|null
 		 */
-		private function __hook_parse_callback( $item, string $alt_method ): ?callable {
+		private function hook_parse_callback( $item, string $alt_method ): ?callable {
 			if ( is_string( $item ) && method_exists( $this, $item ) ) {
 				return [ $this, $item ];
-			} elseif ( is_null( $item ) && method_exists( $this, $alt_method ) ) {
+			}
+
+			if ( is_null( $item ) && method_exists( $this, $alt_method ) ) {
 				return [ $this, $alt_method ];
-			} elseif ( is_callable( $item ) ) {
+			}
+
+			if ( is_callable( $item ) ) {
 				return $item;
 			}
 
@@ -200,8 +204,8 @@ if ( ! trait_exists( 'NBPC_Hook_Impl' ) ) {
 		 *
 		 * @return int
 		 */
-		private function __hook_get_priority( $priority ): int {
-			return is_null( $priority ) ? nbpc()->get_priority() : intval( $priority );
+		private function hook_get_priority( $priority ): int {
+			return is_null( $priority ) ? nbpc()->get_priority() : (int) $priority;
 		}
 	}
 }

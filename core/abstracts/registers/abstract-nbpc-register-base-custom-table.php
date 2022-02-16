@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 	abstract class NBPC_Register_Base_Custom_Table implements NBPC_Register {
-		public function register() {
+		public function register(): void {
 			if ( ! function_exists( 'dbDelta' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			}
@@ -21,8 +21,8 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 			}
 		}
 
-		public function unregister() {
-			foreach( $this->get_items() as $item ) {
+		public function unregister(): void {
+			foreach ( $this->get_items() as $item ) {
 				if ( $item instanceof NBPC_Reg_Custom_Table ) {
 					$item->unregister();
 				}

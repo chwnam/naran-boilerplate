@@ -27,6 +27,8 @@ if ( ! class_exists( 'NBPC_Reg_Menu' ) ) {
 		public bool $remove_submenu;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param string          $page_title
 		 * @param string          $menu_title
 		 * @param string          $capability

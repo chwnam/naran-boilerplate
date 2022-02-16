@@ -15,6 +15,9 @@ if ( ! class_exists( 'NBPC_Register_Base_Option' ) ) {
 		/** @var array Key: alias, value: option_name */
 		private array $fields = [];
 
+		/**
+		 * Constructor method.
+		 */
 		public function __construct() {
 			$this->add_action( 'init', 'register' );
 		}
@@ -22,16 +25,26 @@ if ( ! class_exists( 'NBPC_Register_Base_Option' ) ) {
 		public function __get( string $alias ): ?NBPC_Reg_Option {
 			if ( isset( $this->fields[ $alias ] ) ) {
 				return NBPC_Reg_Option::factory( $this->fields[ $alias ] );
-			} else {
-				return null;
 			}
+
+			return null;
+		}
+
+		public function __set( string $alias, $value ) {
+			throw new RuntimeException( 'Value assignment is now allowed.' );
+		}
+
+		public function __isset( string $alias ): bool {
+			return isset( $this->fields[ $alias ] );
 		}
 
 		/**
 		 * @callback
 		 * @action       init
+		 *
+		 * @return void
 		 */
-		public function register() {
+		public function register(): void {
 			foreach ( $this->get_items() as $idx => $item ) {
 				if ( $item instanceof NBPC_Reg_Option ) {
 					$item->register();

@@ -65,16 +65,20 @@ class NBPC_Prefix_Changer {
 
 		if ( ! preg_match( $pattern, $prefix ) ) {
 			throw new RuntimeException( "Prefix `$prefix` is invalid." );
-		} elseif ( false !== strpos( $prefix, 'nbpc' ) || false !== strpos( $prefix, 'cpbn' ) ) {
+		}
+
+		if ( false !== strpos( $prefix, 'nbpc' ) || false !== strpos( $prefix, 'cpbn' ) ) {
 			throw new RuntimeException( "Prefix cannot contain 'nbpc' or 'cpbn'." );
-		} elseif ( 25 < strlen( $prefix ) ) {
+		}
+
+		if ( 25 < strlen( $prefix ) ) {
 			throw new RuntimeException( "Maximum length exceeded." );
-        }
+		}
 
 		return true;
 	}
 
-	public function change_php_file_name_prefixes() {
+	public function change_php_file_name_prefixes(): void {
 		$old_prefix = $this->lower_dash( $this->old_prefix );
 		$new_prefix = $this->lower_dash( $this->new_prefix );
 		$pattern    = "/^(abstract|class|interface|trait)-$old_prefix-(.+)$/";
@@ -109,7 +113,7 @@ class NBPC_Prefix_Changer {
 		}
 	}
 
-	public function change_source_codes() {
+	public function change_source_codes(): void {
 		foreach ( $this->subdirs as $subdir ) {
 			$iterator = new RegexIterator(
 				new RecursiveIteratorIterator(
@@ -139,7 +143,7 @@ class NBPC_Prefix_Changer {
 		}
 	}
 
-	public function change_language_files() {
+	public function change_language_files(): void {
 		$old_prefix = $this->lower_dash( $this->old_prefix );
 		$new_prefix = $this->lower_dash( $this->new_prefix );
 		$dir        = "$this->root_directory/languages";
@@ -174,7 +178,7 @@ class NBPC_Prefix_Changer {
 		}
 	}
 
-	private function code_patch( string $path ) {
+	private function code_patch( string $path ): void {
 		$content = file_get_contents( $path );
 
 		if ( $content ) {
@@ -227,7 +231,7 @@ function help() {
 
 function confirm( string $message ): bool {
 	echo $message . " [Y/n] ";
-	return 'y' === trim( strtolower( fgets( STDIN ) ) );
+	return 'y' === strtolower( trim( fgets( STDIN ) ) );
 }
 
 
@@ -236,10 +240,13 @@ function get_new_prefix(): string {
 		try {
 			echo 'Please enter your new prefix (Enter \'exit\' to skip): ';
 			$new_prefix = strtolower( trim( fgets( STDIN ) ) );
-			if ( 'exit' === $new_prefix ) {
+
+            if ( 'exit' === $new_prefix ) {
 				echo 'prefix-change.php skipped.' . PHP_EOL;
 				exit;
-			} elseif ( true === NBPC_Prefix_Changer::validate_prefix( $new_prefix ) ) {
+			}
+
+            if ( true === NBPC_Prefix_Changer::validate_prefix( $new_prefix ) ) {
 				break;
 			}
 		} catch ( RuntimeException $e ) {
@@ -250,7 +257,7 @@ function get_new_prefix(): string {
 	return $new_prefix;
 }
 
-if ( 'cli' === php_sapi_name() ) {
+if ( 'cli' === PHP_SAPI ) {
 	$root_dir = dirname( __DIR__ );
 
 	if ( 1 === $argc ) {
@@ -261,8 +268,9 @@ if ( 'cli' === php_sapi_name() ) {
 		$new_prefix = $argv[1];
 		$old_prefix = 'nbpc';
 	} elseif ( 3 === $argc ) {
-		$new_prefix = $argv[1];
-		$old_prefix = $argv[2];
+//		$new_prefix = $argv[1];
+//		$old_prefix = $argv[2];
+		[ $_, $new_prefix, $old_prefix ] = $argv;
 	} else {
 		help();
 		exit;

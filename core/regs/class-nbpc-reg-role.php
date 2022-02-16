@@ -17,7 +17,9 @@ if ( ! class_exists( 'NBPC_Reg_Role' ) ) {
 		public array $capabilities;
 
 		/**
-		 * @param string              $role         Role identifier
+		 * Constructor method
+		 *
+		 * @param string              $role         Role identifier.
 		 * @param string              $display_name Display name, human-friendly string.
 		 * @param array<string, bool> $capabilities Capabilities. Key: capability, value: boolean value.
 		 */
@@ -27,11 +29,11 @@ if ( ! class_exists( 'NBPC_Reg_Role' ) ) {
 			$this->capabilities = $capabilities;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			add_role( $this->role, $this->display_name, $this->capabilities );
 		}
 
-		public function unregister() {
+		public function unregister(): void {
 			remove_role( $this->role );
 		}
 	}

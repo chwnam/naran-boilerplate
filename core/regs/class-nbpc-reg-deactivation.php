@@ -18,6 +18,8 @@ if ( ! class_exists( 'NBPC_Reg_Deactivation' ) ) {
 		public bool $error_log;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param Closure|array|string $callback
 		 * @param array                $args
 		 * @param bool                 $error_log
@@ -32,8 +34,10 @@ if ( ! class_exists( 'NBPC_Reg_Deactivation' ) ) {
 		 * Method name can mislead, but it does its deactivation callback job.
 		 *
 		 * @param null $dispatch
+		 *
+		 * @return void
 		 */
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			try {
 				$callback = nbpc_parse_callback( $this->callback );
 			} catch ( NBPC_Callback_Exception $e ) {
@@ -45,6 +49,8 @@ if ( ! class_exists( 'NBPC_Reg_Deactivation' ) ) {
 						nbpc_format_callback( $this->callback )
 					)
 				);
+				// $error is a WP_Error instance.
+				// phpcs:ignore WordPress.Security.EscapeOutput
 				wp_die( $error );
 			}
 

@@ -1,4 +1,7 @@
 <?php
+/**
+ * NBPC: uninstall script.
+ */
 
 if ( ! ( defined( 'WP_UNINSTALL_PLUGIN' ) && WP_UNINSTALL_PLUGIN ) ) {
 	exit;
@@ -7,9 +10,9 @@ if ( ! ( defined( 'WP_UNINSTALL_PLUGIN' ) && WP_UNINSTALL_PLUGIN ) ) {
 require_once __DIR__ . '/index.php';
 require_once __DIR__ . '/core/uninstall-functions.php';
 
-$uninstall = nbpc()->registers->uninstall;
-if ( $uninstall ) {
-	$uninstall->register();
+$nbpc_uninstall = nbpc()->registers->uninstall;
+if ( $nbpc_uninstall ) {
+	$nbpc_uninstall->register();
 }
 
 // You may use these functions to purge data.

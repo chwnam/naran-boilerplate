@@ -10,12 +10,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Script_Helper' ) ) {
 	class NBPC_Script_Helper {
-		/** @var NBPC_Template_Impl|NBPC_Module */
+		/**
+		 * Parent module object.
+		 *
+		 * @var NBPC_Template_Impl|NBPC_Module
+		 */
 		private $parent;
 
-		/** @var string */
+		/**
+		 * Script handle name.
+		 *
+		 * @var string
+		 */
 		private string $handle;
 
+		/**
+		 * Constructor method.
+		 *
+		 * @param NBPC_Template_Impl|NBPC_Module $parent Parent object.
+		 * @param string                         $handle Script handle name.
+		 */
 		public function __construct( $parent, string $handle ) {
 			$this->parent = $parent;
 			$this->handle = $handle;
@@ -75,8 +89,8 @@ if ( ! class_exists( 'NBPC_Script_Helper' ) ) {
 		/**
 		 * Function wp_set_script_translations() wrapper.
 		 *
-		 * @param string      $domain
-		 * @param string|null $path
+		 * @param string      $domain Textdomain.
+		 * @param string|null $path   Path to translation.
 		 *
 		 * @return self
 		 */
@@ -86,6 +100,8 @@ if ( ! class_exists( 'NBPC_Script_Helper' ) ) {
 		}
 
 		/**
+		 * Finish call chain
+		 *
 		 * @return NBPC_Template_Impl|NBPC_Module
 		 */
 		public function then() {

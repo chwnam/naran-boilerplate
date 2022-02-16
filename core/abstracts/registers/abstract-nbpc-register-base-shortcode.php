@@ -34,6 +34,9 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 		 */
 		private string $regex;
 
+		/**
+		 * Constructor method.
+		 */
 		public function __construct() {
 			$this
 				->add_action( 'init', 'register' )
@@ -46,7 +49,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 			$this->regex           = '';
 		}
 
-		public function register() {
+		public function register(): void {
 			foreach ( $this->get_items() as $item ) {
 				if ( $item instanceof NBPC_Reg_Shortcode ) {
 					$item->register( [ $this, 'dispatch' ] );
@@ -61,15 +64,16 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 		/**
 		 * Detect shortcodes and do something before headers are sent.
 		 *
-		 * @throws NBPC_Callback_Exception
+		 * @return void
+		 * @throws NBPC_Callback_Exception Thrown if callback is invalid.
 		 */
-		public function heading_actions_handler() {
-			if ( is_singular() && $this->heading_actions ) {
+		public function heading_actions_handler(): void {
+			if ( $this->heading_actions && is_singular() ) {
 				$this->find_shortcode( get_post_field( 'post_content', null, 'raw' ) );
 				foreach ( array_unique( $this->found_tags ) as $tag ) {
 					$callback = nbpc_parse_callback( $this->heading_actions[ $tag ] );
 					if ( is_callable( $callback ) ) {
-						call_user_func( $callback, $tag );
+						$callback( $tag );
 					}
 				}
 			}
@@ -85,29 +89,31 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 		 * @param string       $tag
 		 *
 		 * @return string
-		 * @throws NBPC_Callback_Exception
+		 * @throws NBPC_Callback_Exception Thrown if callback is invalid.
 		 */
 		public function dispatch( $atts, string $enclosed, string $tag ): string {
 			$callback = nbpc_parse_callback( $this->real_callbacks[ $tag ] ?? '__return_empty_string' );
 
 			if ( is_callable( $callback ) ) {
-				return call_user_func_array( $callback, [ $atts, $enclosed, $tag ] );
-			} else {
-				return '';
+				return $callback( $atts, $enclosed, $tag );
 			}
+
+			return '';
 		}
 
 		/**
 		 * Find and collect shortcode tags in the content.
 		 *
 		 * @param string $content
+		 *
+		 * @return void
 		 */
-		protected function find_shortcode( string $content ) {
+		protected function find_shortcode( string $content ): void {
 			if ( false === strpos( $content, '[' ) ) {
 				return;
 			}
 
-			if ( !$this->regex ) {
+			if ( ! $this->regex ) {
 				$this->regex = '/' . get_shortcode_regex( array_keys( $this->heading_actions ) ) . '/';
 			}
 

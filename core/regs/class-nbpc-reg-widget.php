@@ -16,13 +16,15 @@ if ( ! class_exists( 'NBPC_Reg_Widget' ) ) {
 		public $widget;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param string|object $widget
 		 */
 		public function __construct( $widget ) {
 			$this->widget = $widget;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			register_widget( $this->widget );
 		}
 	}

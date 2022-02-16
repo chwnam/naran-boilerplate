@@ -24,10 +24,12 @@ if ( ! class_exists( 'NBPC_Reg_Ajax' ) ) {
 		public int $priority;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param string               $action       Action name.
 		 * @param Closure|array|string $callback     Callback.
 		 * @param string|bool          $allow_nopriv true, false, or 'only_nopriv'.
-		 * @param bool                 $is_wc_ajax   Is this for wc-ajax (WooCommerce AJAX)?
+		 * @param bool                 $is_wc_ajax   Is this for wc-ajax (WooCommerce AJAX) or regular admin-ajax.php.
 		 * @param int|null             $priority     Priority number. Defaults to NBPC_PRIORITY.
 		 */
 		public function __construct(
@@ -44,7 +46,7 @@ if ( ! class_exists( 'NBPC_Reg_Ajax' ) ) {
 			$this->priority     = is_null( $priority ) ? nbpc()->get_priority() : $priority;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			if ( $this->action && $this->callback && $dispatch ) {
 				if ( $this->is_wc_ajax ) {
 					add_action( "wc_ajax_$this->action", $dispatch, $this->priority );

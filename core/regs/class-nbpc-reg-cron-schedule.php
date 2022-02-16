@@ -16,6 +16,13 @@ if ( ! class_exists( 'NBPC_Reg_Cron_Schedule' ) ) {
 
 		public string $display;
 
+		/**
+		 * Constructor method
+		 *
+		 * @param string $name
+		 * @param int    $interval
+		 * @param string $display
+		 */
 		public function __construct(
 			string $name,
 			int $interval,
@@ -26,7 +33,7 @@ if ( ! class_exists( 'NBPC_Reg_Cron_Schedule' ) ) {
 			$this->display  = $display;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			// Do nothing.
 		}
 	}

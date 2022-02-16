@@ -18,6 +18,8 @@ if ( ! class_exists( 'NBPC_Reg_Uninstall' ) ) {
 		public bool $error_log;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param Closure|array|string $callback
 		 * @param array                $args
 		 * @param bool                 $error_log
@@ -33,7 +35,7 @@ if ( ! class_exists( 'NBPC_Reg_Uninstall' ) ) {
 		 *
 		 * @param null $dispatch
 		 */
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			try {
 				$callback = nbpc_parse_callback( $this->callback );
 			} catch ( NBPC_Callback_Exception $e ) {
@@ -45,6 +47,8 @@ if ( ! class_exists( 'NBPC_Reg_Uninstall' ) ) {
 						$this->callback
 					)
 				);
+				// $return is a WP_Error instance.
+				// phpcs:ignore WordPress.Security.EscapeOutput
 				wp_die( $error );
 			}
 
@@ -53,7 +57,7 @@ if ( ! class_exists( 'NBPC_Reg_Uninstall' ) ) {
 					error_log( error_log( sprintf( 'Uninstall callback started: %s', $this->callback ) ) );
 				}
 
-				call_user_func( $callback, $this->args );
+				$callback( $this->args );
 
 				if ( $this->error_log ) {
 					error_log( sprintf( 'Uninstall callback finished: %s', $this->callback ) );

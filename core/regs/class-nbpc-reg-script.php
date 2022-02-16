@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 	class NBPC_Reg_Script implements NBPC_Reg {
-		const WP_SCRIPT = 'nbpc-wp-script-generated';
+		public const WP_SCRIPT = 'nbpc-wp-script-generated';
 
 		public string $handle;
 
@@ -25,6 +25,8 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 		public bool $in_footer;
 
 		/**
+		 * Constructor method
+		 *
 		 * NOTE: If a script is built from wp-scripts, check these:
 		 * - 'src'  is relative to assets/js.
 		 * - 'deps' must be 'WP_SCRIPT' constant.
@@ -32,7 +34,7 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 		 * @param string           $handle
 		 * @param string           $src
 		 * @param array|string     $deps
-		 * @param null|string|bool $ver null: Use plugin version / true: Use WordPress version / false: No version
+		 * @param null|string|bool $ver null: Use plugin version / true: Use WordPress version / false: No version.
 		 * @param bool             $in_footer
 		 */
 		public function __construct(
@@ -49,7 +51,7 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 			$this->in_footer = $in_footer;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			if ( $this->handle && $this->src && ! wp_script_is( $this->handle, 'registered' ) ) {
 				if ( self::WP_SCRIPT === $this->deps ) {
 					// When WP_SCRIPT is used, $src must be a relative path to assets/js.

@@ -3,7 +3,6 @@
  * NBPC: template trait
  */
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -72,6 +71,7 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 				// This prevents from accessing from the template inside.
 				( static function () use ( $context, $___file_name___ ) {
 					if ( ! empty( $context ) ) {
+						// phpcs:ignore WordPress.PHP.DontExtract
 						extract( $context, EXTR_SKIP );
 					}
 					unset( $context );

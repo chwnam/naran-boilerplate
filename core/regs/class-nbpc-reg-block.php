@@ -38,6 +38,8 @@ if ( ! class_exists( 'NBPC_Reg_Block' ) ) {
 		public array $args;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param string $block_type
 		 * @param array  $args
 		 *
@@ -56,7 +58,11 @@ if ( ! class_exists( 'NBPC_Reg_Block' ) ) {
 			$this->args[ $key ] = $value;
 		}
 
-		public function register( $dispatch = null ) {
+		public function __isset( string $key ): bool {
+			return isset( $this->args[ $key ] );
+		}
+
+		public function register( $dispatch = null ): void {
 			register_block_type( $this->block_type, $this->args );
 		}
 	}

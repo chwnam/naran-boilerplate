@@ -27,6 +27,8 @@ if ( ! class_exists( 'NBPC_Reg_Rewrite_Rule' ) ) {
 		public array $query_vars;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param string               $regex      Regular expression for URL matching.
 		 * @param string               $query      Rewrite query string.
 		 * @param string               $after      'top', 'bottom'.
@@ -47,7 +49,7 @@ if ( ! class_exists( 'NBPC_Reg_Rewrite_Rule' ) ) {
 			$this->query_vars = (array) $query_vars;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			if ( $this->regex && $this->query ) {
 				add_rewrite_rule( $this->regex, $this->query, $this->after );
 			}

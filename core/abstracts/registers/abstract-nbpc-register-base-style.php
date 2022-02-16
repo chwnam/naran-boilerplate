@@ -12,6 +12,9 @@ if ( ! class_exists( 'NBPC_Register_Base_Style' ) ) {
 	abstract class NBPC_Register_Base_Style implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
+		/**
+		 * Constructor method.
+		 */
 		public function __construct() {
 			$this->add_action( 'init', 'register' );
 		}
@@ -19,8 +22,10 @@ if ( ! class_exists( 'NBPC_Register_Base_Style' ) ) {
 		/**
 		 * @callback
 		 * @action       init
+		 *
+		 * @return void
 		 */
-		public function register() {
+		public function register(): void {
 			foreach ( $this->get_items() as $item ) {
 				if ( $item instanceof NBPC_Reg_Style ) {
 					$item->register();
@@ -39,8 +44,8 @@ if ( ! class_exists( 'NBPC_Register_Base_Style' ) ) {
 		protected function src_helper( string $rel_path, bool $replace_min = true ): string {
 			$rel_path = trim( $rel_path, '\\/' );
 
-			if ( nbpc_script_debug() && $replace_min && substr( $rel_path, - 8 ) === '.min.css' ) {
-				$rel_path = substr( $rel_path, 0, strlen( $rel_path ) - 8 ) . '.css';
+			if ( $replace_min && nbpc_script_debug() && substr( $rel_path, - 8 ) === '.min.css' ) {
+				$rel_path = substr( $rel_path, 0, - 8 ) . '.css';
 			}
 
 			return plugin_dir_url( nbpc()->get_main_file() ) . 'assets/css/' . $rel_path;

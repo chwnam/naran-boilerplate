@@ -15,11 +15,14 @@ if ( ! class_exists( 'NBPC_Register_Base_Rewrite_Rule' ) ) {
 
 		private array $query_vars = [];
 
+		/**
+		 * Constructor method.
+		 */
 		public function __construct() {
 			$this->add_action( 'init', 'register' );
 		}
 
-		public function register() {
+		public function register(): void {
 			foreach ( $this->get_items() as $item ) {
 				if ( $item instanceof NBPC_Reg_Rewrite_Rule ) {
 					$item->register();
@@ -50,13 +53,15 @@ if ( ! class_exists( 'NBPC_Register_Base_Rewrite_Rule' ) ) {
 		 *
 		 * @return void
 		 */
-		public function handle_binding() {
+		public function handle_binding(): void {
 			global $wp;
 
 			if ( ( $binding = $this->bindings[ $wp->matched_rule ] ?? null ) ) {
 				try {
 					$callback = NBPC_parse_callback( $binding );
 				} catch ( NBPC_Callback_Exception $e ) {
+					// WP_Error instance.
+					// phpcs:disable WordPress.Security.EscapeOutput
 					wp_die(
 						new WP_Error(
 							'snp_rewrite_rule_error',
@@ -64,9 +69,10 @@ if ( ! class_exists( 'NBPC_Register_Base_Rewrite_Rule' ) ) {
 							sprintf( __( 'Rewrite rule binding `%s` is invalid. Please check your rewrite rule register items.', 'nbpc' ), nbpc_format_callback( $binding ) )
 						)
 					);
+					// phpcs:enable WordPress.Security.EscapeOutput
 				}
 
-				call_user_func( $callback );
+				$callback();
 
 				if ( apply_filters( 'nbpc_register_rewrite_rule_exit', true, $wp->matched_rule ) ) {
 					exit;

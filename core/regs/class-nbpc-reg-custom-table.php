@@ -22,6 +22,16 @@ if ( ! class_exists( 'NBPC_Reg_Custom_Table' ) ) {
 
 		public string $collate;
 
+		/**
+		 * Constructor method
+		 *
+		 * @param string $table
+		 * @param array  $fields
+		 * @param array  $index
+		 * @param string $engine
+		 * @param string $charset
+		 * @param string $collate
+		 */
 		public function __construct(
 			string $table,
 			array $fields,
@@ -38,15 +48,15 @@ if ( ! class_exists( 'NBPC_Reg_Custom_Table' ) ) {
 			$this->collate = $collate;
 		}
 
-		public function register( $dispatch = null ) {
+		public function register( $dispatch = null ): void {
 			$this->create_table();
 		}
 
-		public function unregister() {
+		public function unregister(): void {
 			$this->drop_table();
 		}
 
-		public function create_table() {
+		public function create_table(): void {
 			global $wpdb;
 
 			$fields  = implode( ",\n  ", $this->fields );
@@ -65,9 +75,10 @@ if ( ! class_exists( 'NBPC_Reg_Custom_Table' ) ) {
 			}
 		}
 
-		public function drop_table() {
+		public function drop_table(): void {
 			global $wpdb;
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( "DROP TABLE IF EXISTS $this->table" );
 		}
 	}

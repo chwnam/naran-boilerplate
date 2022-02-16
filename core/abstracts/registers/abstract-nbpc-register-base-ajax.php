@@ -16,15 +16,22 @@ if ( ! class_exists( 'NBPC_Register_Base_Ajax' ) ) {
 
 		private array $wc_ajax = [];
 
+		/**
+		 * Constructor method
+		 */
 		public function __construct() {
 			$this->add_action( 'init', 'register' );
 		}
 
 		/**
+		 * Register regs
+		 *
 		 * @callback
 		 * @actin       init
+		 *
+		 * @return void
 		 */
-		public function register() {
+		public function register(): void {
 			foreach ( $this->get_items() as $item ) {
 				if (
 					$item instanceof NBPC_Reg_Ajax &&
@@ -40,19 +47,30 @@ if ( ! class_exists( 'NBPC_Register_Base_Ajax' ) ) {
 			}
 		}
 
-		public function dispatch() {
-			$action = $_REQUEST['action'] ?? '';
+		/**
+		 * Generic callback method.
+		 *
+		 * @return void
+		 */
+		public function dispatch(): void {
+			// Boilerplate code cannot check nonce values.
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended
+			$action = sanitize_key( $_REQUEST['action'] ?? '' );
 
 			// Action value may come from wc-ajax.
-			if ( ! $action && $this->wc_ajax[ $_GET['wc-ajax'] ?? '' ] ?? false ) {
-				$action = $_GET['wc-ajax'];
+			if ( ! $action ) {
+				$wc_ajax = sanitize_key( $_GET['wc-ajax'] ?? '' );
+
+				if ( isset( $this->wc_ajax[ $wc_ajax ] ) ) {
+					$action = $wc_ajax;
+				}
 			}
 
 			if ( $action && isset( $this->inner_handlers[ $action ] ) ) {
 				try {
 					$callback = nbpc_parse_callback( $this->inner_handlers[ $action ] );
 					if ( is_callable( $callback ) ) {
-						call_user_func( $callback );
+						$callback();
 					}
 				} catch ( NBPC_Callback_Exception $e ) {
 					$error = new WP_Error();
@@ -66,6 +84,8 @@ if ( ! class_exists( 'NBPC_Register_Base_Ajax' ) ) {
 					wp_send_json_error( $error, 404 );
 				}
 			}
+
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		}
 	}
 }

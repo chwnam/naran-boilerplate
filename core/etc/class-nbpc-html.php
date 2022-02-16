@@ -13,8 +13,8 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		/**
 		 * Quote string
 		 *
-		 * @param string $input
-		 * @param string $quote
+		 * @param string $input Input string.
+		 * @param string $quote Quote character. Defaults to a double quote.
 		 *
 		 * @return string
 		 */
@@ -25,7 +25,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		/**
 		 * Format attribute
 		 *
-		 * @param array $attrs
+		 * @param array $attrs Input attributes. Key for attribute name, value for attribute value.
 		 *
 		 * @return string
 		 */
@@ -38,7 +38,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 					continue;
 				}
 
-				/** @link https://html.spec.whatwg.org/multipage/indices.html#attributes-3 */
+				/* @link https://html.spec.whatwg.org/multipage/indices.html#attributes-3 */
 				switch ( $key ) {
 					case 'accept':
 						$val      = implode( ', ', static::filter_val( $val, 'sanitize_mime_type' ) );
@@ -96,7 +96,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 						} else {
 							$val = esc_attr( $val );
 							// use strlen() because $val can be '0'.
-							$buffer[] = strlen( $val ) ? ( $key . '=' . self::enclose( $val ) ) : $key;
+							$buffer[] = '' !== $val ? ( $key . '=' . self::enclose( $val ) ) : $key;
 						}
 						break;
 
@@ -113,27 +113,24 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		/**
 		 * Open a tag.
 		 *
-		 * @param string $tag
-		 * @param array  $attrs
-		 * @param bool   $echo
+		 * @param string $tag   Tag Name.
+		 * @param array  $attrs Array of attributes.
+		 * @param bool   $echo  Print or return.
 		 *
 		 * @return string
 		 */
 		public static function tag_open( string $tag, array $attrs, bool $echo = true ): string {
-			$output = '';
-			$tag    = sanitize_key( $tag );
-			$attrs  = static::attrs( $attrs );
+			$output    = '';
+			$tag       = sanitize_key( $tag );
+			$formatted = static::attrs( $attrs );
 
 			if ( $tag ) {
-				$output = '<' . $tag;
-				if ( $attrs ) {
-					$output .= ' ' . $attrs . '>';
-				} else {
-					$output .= '>';
-				}
+				$output = '<' . $tag . ( $formatted ? ' ' . $formatted : '' ) . '>';
 			}
 
 			if ( $echo ) {
+				// The function is for convenient HTML output. Escaping here should not be what we expect.
+				// phpcs:ignore WordPress.Security.EscapeOutput
 				echo $output;
 				return '';
 			}
@@ -144,8 +141,8 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		/**
 		 * Close a tag.
 		 *
-		 * @param string $tag
-		 * @param bool   $echo
+		 * @param string $tag  Closing tag.
+		 * @param bool   $echo Print or return.
 		 *
 		 * @return string
 		 */
@@ -158,6 +155,8 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 			}
 
 			if ( $echo ) {
+				// The function is for convenient HTML output. Escaping here should not be what we expect.
+				// phpcs:ignore WordPress.Security.EscapeOutput
 				echo $output;
 				return '';
 			}
@@ -168,8 +167,8 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		/**
 		 * Input tag.
 		 *
-		 * @param array $attrs
-		 * @param bool  $echo
+		 * @param array $attrs Input tag attributes.
+		 * @param bool  $echo  Echo, or return.
 		 *
 		 * @return string
 		 */
@@ -181,7 +180,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		 * Option tag
 		 *
 		 * @param string      $value    'value' attribute.
-		 * @param string      $label    Label
+		 * @param string      $label    Label string.
 		 * @param bool|string $selected Selected value, or more directly, boolean value.
 		 * @param array       $attrs    Attributes other than 'value', and selected.
 		 * @param bool        $echo     Echo, or return.
@@ -195,14 +194,27 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 			array $attrs = [],
 			bool $echo = true
 		): string {
-			$attrs['value']    = $value;
+			$attrs['value'] = $value;
+
+			// phpcs:disable WordPress.PHP.StrictComparisons.LooseComparison
+
+			/**
+			 * The function is for HTML attributes output. Please be more generous about types.
+			 * String '1' and integer 1 may be handled the same in here.
+			 *
+			 * @noinspection TypeUnsafeComparisonInspection
+			 */
 			$attrs['selected'] = is_bool( $selected ) ? $selected : $selected == $value;
+
+			// phpcs:enable WordPress.PHP.StrictComparisons.LooseComparison
 
 			$output = self::tag_open( 'option', $attrs, false ) .
 			          esc_html( $label ) .
 			          self::tag_close( 'option', false );
 
 			if ( $echo ) {
+				// The function is for convenient HTML output. Escaping here should not be what we expect.
+				// phpcs:ignore WordPress.Security.EscapeOutput
 				echo $output;
 				return '';
 			}
@@ -211,7 +223,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		}
 
 		/**
-		 * select tag.
+		 * Select tag.
 		 *
 		 * @param array        $options    Associative array, where keys are for 'value' attributes of option tags,
 		 *                                 values are for text node inside of option tags.
@@ -272,7 +284,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 					/**
 					 * Optgroup part
 					 *
-					 * e.g.
+					 * Sample:
 					 * 'Swedish Cars' => [ 'volvo' => 'Volvo', 'saab' => 'Saab' ],
 					 */
 					$a = [];
@@ -286,7 +298,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 					$buffer[] = self::tag_open( 'optgroup', $a, false );
 
 					foreach ( $option as $v => $l ) {
-						$s = is_array( $selected ) ? in_array( $v, $selected ) : $selected;
+						$s = is_array( $selected ) ? in_array( $v, $selected, true ) : $selected;
 						$a = (array) ( $opt_attrs[ $v ] ?? [] );
 
 						$buffer[] = self::option( $v, $l, $s, $a, false );
@@ -297,7 +309,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 					/**
 					 * Option part
 					 */
-					$s = is_array( $selected ) ? in_array( $key, $selected ) : $selected;
+					$s = is_array( $selected ) ? in_array( $key, $selected, true ) : $selected;
 					$a = (array) ( $opt_attrs[ $key ] ?? [] );
 
 					$buffer[] = self::option( $key, $option, $s, $a, false );
@@ -307,6 +319,8 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 			$buffer[] = self::tag_close( 'select', false );
 
 			if ( $echo ) {
+				// The function is for convenient HTML output. Escaping here should not be what we expect.
+				// phpcs:ignore WordPress.Security.EscapeOutput
 				echo implode( '', $buffer );
 				return '';
 			}
@@ -317,14 +331,14 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		/**
 		 * Filter attribute value
 		 *
-		 * @param array|string $val
-		 * @param callable     $filter
+		 * @param array|string $val    Input.
+		 * @param callable     $filter Filter function.
 		 *
 		 * @return array
 		 */
 		public static function filter_val( $val, callable $filter ): array {
 			if ( ! is_array( $val ) ) {
-				$val = array_map( 'trim', explode( ' ', strval( $val ) ) );
+				$val = array_map( 'trim', explode( ' ', (string) $val ) );
 			}
 
 			return array_unique( array_filter( array_map( $filter, $val ) ) );

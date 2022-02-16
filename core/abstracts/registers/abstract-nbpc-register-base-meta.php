@@ -21,6 +21,9 @@ if ( ! class_exists( 'NBPC_Register_Base_Meta' ) ) {
 		 */
 		private array $fields = [];
 
+		/**
+		 * Constructor method.
+		 */
 		public function __construct() {
 			$this->add_action( 'init', 'register' );
 		}
@@ -28,12 +31,20 @@ if ( ! class_exists( 'NBPC_Register_Base_Meta' ) ) {
 		public function __get( string $alias ): ?NBPC_Reg_Meta {
 			if ( isset( $this->fields[ $alias ] ) ) {
 				return NBPC_Reg_Meta::factory( ...$this->fields[ $alias ] );
-			} else {
-				return null;
 			}
+
+			return null;
 		}
 
-		public function register() {
+		public function __set( string $alias, $value ) {
+			throw new RuntimeException( 'Value assignment is now allowed.' );
+		}
+
+		public function __isset( string $alias ): bool {
+			return isset( $this->fields[ $alias ] );
+		}
+
+		public function register(): void {
 			foreach ( $this->get_items() as $idx => $item ) {
 				if ( $item instanceof NBPC_Reg_Meta ) {
 					$item->register();

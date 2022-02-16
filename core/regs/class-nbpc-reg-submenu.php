@@ -25,6 +25,8 @@ if ( ! class_exists( 'NBPC_Reg_Submenu' ) ) {
 		public ?int $position;
 
 		/**
+		 * Constructor method
+		 *
 		 * @param string          $parent_slug
 		 * @param string          $page_title
 		 * @param string          $menu_title

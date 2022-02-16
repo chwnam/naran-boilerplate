@@ -27,7 +27,7 @@ function rrmdir( string $dir ) {
 	}
 }
 
-if ( 'cli' === php_sapi_name() ) {
+if ( 'cli' === PHP_SAPI ) {
 	$root_dir  = dirname( __DIR__ );
 	$tests_dir = $root_dir . '/tests';
 

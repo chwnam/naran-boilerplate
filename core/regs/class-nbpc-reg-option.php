@@ -42,6 +42,13 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 			return null;
 		}
 
+		/**
+		 * Constructor method
+		 *
+		 * @param string $option_group
+		 * @param string $option_name
+		 * @param array  $args
+		 */
 		public function __construct(
 			string $option_group,
 			string $option_name,
@@ -76,7 +83,15 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 			return $this->args[ $prop ] ?? null;
 		}
 
-		public function register( $dispatch = null ) {
+		public function __set( string $prop, $value ) {
+			throw new RuntimeException( 'Value assignment is now allowed.' );
+		}
+
+		public function __isset( string $prop ): bool {
+			return isset( $this->args[ $prop ] );
+		}
+
+		public function register( $dispatch = null ): void {
 			if ( $this->option_group && $this->option_name ) {
 				if ( $this->args['sanitize_callback'] ) {
 					try {
@@ -90,6 +105,8 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 								nbpc_format_callback( $this->args['sanitize_callback'] )
 							)
 						);
+						// $error is a WP_Error instance.
+						// phpcs:ignore WordPress.Security.EscapeOutput
 						wp_die( $error );
 					}
 				}
@@ -108,9 +125,9 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 		public function get_value( $default = false ) {
 			if ( func_num_args() > 0 ) {
 				return get_option( $this->get_option_name(), $default );
-			} else {
-				return get_option( $this->get_option_name() );
 			}
+
+			return get_option( $this->get_option_name() );
 		}
 
 		public function is_autoload(): bool {
@@ -122,11 +139,18 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 		}
 
 		public function update_from_request(): bool {
-			if ( isset( $_REQUEST[ $this->get_option_name() ] ) && is_callable( $this->sanitize_callback ) ) {
-				return $this->update( $_REQUEST[ $this->get_option_name() ] );
+			// Boilerplate code cannot check nonce values.
+			// phpcs:disable WordPress.Security.NonceVerification.Recommended
+
+			if ( is_callable( $this->sanitize_callback ) && isset( $_REQUEST[ $this->get_option_name() ] ) ) {
+				// Option sanitize_callback will sanitize the value.
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+				return $this->update( wp_unslash( $_REQUEST[ $this->get_option_name() ] ) );
 			}
 
 			return false;
+
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 		}
 
 		public function delete(): bool {

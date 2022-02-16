@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Register_Base_Capability' ) ) {
 	abstract class NBPC_Register_Base_Capability implements NBPC_Register {
-		public function register() {
+		public function register(): void {
 			foreach ( $this->get_items() as $item ) {
 				if ( $item instanceof NBPC_Reg_Capability ) {
 					$item->register();
@@ -18,7 +18,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Capability' ) ) {
 			}
 		}
 
-		public function unregister() {
+		public function unregister(): void {
 			foreach ( $this->get_items() as $item ) {
 				if ( $item instanceof NBPC_Reg_Capability ) {
 					$item->unregister();

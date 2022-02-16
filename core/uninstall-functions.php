@@ -3,10 +3,12 @@
  * NBPC: Uninstall only functions.
  */
 
-/* ABSPATH check */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+// This is uninstall script. Raw queries can be allowed.
+// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
 
 if ( ! function_exists( 'nbpc_cleanup_meta' ) ) {
 	/**
@@ -148,3 +150,5 @@ if ( ! function_exists( 'nbpc_cleanup_posts' ) ) {
 		}
 	}
 }
+
+// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared

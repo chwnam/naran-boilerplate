@@ -44,6 +44,9 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 	class NBPC_Registers implements NBPC_Module {
 		use NBPC_Submodule_Impl;
 
+		/**
+		 * Constructor method
+		 */
 		public function __construct() {
 			/**
 			 * You can remove unused registers.
