@@ -16,6 +16,13 @@ if ( ! class_exists( 'NBPC_Register_Base_Option' ) ) {
 		private array $fields = [];
 
 		/**
+		 * Keys are autoload 'no' options.
+		 *
+		 * @var array<string, true>
+		 */
+		private array $autoload_no = [];
+
+		/**
 		 * Constructor method.
 		 */
 		public function __construct() {
@@ -47,12 +54,33 @@ if ( ! class_exists( 'NBPC_Register_Base_Option' ) ) {
 		public function register(): void {
 			foreach ( $this->get_items() as $idx => $item ) {
 				if ( $item instanceof NBPC_Reg_Option ) {
+					$option_name            = $item->get_option_name();
+					$alias                  = is_int( $idx ) ? $option_name : $idx;
+					$this->fields[ $alias ] = $option_name;
+					if ( ! $item->is_autoload() ) {
+						$this->autoload_no[ $option_name ] = true;
+					}
 					$item->register();
-
-					$alias = is_int( $idx ) ? $item->get_option_name() : $idx;
-
-					$this->fields[ $alias ] = $item->get_option_name();
 				}
+			}
+
+			if ( ! empty( $this->autoload_no ) ) {
+				$this->add_action( 'updated_option', 'fix_autoload', null, 3 );
+			}
+		}
+
+		/**
+		 * Forcibly fix autoload field.
+		 *
+		 * @param string $option
+		 *
+		 * @return void
+		 */
+		public function fix_autoload( string $option ) {
+			global $wpdb;
+
+			if ( isset( $this->autoload_no[ $option ] ) ) {
+				$wpdb->update( $wpdb->options, [ 'autoload' => 'no' ], [ 'option_name' => $option ] );
 			}
 		}
 	}

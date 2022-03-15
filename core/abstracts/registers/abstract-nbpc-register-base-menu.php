@@ -12,6 +12,11 @@ if ( ! class_exists( 'NBPC_Register_Base_Menu' ) ) {
 	abstract class NBPC_Register_Base_Menu implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
+		/**
+		 * All menus and submenus callbacks indexed by page hook handles.
+		 *
+		 * @var array<string, string|callable>
+		 */
 		private array $callbacks = [];
 
 		/**
@@ -22,13 +27,19 @@ if ( ! class_exists( 'NBPC_Register_Base_Menu' ) ) {
 		}
 
 		public function register(): void {
+			$slugs_to_remove = [];
+
 			foreach ( $this->get_items() as $item ) {
 				if ( $item instanceof NBPC_Reg_Menu || $item instanceof NBPC_Reg_Submenu ) {
 					$this->callbacks[ $item->register( [ $this, 'dispatch' ] ) ] = $item->callback;
 					if ( $item instanceof NBPC_Reg_Menu && $item->remove_submenu ) {
-						remove_submenu_page( $item->menu_slug, $item->menu_slug );
+						$slugs_to_remove[] = $item->menu_slug;
 					}
 				}
+			}
+
+			foreach ( $slugs_to_remove as $slug ) {
+				remove_submenu_page( $slug, $slug );
 			}
 		}
 
