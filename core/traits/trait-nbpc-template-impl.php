@@ -30,15 +30,15 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 
 				$styl = get_stylesheet_directory();
 				$tmpl = get_template_directory();
-				$plug = dirname( nbpc()->get_main_file() );
+				$plug = nbpc_is_plugin() ? dirname( nbpc()->get_main_file() ) : false;
 
 				$paths = [
 					$variant ? "$styl/nbpc/$dir/$file_name-$variant.$ext" : false,
 					"$styl/nbpc/$dir/$file_name.$ext",
 					$variant ? "$tmpl/nbpc/$dir/$file_name-$variant.$ext" : false,
 					"$tmpl/nbpc/$dir}/$file_name.$ext",
-					$variant ? "$plug/includes/templates/$dir/$file_name-$variant.$ext" : false,
-					"$plug/includes/templates/$dir/$file_name.$ext",
+					$plug && $variant ? "$plug/includes/templates/$dir/$file_name-$variant.$ext" : false,
+					$plug ? "$plug/includes/templates/$dir/$file_name.$ext" : false,
 				];
 
 				$paths   = apply_filters( 'nbpc_locate_file_paths', array_filter( $paths ), $cache_name );

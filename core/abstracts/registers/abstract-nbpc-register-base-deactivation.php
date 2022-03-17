@@ -10,11 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Register_Base_Deactivation' ) ) {
 	abstract class NBPC_Register_Base_Deactivation implements NBPC_Register {
+		use NBPC_Hook_Impl;
+
 		/**
 		 * Constructor method.
 		 */
 		public function __construct() {
-			register_deactivation_hook( nbpc()->get_main_file(), [ $this, 'register' ] );
+			$this->add_action( 'nbpc_deactivation', 'register' );
 		}
 
 		/**

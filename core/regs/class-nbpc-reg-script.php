@@ -54,16 +54,27 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 		public function register( $dispatch = null ): void {
 			if ( $this->handle && $this->src && ! wp_script_is( $this->handle, 'registered' ) ) {
 				if ( self::WP_SCRIPT === $this->deps ) {
+					$is_theme = nbpc_is_theme();
+
 					// When WP_SCRIPT is used, $src must be a relative path to assets/js.
 					// But why not if it is handled here?
-					$root = plugin_dir_url( nbpc()->get_main_file() ) . 'assets/js/';
+					if ( $is_theme ) {
+						$root = get_stylesheet_directory_uri() . '/assets/js/';
+					} else {
+						$root = plugin_dir_url( nbpc()->get_main_file() ) . 'assets/js/';
+					}
 					if ( 0 === strpos( $this->src, $root ) ) {
 						$this->src = substr( $this->src, strlen( $root ) );
 					}
 
 					$dir  = trim( dirname( $this->src ), '/\\' );
 					$file = pathinfo( $this->src, PATHINFO_FILENAME ) . '.asset.php';
-					$path = path_join( dirname( nbpc()->get_main_file() ), "assets/js/$dir/$file" );
+
+					if ( $is_theme ) {
+						$path = path_join( get_stylesheet_directory(), "assets/js/$dir/$file" );
+					} else {
+						$path = path_join( dirname( nbpc()->get_main_file() ), "assets/js/$dir/$file" );
+					}
 
 					if ( ! file_exists( $path ) || ! is_readable( $path ) ) {
 						return;
@@ -71,7 +82,12 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 
 					$info = include $path;
 
-					$this->src       = plugins_url( "assets/js/$this->src", nbpc()->get_main_file() );
+					if ( $is_theme ) {
+						$this->src = get_stylesheet_directory_uri() . "/assets/js/$this->src";
+					} else {
+						$this->src = plugins_url( "assets/js/$this->src", nbpc()->get_main_file() );
+					}
+
 					$this->deps      = $info['dependencies'] ?? [];
 					$this->ver       = $info['version'] ?? nbpc()->get_version();
 					$this->in_footer = true;

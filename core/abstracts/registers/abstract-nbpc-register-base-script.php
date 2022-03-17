@@ -46,7 +46,11 @@ if ( ! class_exists( 'NBPC_Register_Base_Script' ) ) {
 				$rel_path = substr( $rel_path, 0, - 7 ) . '.js';
 			}
 
-			return plugin_dir_url( nbpc()->get_main_file() ) . "assets/js/$rel_path";
+			if ( nbpc_is_theme() ) {
+				return get_stylesheet_directory_uri() . "/assets/js/$rel_path";
+			} else {
+				return plugin_dir_url( nbpc()->get_main_file() ) . "assets/js/$rel_path";
+			}
 		}
 	}
 }

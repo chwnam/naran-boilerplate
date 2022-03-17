@@ -48,7 +48,11 @@ if ( ! class_exists( 'NBPC_Register_Base_Style' ) ) {
 				$rel_path = substr( $rel_path, 0, - 8 ) . '.css';
 			}
 
-			return plugin_dir_url( nbpc()->get_main_file() ) . 'assets/css/' . $rel_path;
+			if ( nbpc_is_theme() ) {
+				return get_stylesheet_directory_uri() . "/assets/css/$rel_path";
+			} else {
+				return plugin_dir_url( nbpc()->get_main_file() ) . 'assets/css/' . $rel_path;
+			}
 		}
 	}
 }

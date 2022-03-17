@@ -197,6 +197,14 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 			return $this->constructor_params;
 		}
 
+		public function activation(): void {
+			do_action( 'nbpc_activation' );
+		}
+
+		public function deactivation(): void {
+			do_action( 'nbpc_deactivation' );
+		}
+
 		/**
 		 * Initialize plugin.
 		 *
@@ -207,6 +215,7 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 */
 		protected function initialize(): void {
 			$this
+				->setup_activation_deactivation()
 				->assign_constructors( $this->get_constructors() )
 				->assign_modules( $this->get_modules() )
 				->add_action( 'plugins_loaded', 'load_textdomain' )
@@ -220,6 +229,28 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 			$this->extra_initialize();
 
 			do_action( 'nbpc_initialized' );
+		}
+
+		/**
+		 * Setup activation-deactivation hook.
+		 *
+		 * @return void
+		 */
+		protected function setup_activation_deactivation(): NBPC_Main_Base {
+			if ( nbpc_is_theme() ) {
+				$this
+					->add_action( 'after_switch_theme', 'activation' )
+					->add_action( 'switch_theme', 'deactivation' )
+				;
+			} else {
+				$file = plugin_basename( $this->get_main_file() );
+				$this
+					->add_action( "activate_$file", 'activation' )
+					->add_action( "deactivate_$file", 'deactivation' )
+				;
+			}
+
+			return $this;
 		}
 
 		protected function assign_constructors( array $constructors ): NBPC_Main_Base {

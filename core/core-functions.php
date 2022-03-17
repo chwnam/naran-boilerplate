@@ -17,6 +17,30 @@ if ( ! function_exists( 'nbpc' ) ) {
 }
 
 
+if ( ! function_exists( 'nbpc_is_theme' ) ) {
+	/**
+	 * Check if it is used as theme.
+	 *
+	 * @return bool
+	 */
+	function nbpc_is_theme(): bool {
+		return defined( 'NBPC_THEME' ) && NBPC_THEME;
+	}
+}
+
+
+if ( ! function_exists( 'nbpc_is_plugin' ) ) {
+	/**
+	 * Check if it is used as plugin. (default)
+	 *
+	 * @return bool
+	 */
+	function nbpc_is_plugin(): bool {
+		return ! nbpc_is_theme();
+	}
+}
+
+
 if ( ! function_exists( 'nbpc_parse_module' ) ) {
 	/**
 	 * Retrieve submodule by given string notation.
