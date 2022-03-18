@@ -1,4 +1,20 @@
 <?php
+/**
+ * Plugin Name:       Naran Boilerplate Code
+ * Plugin URI:        https://github.com/chwnam/naran-boilerplate-code
+ * Description:       Naran boilerplate code for WordPress plugins/themes.
+ * Version:           1.3.3
+ * Requires at least: 5.1.0
+ * Requires PHP:      7.4
+ * Author:            changwoo
+ * Author URI:        https://blog.changwoo.pe.kr/
+ * License:           GPL v2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Update URI:
+ * Text Domain:       nbpc
+ * Domain Path:       /languages
+ * CPBN version:      1.3.2
+ */
 
 /* ABSPATH check */
 if ( ! defined( 'ABSPATH' ) ) {
