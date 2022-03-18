@@ -48,7 +48,7 @@
     "ext-json": "*",
     "ext-zip": "*"
   },
-  "version": "1.3.4",
+  "version": "1.4.0-beta.1",
   "require-dev": {
     "phpunit/phpunit": "^7",
     "yoast/phpunit-polyfills": "^1.0",
