@@ -331,3 +331,18 @@ nbpc();
 ```
 "version": "@php bin/sync-version.php style.css",
 ```
+
+
+## {PREFIX}_Register_Theme_Support 사용
+{PREFIX}_Registers 클래스 생성자에 사용된 assign_module() 메소드 호출의 인자에서,
+
+```
+// 'theme_support' =>{PREFIX}_Register_Theme_Support::class, // Only for themes.
+```
+
+부분의 주석을 해제합니다.
+
+
+## 프론트 모듈 매핑
+`{PREFIX}_Register_Theme_Support::map_front_modules()` 메소드에서 프론트 모듈을 매핑합니다.
+매핑된 모듈은 `{prefix}_get_front_module()` 함수에서 얻을 수 있습니다.

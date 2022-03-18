@@ -1,16 +1,14 @@
 <?php
-get_header();
 
-while ( have_posts() ) {
-	the_post();
-	?>
-    <article <?php post_class(); ?>>
-		<?php the_title( '<h2>', '</h2>' ); ?>
-        <div>
-			<?php the_content(); ?>
-        </div>
-    </article>
-	<?php
+/* ABSPATH check */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-get_footer();
+require_once __DIR__ . '/vendor/autoload.php';
+
+const NBPC_MAIN_FILE = __FILE__;
+const NBPC_VERSION   = '1.3.4';
+const NBPC_PRIORITY  = 100;
+
+nbpc();
