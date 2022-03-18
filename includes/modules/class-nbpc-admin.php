@@ -10,8 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Admins' ) ) {
-	class NBPC_Admins implements NBPC_Module {
+if ( ! class_exists( 'NBPC_Admin' ) ) {
+	class NBPC_Admin implements NBPC_Module {
 		use NBPC_Submodule_Impl;
 
 		/**

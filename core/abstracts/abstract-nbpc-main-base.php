@@ -185,7 +185,18 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 * @used-by initialize()
 		 */
 		public function load_textdomain(): void {
-			load_plugin_textdomain( 'nbpc', false, wp_basename( dirname( $this->get_main_file() ) ) . '/languages' );
+			if ( nbpc_is_theme() ) {
+				load_theme_textdomain(
+					'nbpc',
+					get_stylesheet_directory() . '/languages'
+				);
+			} else {
+				load_plugin_textdomain(
+					'nbpc',
+					false,
+					wp_basename( dirname( $this->get_main_file() ) ) . '/languages'
+				);
+			}
 		}
 
 		/**
@@ -218,8 +229,13 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 				->setup_activation_deactivation()
 				->assign_constructors( $this->get_constructors() )
 				->assign_modules( $this->get_modules() )
-				->add_action( 'plugins_loaded', 'load_textdomain' )
 			;
+
+			if ( nbpc_is_theme() ) {
+				$this->add_action( 'after_setup_theme', 'load_textdomain' );
+			} else {
+				$this->add_action( 'plugins_loaded', 'load_textdomain' );
+			}
 
 			// Add 'init_conditional_modules' method if exists.
 			if ( method_exists( $this, 'init_conditional_modules' ) ) {
