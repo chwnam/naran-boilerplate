@@ -76,7 +76,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 					'submit'        => NBPC_Register_Submit::class,
 					'taxonomy'      => NBPC_Register_Taxonomy::class,
 					'term_meta'     => NBPC_Register_Term_Meta::class,
-					'theme_support' => NBPC_Register_Theme_Support::class,
+					// 'theme_support' => NBPC_Register_Theme_Support::class, // Only for themes.
 					'uninstall'     => function () { return new NBPC_Register_Uninstall(); },
 					'user_meta'     => NBPC_Register_User_Meta::class,
 					'widget'        => NBPC_Register_Widget::class,

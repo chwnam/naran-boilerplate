@@ -9,19 +9,47 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'NBPC_Theme_Hierarchy' ) ) {
-	class NBPC_Theme_Hierarchy {
-		public string $post_type = '';
+	final class NBPC_Theme_Hierarchy {
+		private string $post_type = '';
 
-		public string $taxonomy = '';
+		private string $taxonomy = '';
 
-		public string $page_template = '';
+		private string $page_template = '';
 
-		public bool $is_archive = false;
+		private bool $is_archive = false;
 
-		public bool $is_singular = false;
+		private bool $is_singular = false;
 
-		public function __construct() {
+		/**
+		 * @var NBPC_Front_Module|string|null
+		 */
+		private $front_module = null;
+
+		private static ?NBPC_Theme_Hierarchy $instance = null;
+
+		/**
+		 * Get the instance.
+		 *
+		 * @return NBPC_Theme_Hierarchy
+		 */
+		public static function get_instance(): NBPC_Theme_Hierarchy {
+			if ( is_null( self::$instance ) ) {
+				self::$instance = new self();
+			}
+			return self::$instance;
+		}
+
+		/**
+		 * Private constructor.
+		 *
+		 * Use get_instalce().
+		 */
+		private function __construct() {
 			global $wp_the_query;
+
+			if ( ! $wp_the_query ) {
+				return;
+			}
 
 			$object = $wp_the_query->get_queried_object();
 
@@ -52,6 +80,67 @@ if ( ! class_exists( 'NBPC_Theme_Hierarchy' ) ) {
 				$this->post_type   = 'post';
 				$this->taxonomy    = '';
 			}
+		}
+
+		/**
+		 * Get front module.
+		 *
+		 * @return NBPC_Front_Module|string|null
+		 */
+		public function get_front_module() {
+			return $this->front_module;
+		}
+
+		/**
+		 * Set front module.
+		 *
+		 * @param NBPC_Front_Module|string $module Front module instance, or class name
+		 *
+		 * @return void
+		 */
+		public function set_front_module( $module ) {
+			$this->front_module = $module;
+		}
+
+		public function is_archive(): bool {
+			return $this->is_archive;
+		}
+
+		public function is_singular(): bool {
+			return $this->is_singular;
+		}
+
+		public function get_post_type(): string {
+			return $this->post_type;
+		}
+
+		public function get_page_template(): string {
+			return $this->page_template;
+		}
+
+		public function get_taxonomy(): string {
+			return $this->taxonomy;
+		}
+
+		/**
+		 * @throws Exception
+		 */
+		public function __clone() {
+			throw new Exception( 'This object does not suppoert __clone().' );
+		}
+
+		/**
+		 * @throws Exception
+		 */
+		public function __sleep() {
+			throw new Exception( 'This object does not suppoert __sleep().' );
+		}
+
+		/**
+		 * @throws Exception
+		 */
+		public function __wakeup() {
+			throw new Exception( 'This object does not suppoert __wakeup().' );
 		}
 	}
 }
