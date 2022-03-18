@@ -35,6 +35,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 	 * @property-read NBPC_Register_Style         $style
 	 * @property-read NBPC_Register_Submit        $submit
 	 * @property-read NBPC_Register_Taxonomy      $taxonomy
+	 * @property-read NBPC_Register_Theme_Support $theme_support
 	 * @property-read NBPC_Register_Term_Meta     $term_meta
 	 * @property-read NBPC_Register_Uninstall     $uninstall
 	 * @property-read NBPC_Register_User_Meta     $user_meta
@@ -75,6 +76,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 					'submit'        => NBPC_Register_Submit::class,
 					'taxonomy'      => NBPC_Register_Taxonomy::class,
 					'term_meta'     => NBPC_Register_Term_Meta::class,
+					// 'theme_support' => NBPC_Register_Theme_Support::class, // Only for themes.
 					'uninstall'     => function () { return new NBPC_Register_Uninstall(); },
 					'user_meta'     => NBPC_Register_User_Meta::class,
 					'widget'        => NBPC_Register_Widget::class,

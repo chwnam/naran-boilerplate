@@ -3,10 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Naran Boilerplate Code 1.1.2\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/naran-"
-"boilerplate\n"
-"POT-Creation-Date: 2022-01-05T11:14:43+09:00\n"
-"PO-Revision-Date: 2022-01-05 11:16+0900\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-18T12:19:36+09:00\n"
+"PO-Revision-Date: 2022-03-18 12:20+0900\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ko_KR\n"
@@ -17,33 +16,13 @@ msgstr ""
 "X-Domain: nbpc\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#. Plugin Name of the plugin
-msgid "Naran Boilerplate Code"
-msgstr "나란 보일러플레이트 코드"
-
-#. Plugin URI of the plugin
-msgid "https://github.com/chwnam/naran-boilerplate-code"
-msgstr "https://github.com/chwnam/naran-boilerplate-code"
-
-#. Description of the plugin
-msgid "Naran boilerplate code for WordPress plugins/themes."
-msgstr "워드프레스 플러그인/테마 개발을 위한 나란 보일러플레이트 코드."
-
-#. Author of the plugin
-msgid "changwoo"
-msgstr "changwoo"
-
-#. Author URI of the plugin
-msgid "https://blog.changwoo.pe.kr/"
-msgstr "https://blog.changwoo.pe.kr/"
-
 #. translators: formatted module name.
-#: core/abstracts/abstract-nbpc-main-base.php:131
+#: core/abstracts/abstract-nbpc-main-base.php:146
 msgid "%s is invalid for callback."
 msgstr "%s는 올바른 콜백이 아닙니다."
 
 #. translators: formatted callback
-#: core/abstracts/registers/abstract-nbpc-register-base-rewrite-rule.php:64
+#: core/abstracts/registers/abstract-nbpc-register-base-rewrite-rule.php:69
 msgid ""
 "Rewrite rule binding `%s` is invalid. Please check your rewrite rule "
 "register items."
@@ -51,10 +30,42 @@ msgstr ""
 "다시쓰기 규칙 바인딩 `%s`은(는) 올바르지 않습니다. 다시쓰기  규칙 레"
 "지스터 항목을 다시 확인하세요."
 
-#: includes/class-nbpc-main.php:46
+#: core/core-functions.php:208
+msgid "Front module is not set."
+msgstr "프론트 모듈이 설정되지 않았습니다."
+
+#: core/core-functions.php:219
+msgid "$instance should be a front module instance."
+msgstr "$instance는 반드시 프론트 모듈 인스턴스여야 합니다."
+
+#: includes/class-nbpc-main.php:71
 msgid "NBPC settings"
 msgstr "NBPC 설정"
 
-#: includes/class-nbpc-main.php:47
+#: includes/class-nbpc-main.php:72
 msgid "Settings"
 msgstr "설정"
+
+#: includes/registers/class-nbpc-register-theme-support.php:105
+msgid "Primary Menu"
+msgstr "주 메뉴"
+
+#: includes/registers/class-nbpc-register-theme-support.php:106
+msgid "Secondary Menu"
+msgstr "부 메뉴"
+
+#~ msgid "Naran Boilerplate Code"
+#~ msgstr "나란 보일러플레이트 코드"
+
+#~ msgid "https://github.com/chwnam/naran-boilerplate-code"
+#~ msgstr "https://github.com/chwnam/naran-boilerplate-code"
+
+#~ msgid "Naran boilerplate code for WordPress plugins/themes."
+#~ msgstr ""
+#~ "워드프레스 플러그인/테마 개발을 위한 나란 보일러플레이트 코드."
+
+#~ msgid "changwoo"
+#~ msgstr "changwoo"
+
+#~ msgid "https://blog.changwoo.pe.kr/"
+#~ msgstr "https://blog.changwoo.pe.kr/"

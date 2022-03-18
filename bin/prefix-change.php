@@ -133,6 +133,7 @@ class NBPC_Prefix_Changer {
 			'composer.json',
 			'custom.dic',
 			'index.php',
+            'nbpc.php',
 			'package.json',
 			'phpunit.xml',
 			'uninstall.php',

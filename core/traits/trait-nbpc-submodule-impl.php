@@ -63,18 +63,31 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		/**
 		 * Assign modules.
 		 *
-		 * @param array $modules Modules
+		 * @param array $modules   Modules
+		 * @param bool  $auto_wrap Wrap callback function automatically.
 		 *
 		 * @return self
 		 */
-		protected function assign_modules( array $modules ): self {
+		protected function assign_modules( array $modules, bool $auto_wrap = false ): self {
 			$cps = nbpc()->get_constructor_params();
 
-			foreach ( $modules as $idx => $module ) {
-				if ( is_string( $module ) && class_exists( $module ) ) {
-					$this->modules[ $idx ] = $this->new_instance( $module, $cps );
-				} else {
-					$this->modules[ $idx ] = $module;
+			if ( $auto_wrap ) {
+				foreach ( $modules as $idx => $module ) {
+					$this->modules[ $idx ] = function () use ( $module, $cps ) {
+						if ( is_string( $module ) && class_exists( $module ) ) {
+							return $this->new_instance( $module, $cps );
+						} else {
+							return $module;
+						}
+					};
+				}
+			} else {
+				foreach ( $modules as $idx => $module ) {
+					if ( is_string( $module ) && class_exists( $module ) ) {
+						$this->modules[ $idx ] = $this->new_instance( $module, $cps );
+					} else {
+						$this->modules[ $idx ] = $module;
+					}
 				}
 			}
 
@@ -135,6 +148,19 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 			}
 
 			return $module();
+		}
+
+		/**
+		 * Just touch module, let it be instantiated.
+		 *
+		 * @param string $name Module name.
+		 *
+		 * @return void
+		 */
+		protected function touch( string $name ) {
+			if ( $this->__isset( $name ) ) {
+				$this->__get( $name );
+			}
 		}
 
 		/**

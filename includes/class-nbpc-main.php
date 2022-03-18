@@ -11,7 +11,7 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 	/**
 	 * Class NBPC_Main
 	 *
-	 * @property-read NBPC_Admins    $admins
+	 * @property-read NBPC_Admin     $admin
 	 * @property-read NBPC_Registers $registers
 	 */
 	final class NBPC_Main extends NBPC_Main_Base {
@@ -24,7 +24,7 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 		 */
 		protected function get_modules(): array {
 			return [
-				'admins'    => NBPC_Admins::class,
+				'admin'     => NBPC_Admin::class,
 				'registers' => NBPC_Registers::class,
 			];
 		}

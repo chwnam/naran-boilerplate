@@ -16,8 +16,10 @@ if ( ! class_exists( 'NBPC_Register_Base_Cron' ) ) {
 		 * Constructor method.
 		 */
 		public function __construct() {
-			register_activation_hook( nbpc()->get_main_file(), [ $this, 'register' ] );
-			register_deactivation_hook( nbpc()->get_main_file(), [ $this, 'unregister' ] );
+			$this
+				->add_action( 'nbpc_activation', 'register' )
+				->add_action( 'nbpc_deactivation', 'unregister' )
+			;
 		}
 
 		public function register(): void {

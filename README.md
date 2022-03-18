@@ -262,3 +262,87 @@ if ( isset( $_GET['foo'] ) && 'bar' === $_GET['foo'] ) {
 
 사이트는 정상적으로 동작하지만 URL 주소의 GET 파라미터에 'foo=bar'를 추가하면
 다시 사이트는 'Intentionally stopped.'라는 메세지를 출력하며 동작을 멈출 것입니다.
+
+
+## 보일러플레이트를 테마로 사용하기
+몇 가지 수정을 통해 간편하게 테마의 기본 코드로 전환시킬 수 있습니다.
+
+### Style.css 파일 생성
+테마는 테마의 최상위 디렉토리에 `style.css` 파일을 반드시 위치시켜야 합니다.
+아래 예시를 참고하여 `style.css` 파일을 생성합니다.
+
+```css
+/*
+Theme Name:        Naran Boilerplate Code
+Theme URI:         https://github.com/chwnam/naran-boilerplate-code
+Description:       Naran boilerplate code for WordPress plugins/themes.
+Version:           1.3.4
+Requires at least: 5.1.0
+Requires PHP:      7.0
+Tested up to:      5.4
+Author:            changwoo
+Author URI:        https://blog.changwoo.pe.kr/
+License:           GPL v2 or later
+License URI:       http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain:       npbc
+CPBN Version:      1.3.4
+*/
+```
+
+## (선택) Screenshot.png 파일 추가
+이미지 기본 사이즈는 1200px * 900px 입니다. 이 이미지는 테마 목록에서 사용됩니다.
+
+## Functions.php 파일 생성
+테마 안에서 PHP 코드의 진입점은 `functions.php`입니다. 그러므로 functions.php 파일을 테마 최상이 디렉토리에 만들고,
+`index.php`에 있던 내용을 잘라 붙입니다.
+
+그리고 중요한 마무리를 합니다. `nbpc()` 함수를 부르기 전에 `{PREFIX}_THEME = true;` 코드를 삽입합니다.
+예시로 아래처럼 될 겁니다.
+
+```php
+<?php
+/* ABSPATH check */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+const NBPC_MAIN_FILE = __FILE__;
+const NBPC_VERSION   = '1.3.4';
+const NBPC_PRIORITY  = 100;
+const NBPC_THEME     = true;
+
+nbpc();
+```
+
+플러그인에 있던 헤더 주석은 삭제합니다. 해당 내용은 이미 테마의 style.css로 옮겼기 때문입니다.
+
+
+## Index.php, header.php, footer.php 생성
+이제 index.php는 테마의 템플릿으로 사용됩니다.
+테마의 템플릿으로 변경하고, header.php, footer.php 파일을 생성합니다.
+
+
+## composer.json 수정
+`composer version` 명령의 수정이 필요합니다.
+`composer > scripts > version`의 명령어를 아래처럼 변경합니다.
+
+```
+"version": "@php bin/sync-version.php style.css",
+```
+
+
+## {PREFIX}_Register_Theme_Support 사용
+{PREFIX}_Registers 클래스 생성자에 사용된 assign_module() 메소드 호출의 인자에서,
+
+```
+// 'theme_support' =>{PREFIX}_Register_Theme_Support::class, // Only for themes.
+```
+
+부분의 주석을 해제합니다.
+
+
+## 프론트 모듈 매핑
+`{PREFIX}_Register_Theme_Support::map_front_modules()` 메소드에서 프론트 모듈을 매핑합니다.
+매핑된 모듈은 `{prefix}_get_front_module()` 함수에서 얻을 수 있습니다.

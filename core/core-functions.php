@@ -17,6 +17,30 @@ if ( ! function_exists( 'nbpc' ) ) {
 }
 
 
+if ( ! function_exists( 'nbpc_is_theme' ) ) {
+	/**
+	 * Check if it is used as theme.
+	 *
+	 * @return bool
+	 */
+	function nbpc_is_theme(): bool {
+		return defined( 'NBPC_THEME' ) && NBPC_THEME;
+	}
+}
+
+
+if ( ! function_exists( 'nbpc_is_plugin' ) ) {
+	/**
+	 * Check if it is used as plugin. (default)
+	 *
+	 * @return bool
+	 */
+	function nbpc_is_plugin(): bool {
+		return ! nbpc_is_theme();
+	}
+}
+
+
 if ( ! function_exists( 'nbpc_parse_module' ) ) {
 	/**
 	 * Retrieve submodule by given string notation.
@@ -162,5 +186,39 @@ if ( ! function_exists( 'nbpc_format_callback' ) ) {
 		}
 
 		return '{Unknown}';
+	}
+}
+
+
+if ( ! function_exists( 'nbpc_get_front_module' ) ) {
+	/**
+	 * Get front module.
+	 *
+	 * The module is chosen in NBPC_Register_Theme_Support::map_front_modules().
+	 *
+	 * @return NBPC_Front_Module
+	 *
+	 * @see NBPC_Register_Theme_Support::map_front_modules()
+	 */
+	function nbpc_get_front_module(): NBPC_Front_Module {
+		$front_module = NBPC_Theme_Hierarchy::get_instance()->get_front_module();
+		$instance     = null;
+
+		if ( ! $front_module ) {
+			throw new RuntimeException( __( 'Front module is not set.', 'nbpc' ) );
+		}
+
+		if ( is_string( $front_module ) ) {
+			$instance = nbpc_parse_module( $front_module );
+			if ( ! $instance && class_exists( $front_module ) ) {
+				$instance = new $front_module();;
+			}
+		}
+
+		if ( ! $instance instanceof NBPC_Front_Module ) {
+			throw new RuntimeException( __( '$instance should be a front module instance.', 'nbpc' ) );
+		}
+
+		return $instance;
 	}
 }

@@ -185,7 +185,18 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 * @used-by initialize()
 		 */
 		public function load_textdomain(): void {
-			load_plugin_textdomain( 'nbpc', false, wp_basename( dirname( $this->get_main_file() ) ) . '/languages' );
+			if ( nbpc_is_theme() ) {
+				load_theme_textdomain(
+					'nbpc',
+					get_stylesheet_directory() . '/languages'
+				);
+			} else {
+				load_plugin_textdomain(
+					'nbpc',
+					false,
+					wp_basename( dirname( $this->get_main_file() ) ) . '/languages'
+				);
+			}
 		}
 
 		/**
@@ -195,6 +206,14 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 */
 		public function get_constructor_params(): array {
 			return $this->constructor_params;
+		}
+
+		public function activation(): void {
+			do_action( 'nbpc_activation' );
+		}
+
+		public function deactivation(): void {
+			do_action( 'nbpc_deactivation' );
 		}
 
 		/**
@@ -207,10 +226,16 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 */
 		protected function initialize(): void {
 			$this
+				->setup_activation_deactivation()
 				->assign_constructors( $this->get_constructors() )
 				->assign_modules( $this->get_modules() )
-				->add_action( 'plugins_loaded', 'load_textdomain' )
 			;
+
+			if ( nbpc_is_theme() ) {
+				$this->add_action( 'after_setup_theme', 'load_textdomain' );
+			} else {
+				$this->add_action( 'plugins_loaded', 'load_textdomain' );
+			}
 
 			// Add 'init_conditional_modules' method if exists.
 			if ( method_exists( $this, 'init_conditional_modules' ) ) {
@@ -220,6 +245,28 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 			$this->extra_initialize();
 
 			do_action( 'nbpc_initialized' );
+		}
+
+		/**
+		 * Setup activation-deactivation hook.
+		 *
+		 * @return void
+		 */
+		protected function setup_activation_deactivation(): NBPC_Main_Base {
+			if ( nbpc_is_theme() ) {
+				$this
+					->add_action( 'after_switch_theme', 'activation' )
+					->add_action( 'switch_theme', 'deactivation' )
+				;
+			} else {
+				$file = plugin_basename( $this->get_main_file() );
+				$this
+					->add_action( "activate_$file", 'activation' )
+					->add_action( "deactivate_$file", 'deactivation' )
+				;
+			}
+
+			return $this;
 		}
 
 		protected function assign_constructors( array $constructors ): NBPC_Main_Base {
