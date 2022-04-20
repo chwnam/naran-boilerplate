@@ -32,14 +32,23 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 				$tmpl = get_template_directory();
 				$plug = nbpc_is_plugin() ? dirname( nbpc()->get_main_file() ) : false;
 
-				$paths = [
-					$variant ? "$styl/nbpc/$dir/$file_name-$variant.$ext" : false,
-					"$styl/nbpc/$dir/$file_name.$ext",
-					$variant ? "$tmpl/nbpc/$dir/$file_name-$variant.$ext" : false,
-					"$tmpl/nbpc/$dir}/$file_name.$ext",
-					$plug && $variant ? "$plug/includes/templates/$dir/$file_name-$variant.$ext" : false,
-					$plug ? "$plug/includes/templates/$dir/$file_name.$ext" : false,
-				];
+				if ( nbpc_is_theme() ) {
+					$paths = [
+						$variant ? "$styl/includes/templates/$dir/$file_name-$variant.$ext" : false,
+						"$styl/includes/templates/$dir/$file_name.$ext",
+						$variant ? "$tmpl/includes/templates/$dir/$file_name-$variant.$ext" : false,
+						"$tmpl/includes/templates/$dir/$file_name.$ext",
+					];
+				} else {
+					$paths = [
+						$variant ? "$styl/nbpc/$dir/$file_name-$variant.$ext" : false,
+						"$styl/nbpc/$dir/$file_name.$ext",
+						$variant ? "$tmpl/nbpc/$dir/$file_name-$variant.$ext" : false,
+						"$tmpl/nbpc/$dir}/$file_name.$ext",
+						$plug && $variant ? "$plug/includes/templates/$dir/$file_name-$variant.$ext" : false,
+						$plug ? "$plug/includes/templates/$dir/$file_name.$ext" : false,
+					];
+				}
 
 				$paths   = apply_filters( 'nbpc_locate_file_paths', array_filter( $paths ), $cache_name );
 				$located = false;

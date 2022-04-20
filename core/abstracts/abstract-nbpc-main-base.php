@@ -50,7 +50,7 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		/**
 		 * Get instance method.
 		 *
-		 * @return NBPC_Main_Base
+		 * @return static
 		 */
 		public static function get_instance(): NBPC_Main_Base {
 			if ( is_null( self::$instance ) ) {

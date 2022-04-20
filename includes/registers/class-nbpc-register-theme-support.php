@@ -14,7 +14,7 @@ if ( ! class_exists( 'NBPC_Register_Theme_Support' ) ) {
 			parent::__construct();
 
 			if ( ! is_admin() ) {
-				$this->add_action( 'wp', 'map_front_modules' );
+				$this->add_action( 'pre_get_posts', 'map_front_modules' );
 			}
 		}
 
@@ -71,20 +71,35 @@ if ( ! class_exists( 'NBPC_Register_Theme_Support' ) ) {
 		/**
 		 * Map front module.
 		 *
+		 * @param WP_Query $query
+		 *
 		 * @return void
 		 */
-		public function map_front_modules() {
-			/*
-			// Decide which front module will handle the front scene.:
+		public function map_front_modules( WP_Query $query ) {
+			if ( ! $query->is_main_query() ) {
+				return;
+			}
+
+			$this->remove_action( 'pre_get_posts', 'map_front_modules' );
 
 			$hierarchy = NBPC_Theme_Hierarchy::get_instance();
 
+			// Decide which front module will handle the front scene.
+			/*
 			if ( $hierarchy->is_archive() ) {
 				$hierarchy->set_front_module( Archive_Front_Module::class );
 			} elseif ( $hierarchy->is_singular() ) {
 				$hierarchy->set_front_module( Singular_Front_Module::class );
 			}
 			*/
+
+			// Call pre_get_posts for archive moudules.
+			if ( $hierarchy->is_archive() ) {
+				$module = $hierarchy->get_front_module();
+				if ( $module instanceof NBPC_Front_Archive_Module ) {
+					$module->pre_get_posts( $query );
+				}
+			}
 		}
 
 		/**

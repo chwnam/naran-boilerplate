@@ -1,6 +1,17 @@
+1.4.0-beta.2
+------------
+2022-04-20
+
+- Add: Front fallback module.
+- Fix: Better front module setup process.
+- Fix: Template_Impl::render() cannot find template file when used for themes. (Issue #66)
+- Fix: Force update 'autoload=no' options won't work for newly added options. (Issue #67)
+
+
 1.4.0-beta.1
 ------------
 2022-03-18
+
 - Add: Theme support.
 - Add: Dynamic loading of admin modules.
 
