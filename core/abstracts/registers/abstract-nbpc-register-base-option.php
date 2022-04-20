@@ -65,7 +65,10 @@ if ( ! class_exists( 'NBPC_Register_Base_Option' ) ) {
 			}
 
 			if ( ! empty( $this->autoload_no ) ) {
-				$this->add_action( 'updated_option', 'fix_autoload', null, 3 );
+				$this
+					->add_action( 'added_option', 'fix_autoload', null, 2 )
+					->add_action( 'updated_option', 'fix_autoload', null, 3 )
+				;
 			}
 		}
 

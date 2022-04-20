@@ -201,24 +201,17 @@ if ( ! function_exists( 'nbpc_get_front_module' ) ) {
 	 * @see NBPC_Register_Theme_Support::map_front_modules()
 	 */
 	function nbpc_get_front_module(): NBPC_Front_Module {
-		$front_module = NBPC_Theme_Hierarchy::get_instance()->get_front_module();
-		$instance     = null;
+		$hierarchy    = NBPC_Theme_Hierarchy::get_instance();
+		$front_module = $hierarchy->get_front_module();
 
 		if ( ! $front_module ) {
-			throw new RuntimeException( __( 'Front module is not set.', 'nbpc' ) );
+			$front_module = $hierarchy->get_fallback();
 		}
 
-		if ( is_string( $front_module ) ) {
-			$instance = nbpc_parse_module( $front_module );
-			if ( ! $instance && class_exists( $front_module ) ) {
-				$instance = new $front_module();;
-			}
-		}
-
-		if ( ! $instance instanceof NBPC_Front_Module ) {
+		if ( ! $front_module instanceof NBPC_Front_Module ) {
 			throw new RuntimeException( __( '$instance should be a front module instance.', 'nbpc' ) );
 		}
 
-		return $instance;
+		return $front_module;
 	}
 }

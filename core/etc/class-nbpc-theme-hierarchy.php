@@ -21,7 +21,7 @@ if ( ! class_exists( 'NBPC_Theme_Hierarchy' ) ) {
 		private bool $is_singular = false;
 
 		/**
-		 * @var NBPC_Front_Module|string|null
+		 * @var NBPC_Front_Module|string|false|null
 		 */
 		private $front_module = null;
 
@@ -36,6 +36,7 @@ if ( ! class_exists( 'NBPC_Theme_Hierarchy' ) ) {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new self();
 			}
+
 			return self::$instance;
 		}
 
@@ -51,35 +52,39 @@ if ( ! class_exists( 'NBPC_Theme_Hierarchy' ) ) {
 				return;
 			}
 
-			$object = $wp_the_query->get_queried_object();
-
-			if ( $object instanceof WP_Term ) {
+			if ( $wp_the_query->is_archive() ) {
+				// Archive
 				$this->is_archive = true;
-				$this->post_type  = $wp_the_query->get( 'post_type' );
-				$this->taxonomy   = $object->taxonomy;
-			} elseif ( $object instanceof WP_Post_Type ) {
-				$this->is_archive = true;
-				$this->post_type  = $object->name;
-				$this->taxonomy   = $wp_the_query->get( 'taxonomy' );
-			} elseif ( $object instanceof WP_Post ) {
-				$this->is_singular = true;
-				$this->post_type   = $object->post_type;
-				$this->taxonomy    = $wp_the_query->get( 'taxonomy' );
-				$page_template     = get_page_template_slug( $object );
-				if ( $page_template ) {
-					$this->page_template = $page_template;
+				if ( $wp_the_query->is_post_type_archive ) {
+					$this->post_type = $wp_the_query->get( 'post_type' );
+				} elseif ( $wp_the_query->is_tax ) {
+					global $wp_taxonomies;
+					foreach ( array_keys( $wp_taxonomies ) as $taxonomy ) {
+						if ( isset( $wp_the_query->query_vars[ $taxonomy ] ) ) {
+							$this->taxonomy = $taxonomy;
+							break;
+						}
+					}
+				} elseif ( $wp_the_query->is_category ) {
+					$this->taxonomy = 'category';
+				} elseif ( $wp_the_query->is_tag ) {
+					$this->taxonomy = 'post_tag';
 				}
-			} elseif (
-				empty( $wp_the_query->get( 'post_type' ) ) &&
-				empty( $wp_the_query->get( 'cat' ) ) &&
-				empty( $wp_the_query->get( 'tag' ) ) &&
-				empty( $wp_the_query->get( 'p' ) )
-			) {
-				$this->is_singular = false;
-				$this->is_archive  = true;
-				$this->post_type   = 'post';
-				$this->taxonomy    = '';
+			} elseif ( $wp_the_query->is_singular() ) {
+				// Singular
+				$this->is_singular = true;
+				$this->post_type   = $wp_the_query->get( 'post_type' );
+				if ( ! $this->post_type ) {
+					if ( $wp_the_query->is_page ) {
+						$this->post_type     = 'page';
+						$this->page_template = get_page_template_slug( $wp_the_query->queried_object ) ?: '';
+					} else {
+						$this->post_type = 'post';
+					}
+				}
 			}
+
+			do_action_ref_array( 'nbpc_theme_hierarchy', [ &$this ] );
 		}
 
 		/**
@@ -99,7 +104,14 @@ if ( ! class_exists( 'NBPC_Theme_Hierarchy' ) ) {
 		 * @return void
 		 */
 		public function set_front_module( $module ) {
-			$this->front_module = $module;
+			if ( is_string( $module ) ) {
+				$instance = nbpc_parse_module( $module );
+				if ( $instance ) {
+					$this->front_module = $instance;
+				}
+			} else {
+				$this->front_module = $module;
+			}
 		}
 
 		public function is_archive(): bool {
@@ -120,6 +132,10 @@ if ( ! class_exists( 'NBPC_Theme_Hierarchy' ) ) {
 
 		public function get_taxonomy(): string {
 			return $this->taxonomy;
+		}
+
+		public function get_fallback(): NBPC_Front_Fallback {
+			return new NBPC_Front_Fallback();
 		}
 
 		/**

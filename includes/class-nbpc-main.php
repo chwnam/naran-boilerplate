@@ -14,7 +14,7 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 	 * @property-read NBPC_Admin     $admin
 	 * @property-read NBPC_Registers $registers
 	 */
-	final class NBPC_Main extends NBPC_Main_Base {
+	class NBPC_Main extends NBPC_Main_Base {
 		/**
 		 * Return root modules
 		 *
