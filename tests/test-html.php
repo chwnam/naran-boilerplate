@@ -65,14 +65,13 @@ class Test_HTML extends WP_UnitTestCase {
 				'coffee',
 				'Coffee',
 				true,
-				[ 'aria-label' => 'Our store coffee' ],
-				false
+				[ 'aria-label' => 'Our store coffee' ]
 			)
 		);
 
 		$this->assertEquals(
 			'<option value="0">0</option>',
-			HTML::option( 0, '0', false, [], false )
+			HTML::option( 0, '0', false, [] )
 		);
 	}
 
@@ -83,8 +82,7 @@ class Test_HTML extends WP_UnitTestCase {
 				[ 0 => '0', 1 => '1' ],
 				1,
 				[ 'id' => 'id', 'name' => 'name' ],
-				[ 1 => [ 'class' => 'opt' ] ],
-				false
+				[ 1 => [ 'class' => 'opt' ] ]
 			)
 		);
 
@@ -93,8 +91,95 @@ class Test_HTML extends WP_UnitTestCase {
 			HTML::select(
 				[
 					'A' => [ 0 => '0', 1 => '1' ],
-					'B' => [ 2 => '2', 3 => '3' ]
-				], '', [], [], false )
+					'B' => [ 2 => '2', 3 => '3' ],
+				], '', [], [] )
+		);
+	}
+
+	public function test_input() {
+		$this->assertEquals(
+			'<input id="foo" name="foo" type="text" class="text large-text" value="foo"/>',
+			HTML::input( [
+				'id'    => 'foo',
+				'name'  => 'foo',
+				'type'  => 'text',
+				'class' => 'text large-text',
+				'value' => 'foo',
+			] )
+		);
+	}
+
+	public function test_nested() {
+		$this->assertEquals(
+			'<p>The paragraph</p>',
+			HTML::nested( 'p', [], 'The paragraph' )
+		);
+
+		$this->assertEquals(
+			'<ul><li>X</li><li>Y</li><li>Z</li></ul>',
+			HTML::nested( 'ul', [],
+				HTML::nested( 'li', [], 'X' ),
+				[
+					HTML::nested( 'li', [], 'Y' ),
+					HTML::nested( 'li', [], 'Z' ),
+				]
+			)
+		);
+	}
+
+	public function test_kses_input() {
+		$this->assertEquals(
+			'<input id="foo" name="foo" type="text" class="text large-text" value="foo" />',
+			HTML::kses_input(
+				HTML::input( [
+					'id'        => 'foo',
+					'name'      => 'foo',
+					'type'      => 'text',
+					'class'     => 'text large-text',
+					'value'     => 'foo',
+					'evil-prop' => '?',
+				] )
+			)
+		);
+	}
+
+	public function test_kses_select() {
+		$this->assertEquals(
+			'<select data-x="1"><optgroup label="A"><option value="0">0</option><option value="1">1</option></optgroup><optgroup label="B"><option value="2">2</option><option value="3">3</option></optgroup></select>Button//JavascriptCode',
+			HTML::kses_select(
+				HTML::select(
+					[
+						'A' => [ 0 => '0', 1 => '1' ],
+						'B' => [ 2 => '2', 3 => '3' ],
+					],
+					'',
+					[ 'data-x' => '1' ],
+					[ 'A' => [ 'not-allowed' => 'no' ] ]
+				) . '<button>Button</button><script>//JavascriptCode</script>',
+				[
+					'select' => [ 'data-x' => true ],
+				]
+			)
+		);
+	}
+
+	public function test_kses_nested() {
+		$this->assertEquals(
+			'<div id="foo" class="foo-container"><p>Nested Content</p></div>',
+			HTML::kses_nested(
+				HTML::nested(
+					'div',
+					[
+						'id'    => 'foo',
+						'class' => 'foo-container',
+					],
+					HTML::nested( 'p', [], "Nested Content" )
+				),
+				[
+					'div' => [],
+					'p'   => [],
+				]
+			)
 		);
 	}
 }

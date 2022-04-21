@@ -1,3 +1,12 @@
+1.4.0
+-----
+2022-04-21
+
+- Add: NBPC_HTML kses helper methods.
+- Fix: NBPC_HTML methods now do not support echo outputs.
+- Fix: NBPC_Submodule_Impl:touch()'s visibility changes from protected to public.
+
+
 1.4.0-beta.2
 ------------
 2022-04-20
