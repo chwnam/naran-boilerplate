@@ -9,7 +9,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'NBPC_HTML' ) ) {
+	/**
+	 * HTML generate class
+	 *
+	 * @since 1.4.0-beta.3 $output is removed.
+	 *                     You are required to sanitize your HTML text results by yourself right before they are echoed.
+	 * @see   wp_kses
+	 * @see   wp_kses_post
+	 */
 	class NBPC_HTML {
+		protected static ?array $allowed_select = null;
+
+		protected static ?array $allowed_input = null;
+
 		/**
 		 * Quote string
 		 *
@@ -94,8 +106,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 						if ( is_bool( $val ) ) {
 							$buffer[] = $val ? ( $key . '=' . self::enclose( $key ) ) : '';
 						} else {
-							$val = esc_attr( $val );
-							// use strlen() because $val can be '0'.
+							$val      = esc_attr( $val );
 							$buffer[] = '' !== $val ? ( $key . '=' . self::enclose( $val ) ) : $key;
 						}
 						break;
@@ -113,26 +124,19 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		/**
 		 * Open a tag.
 		 *
-		 * @param string $tag   Tag Name.
-		 * @param array  $attrs Array of attributes.
-		 * @param bool   $echo  Print or return.
+		 * @param string $tag     Tag Name.
+		 * @param array  $attrs   Array of attributes.
+		 * @param bool   $enclose Put a closing slash at the tail of tag.
 		 *
 		 * @return string
 		 */
-		public static function tag_open( string $tag, array $attrs, bool $echo = true ): string {
+		public static function tag_open( string $tag, array $attrs = [], bool $enclose = false ): string {
 			$output    = '';
 			$tag       = sanitize_key( $tag );
 			$formatted = static::attrs( $attrs );
 
 			if ( $tag ) {
-				$output = '<' . $tag . ( $formatted ? ' ' . $formatted : '' ) . '>';
-			}
-
-			if ( $echo ) {
-				// The function is for convenient HTML output. Escaping here should not be what we expect.
-				// phpcs:ignore WordPress.Security.EscapeOutput
-				echo $output;
-				return '';
+				$output = '<' . $tag . ( $formatted ? " $formatted" : '' ) . ( $enclose ? '/' : '' ) . '>';
 			}
 
 			return $output;
@@ -142,23 +146,15 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		 * Close a tag.
 		 *
 		 * @param string $tag  Closing tag.
-		 * @param bool   $echo Print or return.
 		 *
 		 * @return string
 		 */
-		public static function tag_close( string $tag, bool $echo = true ): string {
+		public static function tag_close( string $tag ): string {
 			$output = '';
 			$tag    = sanitize_key( $tag );
 
 			if ( $tag ) {
 				$output = '</' . $tag . '>';
-			}
-
-			if ( $echo ) {
-				// The function is for convenient HTML output. Escaping here should not be what we expect.
-				// phpcs:ignore WordPress.Security.EscapeOutput
-				echo $output;
-				return '';
 			}
 
 			return $output;
@@ -168,12 +164,11 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		 * Input tag.
 		 *
 		 * @param array $attrs Input tag attributes.
-		 * @param bool  $echo  Echo, or return.
 		 *
 		 * @return string
 		 */
-		public static function input( array $attrs, bool $echo = true ): string {
-			return self::tag_open( 'input', $attrs, $echo );
+		public static function input( array $attrs = [] ): string {
+			return self::tag_open( 'input', $attrs, true );
 		}
 
 		/**
@@ -183,7 +178,6 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		 * @param string      $label    Label string.
 		 * @param bool|string $selected Selected value, or more directly, boolean value.
 		 * @param array       $attrs    Attributes other than 'value', and selected.
-		 * @param bool        $echo     Echo, or return.
 		 *
 		 * @return string
 		 */
@@ -191,8 +185,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 			string $value,
 			string $label,
 			$selected,
-			array $attrs = [],
-			bool $echo = true
+			array $attrs = []
 		): string {
 			$attrs['value'] = $value;
 
@@ -208,18 +201,7 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 
 			// phpcs:enable WordPress.PHP.StrictComparisons.LooseComparison
 
-			$output = self::tag_open( 'option', $attrs, false ) .
-			          esc_html( $label ) .
-			          self::tag_close( 'option', false );
-
-			if ( $echo ) {
-				// The function is for convenient HTML output. Escaping here should not be what we expect.
-				// phpcs:ignore WordPress.Security.EscapeOutput
-				echo $output;
-				return '';
-			}
-
-			return $output;
+			return self::tag_open( 'option', $attrs ) . esc_html( $label ) . self::tag_close( 'option' );
 		}
 
 		/**
@@ -232,7 +214,6 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 		 * @param array        $attrs      <select> tag attributes.
 		 * @param array        $opt_attrs  <option> tag attributes.
 		 *                                 Key is option value. Value is array or attributes.
-		 * @param bool         $echo       Echo or return.
 		 *
 		 * @return string
 		 *
@@ -272,11 +253,10 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 			array $options,
 			$selected = '',
 			array $attrs = [],
-			array $opt_attrs = [],
-			bool $echo = true
+			array $opt_attrs = []
 		): string {
 			$buffer = [
-				self::tag_open( 'select', $attrs, false ),
+				self::tag_open( 'select', $attrs ),
 			];
 
 			foreach ( $options as $key => $option ) {
@@ -295,16 +275,16 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 					}
 					$a['label'] = $key;
 
-					$buffer[] = self::tag_open( 'optgroup', $a, false );
+					$buffer[] = self::tag_open( 'optgroup', $a );
 
 					foreach ( $option as $v => $l ) {
 						$s = is_array( $selected ) ? in_array( $v, $selected, true ) : $selected;
 						$a = (array) ( $opt_attrs[ $v ] ?? [] );
 
-						$buffer[] = self::option( $v, $l, $s, $a, false );
+						$buffer[] = self::option( $v, $l, $s, $a );
 					}
 
-					$buffer[] = self::tag_close( 'optgroup', false );
+					$buffer[] = self::tag_close( 'optgroup' );
 				} else {
 					/**
 					 * Option part
@@ -312,18 +292,11 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 					$s = is_array( $selected ) ? in_array( $key, $selected, true ) : $selected;
 					$a = (array) ( $opt_attrs[ $key ] ?? [] );
 
-					$buffer[] = self::option( $key, $option, $s, $a, false );
+					$buffer[] = self::option( $key, $option, $s, $a );
 				}
 			}
 
-			$buffer[] = self::tag_close( 'select', false );
-
-			if ( $echo ) {
-				// The function is for convenient HTML output. Escaping here should not be what we expect.
-				// phpcs:ignore WordPress.Security.EscapeOutput
-				echo implode( '', $buffer );
-				return '';
-			}
+			$buffer[] = self::tag_close( 'select' );
 
 			return implode( '', $buffer );
 		}
@@ -342,6 +315,227 @@ if ( ! class_exists( 'NBPC_HTML' ) ) {
 			}
 
 			return array_unique( array_filter( array_map( $filter, $val ) ) );
+		}
+
+		/**
+		 * Build a nested tag structure.
+		 *
+		 * @param string       $tag         Opening, and closing tag.
+		 * @param array        $attrs       Tag's attributes.
+		 * @param string|array ...$enclosed Enclosed nodes. Any number of strings or arrays.
+		 *
+		 * @return string
+		 */
+		public static function nested( string $tag, array $attrs = [], ...$enclosed ): string {
+			$buffer = [
+				static::tag_open( $tag, $attrs ),
+			];
+
+			if ( ! $buffer[0] ) {
+				return '';
+			}
+
+			foreach ( $enclosed as $en ) {
+				if ( is_string( $en ) ) {
+					$buffer[] = trim( $en );
+				} elseif ( is_array( $en ) ) {
+					foreach ( $en as $e ) {
+						if ( is_string( $e ) ) {
+							$buffer[] = trim( $e );
+						}
+					}
+				}
+			}
+
+			$buffer[] = static::tag_close( $tag );
+
+			return implode( '', array_filter( $buffer ) );
+		}
+
+		/**
+		 * Sanitize helper method for select().
+		 *
+		 * @param string                             $input       Select, optgroup, and option HTML text.
+		 * @param array<string, array<string, bool>> $extra_rules Additional rules. Key: tag / value: list of attrs.
+		 *
+		 * @return string
+		 */
+		public static function kses_select( string $input, array $extra_rules = [] ): string {
+			if ( ! static::$allowed_select ) {
+				static::$allowed_select = [
+					'select'   => array_merge(
+						static::kses_global_attrs(),
+						[
+							'autocomplete' => true,
+							'autofocus'    => true,
+							'class'        => true,
+							'disabled'     => true,
+							'form'         => true,
+							'id'           => true,
+							'multiple'     => true,
+							'name'         => true,
+							'readonly'     => true,
+							'required'     => true,
+							'size'         => true,
+							'style'        => true,
+						]
+					),
+					'optgroup' => array_merge(
+						static::kses_global_attrs(),
+						[
+							'class'    => true,
+							'disabled' => true,
+							'id'       => true,
+							'label'    => true,
+							'style'    => true,
+						]
+					),
+					'option'   => array_merge(
+						static::kses_global_attrs(),
+						[
+							'class'    => true,
+							'disabled' => true,
+							'id'       => true,
+							'label'    => true,
+							'style'    => true,
+							'selected' => true,
+							'value'    => true,
+						]
+					),
+				];
+			}
+
+			return wp_kses( $input, static::merge_kses_attrs( static::$allowed_select, $extra_rules ) );
+		}
+
+		/**
+		 * Sanitize helper method for input().
+		 *
+		 * @param string                             $input       Input HTML text.
+		 * @param array<string, array<string, bool>> $extra_rules Additional rules. Key: tag / value: list of attrs.
+		 *
+		 * @return string
+		 */
+		public static function kses_input( string $input, array $extra_rules = [] ): string {
+			if ( ! static::$allowed_input ) {
+				static::$allowed_input = [
+					'input' => array_merge(
+						static::kses_global_attrs(),
+						[
+							'accept'         => true,
+							'alt'            => true,
+							'autocomplete'   => true,
+							'autofocus'      => true,
+							'capture'        => true,
+							'checked'        => true,
+							'dirname'        => true,
+							'disabled'       => true,
+							'form'           => true,
+							'formaction'     => true,
+							'formenctype'    => true,
+							'formmethod'     => true,
+							'formnovalidate' => true,
+							'formtarget'     => true,
+							'height'         => true,
+							'list'           => true,
+							'max'            => true,
+							'maxlength'      => true,
+							'min'            => true,
+							'minlength'      => true,
+							'multiple'       => true,
+							'name'           => true,
+							'pattern'        => true,
+							'placeholder'    => true,
+							'readonly'       => true,
+							'required'       => true,
+							'size'           => true,
+							'src'            => true,
+							'step'           => true,
+							'type'           => true,
+							'value'          => true,
+							'width'          => true,
+						]
+					),
+				];
+			}
+
+			return wp_kses( $input, static::merge_kses_attrs( static::$allowed_input, $extra_rules ) );
+		}
+
+		/**
+		 * Sanitize helper method for nested().
+		 *
+		 * @param string                             $input Input HTML text.
+		 * @param array<string, array<string, bool>> $rules Additional rules. Key: tag / value: list of attrs.
+		 *
+		 * @return string
+		 */
+		public static function kses_nested( string $input, array $rules = [] ): string {
+			$globals = static::kses_global_attrs();
+
+			foreach ( array_keys( $rules ) as $tag ) {
+				$rules[ $tag ] = array_merge( $globals, $rules[ $tag ] );
+			}
+
+			return wp_kses( $input, $rules );
+		}
+
+		/**
+		 * Merge two allowed attributes.
+		 *
+		 * @param array<string, array<string, bool>> $origin
+		 * @param array<string, array<string, bool>> $extra
+		 *
+		 * @return array
+		 */
+		protected static function merge_kses_attrs( array $origin, array $extra ): array {
+			if ( empty( $extra ) ) {
+				return $origin;
+			} else {
+				$result = $origin;
+
+				foreach ( $extra as $tag => $attrs ) {
+					if ( isset( $result[ $tag ] ) ) {
+						$result[ $tag ] = array_merge( $result[ $tag ], $attrs );
+					} else {
+						$result[ $tag ] = $attrs;
+					}
+				}
+
+				return $result;
+			}
+		}
+
+		/**
+		 * Return global HTML attributes list.
+		 *
+		 * @return array<string, bool>
+		 * @link   https://developer.mozilla.org/ko/docs/Web/HTML/Global_attributes
+		 */
+		protected static function kses_global_attrs(): array {
+			return [
+				'accesskey'       => true,
+				'autocapitalize'  => true,
+				'class'           => true,
+				'contenteditable' => true,
+				'dir'             => true,
+				'draggable'       => true,
+				'hidden'          => true,
+				'id'              => true,
+				'inputmode'       => true,
+				'is'              => true,
+				'itemid'          => true,
+				'itemprop'        => true,
+				'itemref'         => true,
+				'itemscope'       => true,
+				'itemtype'        => true,
+				'lang'            => true,
+				'part'            => true,
+				'spellcheck'      => true,
+				'style'           => true,
+				'tabindex'        => true,
+				'title'           => true,
+			];
 		}
 	}
 }

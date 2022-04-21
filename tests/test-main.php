@@ -16,7 +16,7 @@ class Test_Main extends WP_UnitTestCase {
 
 		// Check submodule types
 		$this->assertInstanceOf( NBPC_Main::class, $nbpc );
-		$this->assertInstanceOf( NBPC_Admins::class, $nbpc->admins );
+		$this->assertInstanceOf( NBPC_Admin::class, $nbpc->admin );
 		$this->assertInstanceOf( NBPC_Registers::class, $nbpc->registers );
 
 		// Check getter methods.
@@ -37,7 +37,7 @@ class Test_Main extends WP_UnitTestCase {
 	public function test_get_module_by_notation() {
 		$nbpc = NBPC_Main::get_instance();
 
-		$this->assertInstanceOf( NBPC_Admins::class, $nbpc->get_module_by_notation( 'admins' ) );
+		$this->assertInstanceOf( NBPC_Admin::class, $nbpc->get_module_by_notation( 'admin' ) );
 		$this->assertInstanceOf( NBPC_Registers::class, $nbpc->get_module_by_notation( 'registers' ) );
 
 		// Check registers.activation

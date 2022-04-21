@@ -61,6 +61,19 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		}
 
 		/**
+		 * Just touch module, let it be instantiated.
+		 *
+		 * @param string $name Module name.
+		 *
+		 * @return void
+		 */
+		public function touch( string $name ) {
+			if ( $this->__isset( $name ) ) {
+				$this->__get( $name );
+			}
+		}
+
+		/**
 		 * Assign modules.
 		 *
 		 * @param array $modules   Modules
@@ -151,26 +164,13 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		}
 
 		/**
-		 * Just touch module, let it be instantiated.
-		 *
-		 * @param string $name Module name.
-		 *
-		 * @return void
-		 */
-		protected function touch( string $name ) {
-			if ( $this->__isset( $name ) ) {
-				$this->__get( $name );
-			}
-		}
-
-		/**
 		 * Call or return as-is.
 		 *
 		 * @param mixed $object Input object.
 		 *
 		 * @return mixed
 		 */
-		private function call_if_callable_or_as_is( $object ) {
+		protected function call_if_callable_or_as_is( $object ) {
 			return is_callable( $object ) ? $object() : $object;
 		}
 	}
