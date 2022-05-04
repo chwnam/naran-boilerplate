@@ -217,6 +217,15 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		}
 
 		/**
+		 * Callback for modules that should be started after init action.
+		 *
+		 * @return void
+		 */
+		public function assign_later_modules() {
+			$this->assign_modules( $this->get_late_modules() );
+		}
+
+		/**
 		 * Initialize plugin.
 		 *
 		 * This method is called only once.
@@ -228,7 +237,10 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 			$this
 				->setup_activation_deactivation()
 				->assign_constructors( $this->get_constructors() )
-				->assign_modules( $this->get_modules() )
+				// Higher priority modules.
+				->assign_modules( $this->get_early_modules() )
+				// Lower priority modules.
+				->add_action( 'init', 'assign_later_modules', $this->get_priority() + 10 )
 			;
 
 			if ( nbpc_is_theme() ) {
@@ -269,17 +281,31 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 			return $this;
 		}
 
+		/**
+		 * Assign constructors
+		 *
+		 * @param array<string, array|callable> $constructors Each key should be FQCN, and value can be an array, or a callable which returns an array.
+		 *
+		 * @return $this
+		 */
 		protected function assign_constructors( array $constructors ): NBPC_Main_Base {
 			$this->constructor_params = $constructors;
 			return $this;
 		}
 
 		/**
-		 * Return root modules
+		 * Return modules that are initialized before 'init' action.
 		 *
 		 * @return array
 		 */
-		abstract protected function get_modules(): array;
+		abstract protected function get_early_modules(): array;
+
+		/**
+		 * Return modules that should be initialized after 'init' action.
+		 *
+		 * @return array
+		 */
+		abstract protected function get_late_modules(): array;
 
 		/**
 		 * Return constructor params

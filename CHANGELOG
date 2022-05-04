@@ -1,7 +1,10 @@
 ongoing
 -------
 
-- Fix: fix unrelated strings.
+- Fix: Correct unrelated strings. (Issue #69)
+- Mod: Module loading is distinguished. (Issue #68)
+       * Early modules are loaded as soon as plugin (or theme) is loaded.
+       * Late modules are loaded in init action callback.
 
 
 1.4.0
