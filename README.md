@@ -162,7 +162,7 @@ $ composer version
 
 `foo/includes/class-foo-main.php` 파일에 `Foo_Main` 클래스가 정의되어 있습니다. 이 클래스가 플러그인의 핵심인 메인 파일입니다.
 
-클래스에 정의된 `get_modules()` 메소드로 이동합니다. 이 메소드는 연관 배열을 리턴하는데, 이 배열의 키는 모듈의 식별자이고, 값은 모듈의 인스턴스나 클래스, 혹은 익명 함수일 수 있습니다.
+클래스에 정의된 `get_early_modules()` 메소드로 이동합니다. 이 메소드는 연관 배열을 리턴하는데, 이 배열의 키는 모듈의 식별자이고, 값은 모듈의 인스턴스나 클래스, 혹은 익명 함수일 수 있습니다.
 
 #### 'bar' 모듈 생성
 
@@ -198,10 +198,10 @@ if ( ! class_exists( 'FOO_Bar' ) ) {
 
 #### 'bar' 모듈의 등록
 아직 bar 모듈은 동작하지 않습니다. 동작하려면 메인 클래스에 해당 모듈을 등록해야 합니다.
-FOO_Main 클래스의 get_modules() 메소드에 모듈을 등록합니다.
+FOO_Main 클래스의 get_early_modules() 메소드에 모듈을 등록합니다.
 
 ```php
-protected function get_modules(): array {
+protected function get_early_modules(): array {
   return [
     /* 생략 */
     'bar' => FOO_Bar::class,
@@ -237,10 +237,10 @@ final class FOO_Main extends FOO_Main_Base
 bar 모듈을 클래스 이름으로 전달하면 언제나 모듈이 활성화 됩니다. 그러나 모듈을 필요한 경우에만 
 동작시키고 싶은 경우가 있을 것입니다.
 
-이 때 아래처럼 `Foo_Main::get_modules()` 메소드의 내용을 수정합니다.
+이 때 아래처럼 `Foo_Main::get_early_modules()` 메소드의 내용을 수정합니다.
 
 ```php
-protected function get_modules(): array {
+protected function get_early_modules(): array {
   return [
     /* 생략 */
     'bar' => function () { return new FOO_Bar(); },
@@ -262,6 +262,14 @@ if ( isset( $_GET['foo'] ) && 'bar' === $_GET['foo'] ) {
 
 사이트는 정상적으로 동작하지만 URL 주소의 GET 파라미터에 'foo=bar'를 추가하면
 다시 사이트는 'Intentionally stopped.'라는 메세지를 출력하며 동작을 멈출 것입니다.
+
+#### 우선 모듈(early module)과 후속 모듈(late module)의 차이
+우선 모듈, `get_early_modules()` 메소드로 등록하는 모듈의 등록 방식과
+후속 모듈, `get_late_modules()` 메소드로 등록하는 모듈의 등록 방식은 동일합니다. 다만 후속 모듈은
+`init` 액션의 좀 더 낮은 우선순위의 콜백에 불려진다는 점이 다릅니다.
+
+자동으로 시작하는 모듈이나, 특정 기능이 코어에 등록된 이후에 정상적인 동작이 보장되는 모듈일 경우
+`get_late_modules()` 메소드에 등록하는 것이 좋습니다.
 
 
 ## 보일러플레이트를 테마로 사용하기
