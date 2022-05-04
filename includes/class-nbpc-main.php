@@ -16,17 +16,29 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 	 */
 	class NBPC_Main extends NBPC_Main_Base {
 		/**
-		 * Return root modules
+		 * Return modules that are initialized before 'init' action.
 		 *
 		 * @return array
-		 *
 		 * @used-by NBPC_Main_Base::initialize()
 		 */
-		protected function get_modules(): array {
+		protected function get_early_modules(): array {
 			return [
 				'admin'     => NBPC_Admin::class,
 				'registers' => NBPC_Registers::class,
 			];
+		}
+
+		/**
+		 * Return modules that should be initialized after 'init' action.
+		 *
+		 * Some features can be used properly after they are initialized,
+		 *  and they are mostly done in the init callbacks.
+		 *
+		 * @return array
+		 * @used-by NBPC_Main_Base::assign_init_modules()
+		 */
+		protected function get_late_modules(): array {
+			return [];
 		}
 
 		/**
