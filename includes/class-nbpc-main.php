@@ -66,7 +66,7 @@ if ( ! class_exists( 'NBPC_Main' ) ) {
 				[
 					'settings' => sprintf(
 					/* translators: %1$s: link to settings , %2$s: aria-label  , %3$s: text */
-						'<a href="%1$s" id="nss-settings" aria-label="%2$s">%3$s</a>',
+						'<a href="%1$s" id="nbpc-settings" aria-label="%2$s">%3$s</a>',
 						admin_url( 'options-general.php?page=nbpc' ), // NOTE: You need to implement the page.
 						esc_attr__( 'NBPC settings', 'nbpc' ),
 						esc_html__( 'Settings', 'nbpc' )
