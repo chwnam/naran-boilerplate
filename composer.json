@@ -54,7 +54,9 @@
     "yoast/phpunit-polyfills": "^1.0",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "wp-coding-standards/wpcs": "^2.3",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2"
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
+    "pear/console_commandline": "^1.2",
+    "nikic/php-parser": "^4.13"
   },
   "license": "GPL-2.0-or-later",
   "config": {
