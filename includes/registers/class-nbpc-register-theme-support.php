@@ -124,7 +124,7 @@ if ( ! class_exists( 'NBPC_Register_Theme_Support' ) ) {
 
 			register_sidebar(
 				[
-					'name'          => __( 'Primary Sidebar', 'theme_name' ),
+					'name'          => __( 'Primary Sidebar', 'nbpc' ),
 					'id'            => 'sidebar-1',
 					'before_widget' => '<aside id="%1$s" class="widget %2$s">',
 					'after_widget'  => '</aside>',
@@ -135,7 +135,7 @@ if ( ! class_exists( 'NBPC_Register_Theme_Support' ) ) {
 
 			register_sidebar(
 				[
-					'name'          => __( 'Secondary Sidebar', 'theme_name' ),
+					'name'          => __( 'Secondary Sidebar', 'nbpc' ),
 					'id'            => 'sidebar-2',
 					'before_widget' => '<ul><li id="%1$s" class="widget %2$s">',
 					'after_widget'  => '</li></ul>',
