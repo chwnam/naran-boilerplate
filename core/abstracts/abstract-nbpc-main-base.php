@@ -123,7 +123,7 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 *
 		 * @return Closure|array|string
 		 * @throws NBPC_Callback_Exception Thrown if callback is invalid.
-		 * @example foo.bar@baz ---> array( nbpc()->foo->bar, 'baz )
+		 * @example foo.bar@baz ---> array( nbpc()->foo->bar, 'baz' )
 		 */
 		public function parse_callback( $item ) {
 			if ( is_callable( $item ) ) {
