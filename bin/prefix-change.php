@@ -582,13 +582,13 @@ function get_new_prefix(): string {
 
 function get_parser(): Console_CommandLine {
 	$parser                       = new Console_CommandLine();
-	$parser->description          = 'Prefix and text domain changer.';
+	$parser->description          = "Prefix and text domain changer.\n  Due to the complextity of PHP syntax, prefix-change rely on simple string replacement.\n  Therefore set your prefix to a unique string.";
 	$parser->renderer->line_width = get_console_width();
 
 	$parser->addArgument(
 		'new_prefix',
 		[
-			'description' => 'Your new prefix string. Accepts only lowercase alphabets, numbers, and hyphen. The first character must be an alphabet.',
+			'description' => 'Your new prefix string.Accepts only lowercase alphabets, numbers, and hyphen. The first character must be an alphabet.',
 			'multiple'    => false,
 			'optional'    => true,
 			'help_name'   => 'NEW_PREFIX',
@@ -601,7 +601,7 @@ function get_parser(): Console_CommandLine {
 			'description' => 'Current prefix string. Defaults to \'nbpc\'.',
 			'multiple'    => false,
 			'optional'    => true,
-			'help_name'   => 'NEW_PREFIX',
+			'help_name'   => 'OLD_PREFIX',
 			'default'     => 'nbpc',
 		]
 	);
