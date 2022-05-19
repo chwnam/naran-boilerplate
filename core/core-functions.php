@@ -9,9 +9,9 @@ if ( ! function_exists( 'nbpc' ) ) {
 	/**
 	 * NBPC_Main alias.
 	 *
-	 * @return NBPC_Main
+	 * @return NBPC_Main_Base
 	 */
-	function nbpc(): NBPC_Main {
+	function nbpc(): NBPC_Main_Base {
 		return NBPC_Main::get_instance();
 	}
 }
@@ -63,7 +63,7 @@ if ( ! function_exists( 'nbpc_parse_callback' ) ) {
 	 *
 	 * @return callable|array|string
 	 * @throws NBPC_Callback_Exception Thrown if callback is invalid.
-	 * @example foo.bar@baz ---> array( nbpc()->foo->bar, 'baz )
+	 * @example foo.bar@baz ---> array( nbpc()->foo->bar, 'baz' )
 	 */
 	function nbpc_parse_callback( $maybe_callback ) {
 		return nbpc()->parse_callback( $maybe_callback );

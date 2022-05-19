@@ -56,13 +56,17 @@ Replace prefix from `npbc` to `foo`. Are you sure? [Y/n]
 
 ```
 $ cd boilerplate
-$ php bin/prefix-changer.php myplugin               # 접두 npbc를 myplugin 으로 변경.
-$ php bin/prefix-changer.php my-new-prefix myplugin # 접두 myplugin를 my-new-prefix 으로 변경.
+$ php bin/prefix-change.php myplugin                     # 접두 npbc를 myplugin 으로 변경.
+$ php bin/prefix-change.php my-new-prefix myplugin       # 접두 myplugin를 my-new-prefix 으로 변경.
 ```
+
+자세한 사항은 `php bin/prefix-change.php --help`를 참고하십시오.
+
 
 ### 버전 일괄 변경
 
-플러그인 메인 헤더 파일의 'version' 태그 정보를 기준으로 정의된 버전 문자열을 동기화할 수 있습니다. 예를 들어, 메인의 헤더 파일이 아래처럼 되어 있다면,
+플러그인 메인 헤더 파일의 'version' 태그 정보를 기준으로 정의된 버전 문자열을 동기화할 수 있습니다.
+예를 들어, 메인의 헤더 파일이 아래처럼 되어 있다면,
 
 ```php
 <?php
@@ -75,8 +79,8 @@ $ php bin/prefix-changer.php my-new-prefix myplugin # 접두 myplugin를 my-new-
 // 이하 생략
 ```
 
-플러그인의 버전은 1.1.0입니다. 그런데 이에 맞춰 `package.json`, `composer.json`이나 메인 파일 자체에 있는 상수 선언도 이에 맞춰 같은 문자열을 가져야 합니다. 이
-때, `bin/sync-version.php` 스크립트를 사용할 수 있습니다.
+플러그인의 버전은 1.1.0입니다. 그런데 이에 맞춰 `package.json`, `composer.json`이나 메인 파일 자체에 있는 상수 선언도
+이에 맞춰 같은 문자열을 가져야 합니다. 이때, `bin/sync-version.php` 스크립트를 사용할 수 있습니다.
 
 ```
 $ php bin/sync-version.php index.php # 메인 파일을 정확히 지정.
