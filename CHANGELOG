@@ -1,10 +1,13 @@
-ongoing
--------
+1.4.1
+-----
+2022-05-19
 
 - Fix: Correct unrelated strings. (Issue #69)
 - Mod: Module loading is distinguished. (Issue #68)
        * Early modules are loaded as soon as plugin (or theme) is loaded.
        * Late modules are loaded in init action callback.
+- Mod: prefix-change.php can additionally replace text domain strings.
+- Fix: Minor string correction.
 
 
 1.4.0
