@@ -31,6 +31,9 @@ class NBPC_Sync_Version {
 
 		// Change package.json version.
 		$this->apply_change_json( $package, $target_version, 'package.json' );
+
+		// Change CPBN version. Only applied when developing NBPC.
+		$this->apply_change_cpbn( $main_path, $target_version );
 	}
 
 	/**
@@ -67,6 +70,46 @@ class NBPC_Sync_Version {
 		$detect  = $this->detect_comment( $content );
 
 		return $detect[0];
+	}
+
+	/**
+	 * Fix CPBN version string, if it is not modified.
+	 *
+	 * @param string $main_path      Main file path.
+	 * @param string $target_version Target version string.
+	 */
+	private function apply_change_cpbn( string $main_path, string $target_version ): void {
+		$dir  = basename( dirname( $main_path ) );
+		$base = basename( $main_path );
+
+		// Check directory name and main file name.
+		if ( 'naran-boilerplate' !== $dir || 'index.php' !== $base ) {
+			return;
+		}
+
+		$content = $this->get_content( $main_path );
+
+		// Check constants
+		if (
+			! preg_match( '/^const NBPC_MAIN_FILE/m', $content ) ||
+			! preg_match( '/^const NBPC_VERSION/m', $content )
+		) {
+			return;
+		}
+
+		// Get CPBN version
+		if ( preg_match( '/^ \* CPBN version:\s+(\S+)$/m', $content, $match, PREG_OFFSET_CAPTURE ) ) {
+			$cpbn_version = rtrim( $match[1][0] );
+			$offset       = $match[1][1];
+			$length       = strlen( $cpbn_version );
+			$detected     = [ $cpbn_version, $offset, $length ];
+
+			if ( $cpbn_version !== $target_version ) {
+				echo "* Fix CPBN version: $cpbn_version ---> $target_version\n";
+				$content = $this->replace_version( $content, $target_version, $detected );
+				file_put_contents( $main_path, $content );
+			}
+		}
 	}
 
 	/**
@@ -245,6 +288,9 @@ class NBPC_Sync_Version {
 	 * @param string $content Input string.
 	 * @param string $version Target version.
 	 * @param array  $detect  Detect info.
+	 *                        0: string.
+	 *                        1: offeset.
+	 *                        2: length.
 	 *
 	 * @return string
 	 */
@@ -299,20 +345,54 @@ class NBPC_Sync_Version {
 }
 
 function help() {
-	echo "\nNaran sync version\n";
-	echo "==================\n\n";
-	echo "Usage: sync-version.php {MAIN_FILE}\n\n";
-	echo "       MAIN_FILE your plugin main file.\n\n";
+	echo "Naran sync version\n";
+	echo "==================\n";
+	echo "Usage: sync-version.php [MAIN_FILE]\n\n";
+	echo "  MAIN_FILE    Your plugin main file name, such as index.php, or functions.php.\n";
+	echo "               You may leave it blank, and the script will find it for you.\n\n";
+}
+
+/**
+ * Return the main path.
+ *
+ * @return string
+ */
+function find_main_path(): string {
+	$root = dirname( __DIR__ );
+	$base = basename( $root );
+
+	$candiates = [
+		"$root/style.css", // Theme main file.
+		"$root/index.php", // Plugin main file.
+		"$root/$base.php", // Plugin alternative main file.
+	];
+
+	foreach ( $candiates as $candiate ) {
+		if ( file_exists( $candiate ) ) {
+			return $candiate;
+		}
+	}
+
+	die( "Error! Main file not found." );
 }
 
 if ( 'cli' === PHP_SAPI ) {
-	if ( 2 === $argc ) {
+    if ( 2 === $argc && '-h' === $argv[1] ) {
+        help();
+        exit;
+    }
+
+	if ( 2 === $argc || 1 === $argc ) {
 		try {
-			( new NBPC_Sync_Version() )->sync( realpath( $argv[1] ) );
+			if ( isset( $argv[1] ) ) {
+				$main_path = realpath( dirname( __DIR__ ) . '/' . $argv[1] );
+			} else {
+				$main_path = find_main_path();
+                echo "* Found main path: $main_path\n";
+			}
+			( new NBPC_Sync_Version() )->sync( $main_path );
 		} catch ( JsonException $e ) {
 			die( $e->getMessage() );
 		}
-	} else {
-		help();
 	}
 }

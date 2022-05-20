@@ -1,3 +1,12 @@
+1.4.2
+-----
+2022-05-20
+
+- Mod: The 1st argument of bin/sync-version.php becomes optional. Main path is automatically found.
+- Mod: bin/sync-version.php handles CPBN version string when the boilerplate code is not prefix changed.
+- Mod: bin/prefix-change.php also finds style.css and root-level .php files automatically.
+
+
 1.4.1
 -----
 2022-05-19

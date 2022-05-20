@@ -392,14 +392,23 @@ class NBPC_Prefix_Changer {
 			}
 		}
 
+		/**
+		 * Any .php files found in root directory.
+		 *
+		 * @var string[] $php_files Relative path to root directory.
+		 */
+		$php_files = [];
+		foreach ( glob( "$this->root_directory/*.php" ) as $item ) {
+			$php_files = substr( $item, $this->root_len + 1 );
+		}
+
 		$root_files = [
 			'composer.json',
 			'custom.dic',
-			'index.php',
-			'nbpc.php',
 			'package.json',
 			'phpunit.xml',
-			'uninstall.php',
+			'style.css',
+			...$php_files,
 		];
 
 		foreach ( $root_files as $root_file ) {

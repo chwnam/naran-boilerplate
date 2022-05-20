@@ -1,6 +1,7 @@
 # Naran Boilerplate
 
-WordPress 플러그인 개발을 위한 상용구 코드 (boilerplate code). 여러 플러그인 코드를 개발하면서 겪은 공통된 경험을 모아 플러그인의 기초 구조를 제공합니다.
+WordPress 플러그인 개발을 위한 상용구 코드 (boilerplate code).
+여러 플러그인 코드를 개발하면서 겪은 공통된 경험을 모아 플러그인의 기초 구조를 제공합니다.
 
 ## 시작하기
 
@@ -73,28 +74,41 @@ $ php bin/prefix-change.php my-new-prefix myplugin       # 접두 myplugin를 my
 /*
  * Plugin Name: Sample
  * Description: Sample plugin.
- * Version:     1.1.0
+ * Version:     1.4.2
  */
 
 // 이하 생략
 ```
 
-플러그인의 버전은 1.1.0입니다. 그런데 이에 맞춰 `package.json`, `composer.json`이나 메인 파일 자체에 있는 상수 선언도
-이에 맞춰 같은 문자열을 가져야 합니다. 이때, `bin/sync-version.php` 스크립트를 사용할 수 있습니다.
+현재 플러그인의 버전이 1.4.2라고 표시되어 있습니다. 그러나 이것은 보일러플레이트 코드이 버전이고, 여러분이 이제 
+제작해야할 플러그인의 버전은 아닙니다. 이 숫자를 수정함과 동시에,
+이에 맞춰 `package.json`, `composer.json`이나 메인 파일 자체에 있는 상수 선언도
+같이 변경해야 합니다. 이때, `bin/sync-version.php` 스크립트를 사용할 수 있습니다.
 
 ```
-$ php bin/sync-version.php index.php # 메인 파일을 정확히 지정.
-* Target version: 1.1.0
+$ php bin/sync-version.php
+* Target version: 1.4.2
+...
+```
+
+`bin/sync-version.php` 스크립트는 메인 파일이 플러그인 혹은 테마의 루트 디렉토리에
+style.css (테마), index.php (플러그인), 혹은 {디렉토리 이름}.php (플러그인) 같은 형태로 존재한다면
+자동으로 찾아낼 수 있습니다.
+
+만약 다른 이름을 메인 파일로 사용한다면, 경로를 첫번째 인자로 입력하면 됩니다.
+
+```
+$ php bin/sync-version.php /path/to/main/file.php  # 메인 파일의 절대 혹은 상대 경로
 ...
 ```
 
 `composer.json`에 `version` 명령어로 기본 등록이 되어 있습니다.
-
 ```
 $ composer version
-* Target version: 1.1.0
-...
 ```
+처럼 간단하게 사용 가능합니다.
+
+
 
 ## 플러그인 예제
 
@@ -336,22 +350,12 @@ nbpc();
 테마의 템플릿으로 변경하고, header.php, footer.php 파일을 생성합니다.
 
 
-## composer.json 수정
-`composer version` 명령의 수정이 필요합니다.
-`composer > scripts > version`의 명령어를 아래처럼 변경합니다.
-
-```
-"version": "@php bin/sync-version.php style.css",
-```
-
-
 ## {PREFIX}_Register_Theme_Support 사용
 {PREFIX}_Registers 클래스 생성자에 사용된 assign_module() 메소드 호출의 인자에서,
 
 ```
 // 'theme_support' =>{PREFIX}_Register_Theme_Support::class, // Only for themes.
 ```
-
 부분의 주석을 해제합니다.
 
 
