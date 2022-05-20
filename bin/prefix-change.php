@@ -399,7 +399,7 @@ class NBPC_Prefix_Changer {
 		 */
 		$php_files = [];
 		foreach ( glob( "$this->root_directory/*.php" ) as $item ) {
-			$php_files = substr( $item, $this->root_len + 1 );
+			$php_files[] = substr( $item, $this->root_len + 1 );
 		}
 
 		$root_files = [
@@ -464,7 +464,14 @@ class NBPC_Prefix_Changer {
 	 * @return void
 	 */
 	private function substitute_prefix( string $path ): void {
-		$content = file_get_contents( $path );
+		/**
+		 * @var string|false $content The file content.
+		 */
+        $content = false;
+
+		if ( file_exists( $path ) && is_readable( $path ) ) {
+			$content = file_get_contents( $path );
+		}
 
 		if ( $content ) {
 			$search = [
@@ -525,11 +532,7 @@ class NBPC_Prefix_Changer {
 			}
 		}
 
-		if ( $offsets ) {
-			echo $path . PHP_EOL;
-			echo $content;
-			echo PHP_EOL;
-		}
+		file_put_contents( $path, $content );
 	}
 }
 
