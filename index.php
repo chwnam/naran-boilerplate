@@ -13,7 +13,7 @@
  * Update URI:
  * Text Domain:       nbpc
  * Domain Path:       /languages
- * CPBN version:      1.4.0
+ * CPBN version:      1.4.1
  */
 
 /* ABSPATH check */
