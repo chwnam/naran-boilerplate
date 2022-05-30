@@ -52,7 +52,7 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 		 *
 		 * @return static
 		 */
-		public static function get_instance(): NBPC_Main_Base {
+		public static function get_instance(): self {
 			if ( is_null( self::$instance ) ) {
 				self::$instance = new static();
 				self::$instance->initialize();

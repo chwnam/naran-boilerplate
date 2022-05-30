@@ -9,9 +9,9 @@ if ( ! function_exists( 'nbpc' ) ) {
 	/**
 	 * NBPC_Main alias.
 	 *
-	 * @return NBPC_Main_Base
+	 * @return NBPC_Main
 	 */
-	function nbpc(): NBPC_Main_Base {
+	function nbpc(): NBPC_Main {
 		return NBPC_Main::get_instance();
 	}
 }
