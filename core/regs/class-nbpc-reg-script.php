@@ -63,7 +63,7 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 					} else {
 						$root = plugin_dir_url( nbpc()->get_main_file() ) . 'assets/js/';
 					}
-					if ( 0 === strpos( $this->src, $root ) ) {
+					if ( str_starts_with( $this->src, $root ) ) {
 						$this->src = substr( $this->src, strlen( $root ) );
 					}
 
@@ -105,6 +105,18 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 					$this->in_footer
 				);
 			}
+		}
+
+		/**
+		 * Return script reg which is created by wp-scripts
+		 *
+		 * @param string $handle Script handle.
+		 * @param string $src    Source path, relative to assets/js.
+		 *
+		 * @return NBPC_Reg_Script
+		 */
+		public static function wp_script( string $handle, string $src ): NBPC_Reg_Script {
+			return new NBPC_Reg_Script( $handle, $src, self::WP_SCRIPT );
 		}
 	}
 }

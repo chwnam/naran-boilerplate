@@ -6,10 +6,16 @@
 *.html
 *.bak
 
-.git
+/.git
 
-vendor/*
+/assets/**/*.js.map
+/assets/**/*.css.map
+/assets/**/*.hot-update.js
+/assets/**/*.hot-update.json
+
+/node_modules
+/vendor/*
 
 # Uncomment below two lines to commit autoload-generated files.
-# !vendor/composer
-# !vendor/autoload.php
+# !/vendor/composer
+# !/vendor/autoload.php
