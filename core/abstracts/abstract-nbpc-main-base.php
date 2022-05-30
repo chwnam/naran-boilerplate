@@ -244,9 +244,9 @@ if ( ! class_exists( 'NBPC_Main_Base' ) ) {
 			;
 
 			if ( nbpc_is_theme() ) {
-				$this->add_action( 'after_setup_theme', 'load_textdomain' );
+				$this->add_action( 'after_setup_theme', 'load_textdomain', $this->get_priority() + 10 );
 			} else {
-				$this->add_action( 'plugins_loaded', 'load_textdomain' );
+				$this->add_action( 'plugins_loaded', 'load_textdomain', $this->get_priority() + 10 );
 			}
 
 			// Add 'init_conditional_modules' method if exists.
