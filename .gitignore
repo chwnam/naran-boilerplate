@@ -6,9 +6,9 @@
 *.html
 *.bak
 
-.git
-
-vendor/*
+/.git
+/node_modules
+/vendor/*
 
 # Uncomment below two lines to commit autoload-generated files.
 # !vendor/composer
