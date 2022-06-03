@@ -17,10 +17,10 @@
     "make-pot": "@php -d xdebug.max_nesting_level=512 $(which wp) i18n make-pot . ./languages/nbpc.pot --domain=nbpc --include=assets/js/dist --exclude=src",
     "make-zip": "@php bin/make-zip.php",
     "post-create-project-cmd": [
-      "@php bin/prefix-change.php",
-      "@php bin/cleanup.php",
       "@composer --working-dir=bin install",
       "@composer --working-dir=bin daa",
+      "@php bin/prefix-change.php",
+      "@php bin/cleanup.php",
       "@composer dump-autoload"
     ],
     "remove:hot-update": "@php bin/remove-hot-update.php",
