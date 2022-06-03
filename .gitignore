@@ -19,3 +19,6 @@
 # Uncomment below two lines to commit autoload-generated files.
 # !/vendor/composer
 # !/vendor/autoload.php
+
+# Comment .lock files when you release this.
+.lock
