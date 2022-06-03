@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-require dirname( __DIR__ ) . '/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 /**
  * NBPC: Prefix change
@@ -467,7 +467,7 @@ class NBPC_Prefix_Changer {
 		/**
 		 * @var string|false $content The file content.
 		 */
-        $content = false;
+		$content = false;
 
 		if ( file_exists( $path ) && is_readable( $path ) ) {
 			$content = file_get_contents( $path );

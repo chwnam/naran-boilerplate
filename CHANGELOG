@@ -1,3 +1,13 @@
+1.5.0
+-----
+2022-06-03
+
+- Add: Separate composer.json in /bin dir. (#83)
+- Add: nbpc_react_refresh_runtime() function. (#86)
+- Add: Rest route register, and reg. (#87)
+- Mod: Exclude .lock files (#81)
+
+
 1.4.3
 -----
 2022-05-20
