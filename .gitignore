@@ -13,9 +13,13 @@
 /assets/**/*.hot-update.js
 /assets/**/*.hot-update.json
 
-/node_modules
-/vendor/*
+bin/vendor
+node_modules
+vendor/*
 
 # Uncomment below two lines to commit autoload-generated files.
 # !/vendor/composer
 # !/vendor/autoload.php
+
+# Comment out below when you release this.
+/*.lock

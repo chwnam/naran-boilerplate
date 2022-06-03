@@ -27,6 +27,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 	 * @property-read NBPC_Register_Option        $option
 	 * @property-read NBPC_Register_Post_Meta     $post_meta
 	 * @property-read NBPC_Register_Post_Type     $post_type
+	 * @property-read NBPC_Register_Rest_Route    $rest_route
 	 * @property-read NBPC_Register_Rewrite_Rule  $rewrite_rule
 	 * @property-read NBPC_Register_Role          $role
 	 * @property-read NBPC_Register_Script        $script
@@ -67,6 +68,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 					'option'        => NBPC_Register_Option::class,
 					'post_meta'     => NBPC_Register_Post_Meta::class,
 					'post_type'     => NBPC_Register_Post_Type::class,
+					'rest_route'    => NBPC_Register_Rest_Route::class,
 					'rewrite_rule'  => NBPC_Register_Rewrite_Rule::class,
 					'role'          => function () { return new NBPC_Register_Role(); },
 					'script'        => NBPC_Register_Script::class,

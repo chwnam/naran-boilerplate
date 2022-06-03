@@ -215,3 +215,37 @@ if ( ! function_exists( 'nbpc_get_front_module' ) ) {
 		return $front_module;
 	}
 }
+
+
+if ( ! function_exists( 'nbpc_react_refresh_runtime' ) ) {
+	/**
+	 * Helper function for properly enqueueing 'wp-react-refresh-runtime'.
+	 *
+	 * Gutenberg plugin must be installed, but its activation is optional.
+	 *
+	 * @return Generator
+	 */
+	function nbpc_react_refresh_runtime(): Generator {
+		if ( ! wp_script_is( 'wp-react-refresh-runtime', 'registered' ) ) {
+			$path = WP_PLUGIN_DIR . '/gutenberg/build/react-refresh-runtime/index.min.asset.php';
+
+			if ( file_exists( $path ) && is_readable( $path ) ) {
+				$asset = include $path;
+
+				if ( is_array( $asset ) && isset( $asset['dependencies'], $asset['version'] ) ) {
+					yield new NBPC_Reg_Script(
+						'wp-react-refresh-runtime',
+						WP_PLUGIN_URL . '/gutenberg/build/react-refresh-runtime/index.min.js',
+						$asset['dependencies'],
+						$asset['version'],
+						true
+					);
+
+					return;
+				}
+			}
+		}
+
+		yield;
+	}
+}

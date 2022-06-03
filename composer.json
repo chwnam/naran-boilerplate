@@ -17,6 +17,8 @@
     "make-pot": "@php -d xdebug.max_nesting_level=512 $(which wp) i18n make-pot . ./languages/nbpc.pot --domain=nbpc --include=assets/js/dist --exclude=src",
     "make-zip": "@php bin/make-zip.php",
     "post-create-project-cmd": [
+      "@composer --working-dir=bin install",
+      "@composer --working-dir=bin daa",
       "@php bin/prefix-change.php",
       "@php bin/cleanup.php",
       "@composer dump-autoload"
@@ -47,19 +49,17 @@
     ]
   },
   "require": {
-    "php": "^7.4|^8.0",
+    "php": "^7.4",
     "ext-json": "*",
     "ext-zip": "*"
   },
-  "version": "1.4.3",
+  "version": "1.5.0",
   "require-dev": {
     "phpunit/phpunit": "^7",
     "yoast/phpunit-polyfills": "^1.0",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "wp-coding-standards/wpcs": "^2.3",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
-    "pear/console_commandline": "^1.2",
-    "nikic/php-parser": "^4.13"
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2"
   },
   "license": "GPL-2.0-or-later",
   "config": {
