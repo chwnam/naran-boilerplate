@@ -3,7 +3,7 @@
  * Plugin Name:       Naran Boilerplate Code
  * Plugin URI:        https://github.com/chwnam/naran-boilerplate-code
  * Description:       Naran boilerplate code for WordPress plugins/themes.
- * Version:           1.5.0
+ * Version:           1.5.1
  * Requires at least: 5.9.0
  * Requires PHP:      7.4
  * Author:            changwoo
@@ -13,7 +13,7 @@
  * Update URI:
  * Text Domain:       nbpc
  * Domain Path:       /languages
- * CPBN version:      1.5.0
+ * CPBN version:      1.5.1
  */
 
 /* ABSPATH check */
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 const NBPC_MAIN_FILE = __FILE__;
-const NBPC_VERSION   = '1.5.0';
+const NBPC_VERSION   = '1.5.1';
 const NBPC_PRIORITY  = 100;
 
 nbpc();
