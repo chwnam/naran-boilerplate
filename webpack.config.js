@@ -5,18 +5,18 @@ const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const isProduction = process.env.NODE_ENV === 'production'
 const hasReactFastRefresh = hasArgInCLI('--hot') && !isProduction
 
+// Modify MiniCSSExtractPlugin to create css files in the 'assets/css/dist' directory.
+const plugins = defaultConfig.plugins,
+    pluginIdx = plugins.findIndex(plugin => plugin instanceof MiniCSSExtractPlugin)
+
+if (pluginIdx > -1) {
+    const newPlugin = new MiniCSSExtractPlugin({
+        filename: '../../css/dist/[name].css',
+    })
+    plugins.splice(pluginIdx, 1, newPlugin)
+}
+
 if (!isProduction) {
-    // Modify MiniCSSExtractPlugin to create css files in the 'assets/css/dist' directory.
-    const plugins = defaultConfig.plugins,
-        pluginIdx = plugins.findIndex(plugin => plugin instanceof MiniCSSExtractPlugin)
-
-    if (pluginIdx > -1) {
-        const newPlugin = new MiniCSSExtractPlugin({
-            filename: '../../css/dist/[name].css',
-        })
-        plugins.splice(pluginIdx, 1, newPlugin)
-    }
-
     module.exports = {
         ...defaultConfig,
         // To support HMR (Hot Module Replacement) feature.
@@ -30,4 +30,6 @@ if (!isProduction) {
             hot: hasReactFastRefresh,
         },
     }
+} else {
+    module.exports = defaultConfig
 }
