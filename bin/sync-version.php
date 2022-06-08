@@ -187,7 +187,7 @@ class NBPC_Sync_Version {
 	 * @throws JsonException
 	 */
 	private function save_as_json( string $path, array $content ): void {
-		$dump = json_encode( $content, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
+		$dump = json_encode( $content, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
 
 		if ( $dump ) {
 			// JSON_PRETTY_PRINT gets indent of 4.
