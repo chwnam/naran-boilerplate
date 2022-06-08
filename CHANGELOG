@@ -1,3 +1,7 @@
+1.5.1
+-----
+2022-06-08
+
 - Mod: bin/sync-version.php JSON encoding without unicode escaping. (#89)
 - Mod: fix error of webpack.config.js. (#90)
 
