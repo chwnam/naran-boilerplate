@@ -1,6 +1,6 @@
 <?php
 /**
- * BA3M:
+ * NBPC: Admin post module.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
