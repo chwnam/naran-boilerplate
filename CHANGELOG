@@ -1,3 +1,12 @@
+1.5.2
+-----
+2022-06-13
+
+- Mod: Remove items of install register, and uninstall register.
+- Mod: Feature update of custom table register, and reg.
+- Mod: Fix wrong header comments. (#92)
+
+
 1.5.1
 -----
 2022-06-08
