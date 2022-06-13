@@ -62,7 +62,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 					'comment_meta'  => NBPC_Register_Comment_Meta::class,
 					'cron'          => NBPC_Register_Cron::class,
 					'cron_schedule' => NBPC_Register_Cron_Schedule::class,
-					'custom_table'  => function () { return new NBPC_Register_Custom_Table(); },
+					'custom_table'  => NBPC_Register_Custom_Table::class,
 					'deactivation'  => NBPC_Register_Deactivation::class,
 					'menu'          => NBPC_Register_Menu::class,
 					'option'        => NBPC_Register_Option::class,

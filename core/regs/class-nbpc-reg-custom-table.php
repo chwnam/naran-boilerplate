@@ -48,8 +48,8 @@ if ( ! class_exists( 'NBPC_Reg_Custom_Table' ) ) {
 			$this->collate = $collate;
 		}
 
-		public function register( $dispatch = null ): void {
-			$this->create_table();
+		public function register( $dispatch = null ): array {
+			return $this->create_table();
 		}
 
 		public function unregister(): void {
@@ -70,6 +70,7 @@ if ( ! class_exists( 'NBPC_Reg_Custom_Table' ) ) {
 		 * - Field types must be all lowercase.
 		 * - SQL keywords, like CREATE TABLE and UPDATE, must be uppercase.
 		 * - You must specify the length of all fields that accept a length parameter. int(11), for example.
+		 * - Use 'UNIQUE KEY', not just 'UNIQUE'. Likewise, use 'FULLTEXT KEY', and 'SPATIAL KEY'.
 		 *
 		 * @return array
 		 * @link   https://codex.wordpress.org/Creating_Tables_with_Plugins

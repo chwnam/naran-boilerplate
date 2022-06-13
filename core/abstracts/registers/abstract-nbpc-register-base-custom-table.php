@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 	abstract class NBPC_Register_Base_Custom_Table implements NBPC_Register {
-		protected string $delta_result = "";
+		protected string $delta_result = '';
 
 		/**
 		 * Register each custom table.
@@ -27,7 +27,6 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 					$this->keep_delta_result( $item->register() );
 				}
 			}
-			$this->log_delta_result();
 		}
 
 		/**
@@ -64,6 +63,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 			}
 			$wpdb->suppress_errors( $suppress );
 			$this->update_version( $this->get_current_version() );
+			$this->log_delta_result();
 		}
 
 		/**
@@ -75,7 +75,17 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 			if ( $this->get_current_version() !== $this->get_installed_version() ) {
 				$this->register();
 				$this->update_version( $this->get_current_version() );
+				$this->log_delta_result();
 			}
+		}
+
+		/**
+		 * Current version of DB table.
+		 *
+		 * @return string
+		 */
+		protected function get_current_version(): string {
+			return static::DB_VERSION;
 		}
 
 		/**
@@ -110,7 +120,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 			$lines = [];
 
 			foreach ( $result as $table => $message ) {
-				$lines[] = sprintf( "[%s] %s\n", $table, $message );
+				$lines[] = sprintf( "\t{%s}: %s.", $table, $message );
 			}
 
 			$this->delta_result .= implode( "\n", $lines );
@@ -122,7 +132,10 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 		 * @return void
 		 */
 		protected function log_delta_result() {
-			error_log( $this->delta_result );
+			if ( $this->delta_result ) {
+				$version = $this->get_installed_version();
+				error_log( "dbDelta() updated 'nbpc_db_version' to $version.\n" . $this->delta_result );
+			}
 		}
 	}
 }
