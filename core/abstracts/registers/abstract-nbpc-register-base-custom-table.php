@@ -42,6 +42,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 					$item->unregister();
 				}
 			}
+			$this->delete_version();
 		}
 
 		/**
@@ -84,7 +85,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 		 *
 		 * @return string
 		 */
-		protected function get_current_version(): string {
+		public function get_current_version(): string {
 			return static::DB_VERSION;
 		}
 
@@ -94,7 +95,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 		 *
 		 * @return string
 		 */
-		protected function get_installed_version(): string {
+		public function get_installed_version(): string {
 			return get_option( 'nbpc_db_version', '' );
 		}
 
@@ -105,8 +106,17 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 		 *
 		 * @return void
 		 */
-		protected function update_version( string $version ): void {
+		public function update_version( string $version ): void {
 			update_option( 'nbpc_db_version', $version );
+		}
+
+		/**
+		 * Delete version. Use when uninstalling.
+		 *
+		 * @return void
+		 */
+		public function delete_version(): void {
+			delete_option( 'nbpc_db_version' );
 		}
 
 		/**
