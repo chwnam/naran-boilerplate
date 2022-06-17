@@ -47,7 +47,9 @@ if ( ! class_exists( 'NBPC_Register_Base_Rest_Route' ) ) {
 		 * @return void
 		 */
 		public function register(): void {
-			foreach ( $this->get_items() as $index => $item ) {
+			$index = 0;
+
+			foreach ( $this->get_items() as $item ) {
 				if ( $item instanceof NBPC_Reg_Rest_Route ) {
 					$item->args['nbpc'] = $index;
 
@@ -69,6 +71,8 @@ if ( ! class_exists( 'NBPC_Register_Base_Rest_Route' ) ) {
 						}
 					}
 					$item->register();
+
+					++ $index;
 				}
 			}
 		}
