@@ -1,5 +1,14 @@
+1.5.4
+-----
+2022-06-17
+
+- Mod: NBPC_Register_Base_Rest_Route::register() index bug. (#96)
+
+
 1.5.3
 -----
+2022-06-14
+
 - Mod: Minor change of custom table register. (#94)
 
 
