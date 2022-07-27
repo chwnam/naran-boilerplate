@@ -80,13 +80,13 @@ if ( ! class_exists( 'NBPC_Register_Base_Rest_Route' ) ) {
 		/**
 		 * Call cached, real validator.
 		 *
-		 * @param string          $value
+		 * @param mixed           $value
 		 * @param WP_REST_Request $request
 		 * @param string          $key
 		 *
 		 * @return bool|WP_error
 		 */
-		public function dispatch_validator( string $value, WP_REST_Request $request, string $key ) {
+		public function dispatch_validator( $value, WP_REST_Request $request, string $key ) {
 			$attributes = $request->get_attributes();
 
 			try {
@@ -111,13 +111,13 @@ if ( ! class_exists( 'NBPC_Register_Base_Rest_Route' ) ) {
 		/**
 		 * Call cached, real sanitizer.
 		 *
-		 * @param string          $value
+		 * @param mixed           $value
 		 * @param WP_REST_Request $request
 		 * @param string          $key
 		 *
 		 * @return mixed|WP_Error
 		 */
-		public function dispatch_sanitizer( string $value, WP_REST_Request $request, string $key ) {
+		public function dispatch_sanitizer( $value, WP_REST_Request $request, string $key ) {
 			$attributes = $request->get_attributes();
 
 			try {

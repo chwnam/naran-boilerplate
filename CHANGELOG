@@ -1,3 +1,12 @@
+1.5.5
+-----
+2022-07-27
+
+- Mod: Add actions before and after calling dbDelta() in the custom table base register class. (#101)
+- Mod: Add filter to control initial data setup. (#101)
+- Mod: Fix fatal error when parameter values of REST APIs are not strings. (#102)
+
+
 1.5.4
 -----
 2022-06-17

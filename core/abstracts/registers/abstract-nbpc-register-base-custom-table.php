@@ -54,17 +54,20 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 		public function initial_setup() {
 			global $wpdb;
 
-			$this->register();
-			// You can activate more than once, and then your data should be duplicated.
-			$suppress = $wpdb->suppress_errors();
-			foreach ( $this->get_initial_data() as $table => $datum ) {
-				foreach ( $datum as $row ) {
-					$wpdb->insert( $table, $row );
+			$install_initial_data = apply_filters( 'nbpc_install_initial_data', true, $this->get_current_version(), $this->get_installed_version() );
+			if ( $install_initial_data ) {
+				$this->register();
+				// You can activate more than once, and then your data should be duplicated.
+				$suppress = $wpdb->suppress_errors();
+				foreach ( $this->get_initial_data() as $table => $datum ) {
+					foreach ( $datum as $row ) {
+						$wpdb->insert( $table, $row );
+					}
 				}
+				$wpdb->suppress_errors( $suppress );
+				$this->update_version( $this->get_current_version() );
+				$this->log_delta_result();
 			}
-			$wpdb->suppress_errors( $suppress );
-			$this->update_version( $this->get_current_version() );
-			$this->log_delta_result();
 		}
 
 		/**
@@ -73,8 +76,13 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 		 * @return void
 		 */
 		public function update_table() {
-			if ( $this->get_current_version() !== $this->get_installed_version() ) {
+			$old_version = $this->get_installed_version();
+			$new_version = $this->get_current_version();
+
+			if ( $new_version !== $old_version ) {
+				do_action( 'nbpc_before_update_table', $new_version, $old_version );
 				$this->register();
+				do_action( 'nbpc_after_update_table', $new_version, $old_version, $this->delta_result );
 				$this->update_version( $this->get_current_version() );
 				$this->log_delta_result();
 			}
