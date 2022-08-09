@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Activation register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-activation.php
  */
 
 /* ABSPATH check */
@@ -11,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'NBPC_Register_Base_Activation' ) ) {
 	abstract class NBPC_Register_Base_Activation implements NBPC_Register {
 		use NBPC_Hook_Impl;
+
 		/**
 		 * Constructor method.
 		 */

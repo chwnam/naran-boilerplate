@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Shortcode reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-shortcode.php
  */
 
 /* ABSPATH check */
@@ -10,29 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Reg_Shortcode' ) ) {
 	class NBPC_Reg_Shortcode implements NBPC_Reg {
-		public string $tag;
-
-		/**
-		 * @var string|callable
-		 */
-		public $callback;
-
-		/**
-		 * @var string|callable|null
-		 */
-		public $heading_action;
-
 		/**
 		 * Constructor method
-		 *
-		 * @param string               $tag
-		 * @param string|callable      $callback
-		 * @param string|callable|null $heading_action
 		 */
-		public function __construct( string $tag, $callback, $heading_action = null ) {
-			$this->tag            = $tag;
-			$this->callback       = $callback;
-			$this->heading_action = $heading_action;
+		public function __construct(
+			public string $tag,
+			public Closure|array|string $callback,
+			public Closure|array|string|null $heading_action = null
+		) {
 		}
 
 		public function register( $dispatch = null ): void {

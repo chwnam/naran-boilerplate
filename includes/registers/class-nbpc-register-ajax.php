@@ -8,10 +8,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Register_Ajax' ) ) {
-	class NBPC_Register_Ajax extends NBPC_Register_Base_Ajax {
+if ( ! class_exists( 'NBPC_Register_AJAX' ) ) {
+	class NBPC_Register_AJAX extends NBPC_Register_Base_AJAX {
 		public function get_items(): Generator {
-			yield; // yield new NBPC_Reg_Ajax();
+			yield; // yield new NBPC_Reg_AJAX();
 		}
 	}
 }

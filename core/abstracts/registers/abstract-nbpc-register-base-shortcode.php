@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Shortcode register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-shortcode.php
  */
 
 /* ABSPATH check */
@@ -13,17 +15,17 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 		use NBPC_Hook_Impl;
 
 		/**
-		 * @var array<string, callable|string>
+		 * @var array{string: callable|array|string}
 		 */
 		private array $real_callbacks;
 
 		/**
-		 * @var array <string, callable|string>
+		 * @var array{string|string, callable|array|string}
 		 */
 		private array $heading_actions;
 
 		/**
-		 * @var array <string>
+		 * @var string[]
 		 */
 		private array $found_tags;
 
@@ -71,7 +73,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 			if ( $this->heading_actions && is_singular() ) {
 				$this->find_shortcode( get_post_field( 'post_content', null, 'raw' ) );
 				foreach ( array_unique( $this->found_tags ) as $tag ) {
-					$callback = nbpc_parse_callback( $this->heading_actions[ $tag ] );
+					$callback = NBPC_Main::get_instance()->parse_callback( $this->heading_actions[ $tag ] );
 					if ( is_callable( $callback ) ) {
 						$callback( $tag );
 					}
@@ -84,15 +86,10 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 		 *
 		 * It invokes real callbacks by collected tags.
 		 *
-		 * @param array|string $atts
-		 * @param string       $enclosed
-		 * @param string       $tag
-		 *
-		 * @return string
 		 * @throws NBPC_Callback_Exception Thrown if callback is invalid.
 		 */
-		public function dispatch( $atts, string $enclosed, string $tag ): string {
-			$callback = nbpc_parse_callback( $this->real_callbacks[ $tag ] ?? '__return_empty_string' );
+		public function dispatch( array|string $atts, string $enclosed, string $tag ): string {
+			$callback = NBPC_Main::get_instance()->parse_callback( $this->real_callbacks[ $tag ] ?? '__return_empty_string' );
 
 			if ( is_callable( $callback ) ) {
 				return $callback( $atts, $enclosed, $tag );

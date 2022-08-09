@@ -1,7 +1,10 @@
 <?php
 /**
- * NBPC: Custom post type register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-post-type.php
  */
+
 
 /* ABSPATH check */
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,7 +19,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Post_Type' ) ) {
 		 * Constructor method.
 		 */
 		public function __construct() {
-			$this->add_filter( 'init', 'register' );
+			$this->add_action( 'init', 'register' );
 		}
 
 		/**

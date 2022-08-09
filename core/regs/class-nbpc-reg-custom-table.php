@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Custom table reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-custom-table.php
  */
 
 /* ABSPATH check */
@@ -10,42 +12,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Reg_Custom_Table' ) ) {
 	class NBPC_Reg_Custom_Table implements NBPC_Reg {
-		public string $table;
-
-		public array $fields;
-
-		public array $index;
-
-		public string $engine;
-
-		public string $charset;
-
-		public string $collate;
-
 		/**
 		 * Constructor method
-		 *
-		 * @param string $table
-		 * @param array  $fields
-		 * @param array  $index
-		 * @param string $engine
-		 * @param string $charset
-		 * @param string $collate
 		 */
 		public function __construct(
-			string $table,
-			array $fields,
-			array $index = [],
-			string $engine = 'InnoDB',
-			string $charset = '',
-			string $collate = ''
+			public string $table,
+			public array $fields,
+			public array $index = [],
+			public string $engine = 'InnoDB',
+			public string $charset = '',
+			public string $collate = ''
 		) {
-			$this->table   = $table;
-			$this->fields  = $fields;
-			$this->index   = $index;
-			$this->engine  = $engine;
-			$this->charset = $charset;
-			$this->collate = $collate;
 		}
 
 		public function register( $dispatch = null ): array {

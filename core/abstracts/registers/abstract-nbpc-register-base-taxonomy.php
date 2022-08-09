@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Custom taxonomy register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-taxonomy.php
  */
 
 /* ABSPATH check */
@@ -16,7 +18,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Taxonomy' ) ) {
 		 * Constructor method.
 		 */
 		public function __construct() {
-			$this->add_filter( 'init', 'register' );
+			$this->add_action( 'init', 'register' );
 		}
 
 		/**

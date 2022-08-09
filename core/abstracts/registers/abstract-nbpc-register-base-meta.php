@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Register meta base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-meta.php
  */
 
 /* ABSPATH check */

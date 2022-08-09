@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Sidebar reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-sidebar.php
  */
 
 /* ABSPATH check */
@@ -22,15 +24,10 @@ if ( ! class_exists( 'NBPC_Reg_Sidebar' ) ) {
 	 * @property-read string $after_sidebar
 	 */
 	class NBPC_Reg_Sidebar implements NBPC_Reg {
-		public array $args = [];
-
 		/**
 		 * Constructor method
-		 *
-		 * @param array $args
 		 */
-		public function __construct( array $args = [] ) {
-			$this->args = $args;
+		public function __construct( public array $args = [] ) {
 		}
 
 		/**

@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Script reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-script.php
  */
 
 /* ABSPATH check */
@@ -16,11 +18,9 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 
 		public string $src;
 
-		/** @var array|string */
-		public $deps;
+		public array|string $deps;
 
-		/** @var string|bool */
-		public $ver;
+		public string|bool $ver;
 
 		public bool $in_footer;
 
@@ -33,21 +33,21 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 		 *
 		 * @param string           $handle
 		 * @param string           $src
-		 * @param array|string     $deps
+		 * @param string[]|string  $deps
 		 * @param null|string|bool $ver null: Use plugin version / true: Use WordPress version / false: No version.
 		 * @param bool             $in_footer
 		 */
 		public function __construct(
 			string $handle,
 			string $src,
-			$deps = [],
-			$ver = null,
+			array|string $deps = [],
+			string|bool|null $ver = null,
 			bool $in_footer = false
 		) {
 			$this->handle    = $handle;
 			$this->src       = $src;
 			$this->deps      = $deps;
-			$this->ver       = is_null( $ver ) ? nbpc()->get_version() : $ver;
+			$this->ver       = is_null( $ver ) ? nbpc_version() : $ver;
 			$this->in_footer = $in_footer;
 		}
 
@@ -61,7 +61,7 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 					if ( $is_theme ) {
 						$root = get_stylesheet_directory_uri() . '/assets/js/';
 					} else {
-						$root = plugin_dir_url( nbpc()->get_main_file() ) . 'assets/js/';
+						$root = plugin_dir_url( nbpc_main_file() ) . 'assets/js/';
 					}
 					if ( str_starts_with( $this->src, $root ) ) {
 						$this->src = substr( $this->src, strlen( $root ) );
@@ -73,7 +73,7 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 					if ( $is_theme ) {
 						$path = path_join( get_stylesheet_directory(), "assets/js/$dir/$file" );
 					} else {
-						$path = path_join( dirname( nbpc()->get_main_file() ), "assets/js/$dir/$file" );
+						$path = path_join( dirname( nbpc_main_file() ), "assets/js/$dir/$file" );
 					}
 
 					if ( ! file_exists( $path ) || ! is_readable( $path ) ) {
@@ -85,11 +85,11 @@ if ( ! class_exists( 'NBPC_Reg_Script' ) ) {
 					if ( $is_theme ) {
 						$this->src = get_stylesheet_directory_uri() . "/assets/js/$this->src";
 					} else {
-						$this->src = plugins_url( "assets/js/$this->src", nbpc()->get_main_file() );
+						$this->src = plugins_url( "assets/js/$this->src", nbpc_main_file() );
 					}
 
 					$this->deps      = $info['dependencies'] ?? [];
-					$this->ver       = $info['version'] ?? nbpc()->get_version();
+					$this->ver       = $info['version'] ?? nbpc_version();
 					$this->in_footer = true;
 				}
 

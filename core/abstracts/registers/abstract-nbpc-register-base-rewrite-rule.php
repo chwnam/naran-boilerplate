@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Rewrite register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-rewrite-rule.php
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -58,7 +60,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Rewrite_Rule' ) ) {
 
 			if ( ( $binding = $this->bindings[ $wp->matched_rule ] ?? null ) ) {
 				try {
-					$callback = NBPC_parse_callback( $binding );
+					$callback = NBPC_Main::get_instance()->parse_callback( $binding );
 				} catch ( NBPC_Callback_Exception $e ) {
 					// WP_Error instance.
 					// phpcs:disable WordPress.Security.EscapeOutput
@@ -66,7 +68,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Rewrite_Rule' ) ) {
 						new WP_Error(
 							'snp_rewrite_rule_error',
 							/* translators: formatted callback */
-							sprintf( __( 'Rewrite rule binding `%s` is invalid. Please check your rewrite rule register items.', 'nbpc' ), nbpc_format_callback( $binding ) )
+							sprintf( __( 'Rewrite rule binding `%s` is invalid. Please check your rewrite rule register items.', 'nbpc' ), nbpc_format_callable( $binding ) )
 						)
 					);
 					// phpcs:enable WordPress.Security.EscapeOutput

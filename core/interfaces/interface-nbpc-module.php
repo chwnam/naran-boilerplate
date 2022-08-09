@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Module interface
+ * Naran Boilerplate Core
+ *
+ * interfaces/interface-nbpc-module.php
  */
 
 /* ABSPATH check */

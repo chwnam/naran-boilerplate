@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Script register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-script.php
  */
 
 /* ABSPATH check */
@@ -42,14 +44,14 @@ if ( ! class_exists( 'NBPC_Register_Base_Script' ) ) {
 		protected function src_helper( string $rel_path, bool $replace_min = true ): string {
 			$rel_path = trim( $rel_path, '\\/' );
 
-			if ( $replace_min && nbpc_script_debug() && substr( $rel_path, - 7 ) === '.min.js' ) {
+			if ( $replace_min && nbpc_script_debug() && str_ends_with( $rel_path, '.min.js' ) ) {
 				$rel_path = substr( $rel_path, 0, - 7 ) . '.js';
 			}
 
 			if ( nbpc_is_theme() ) {
 				return get_stylesheet_directory_uri() . "/assets/js/$rel_path";
 			} else {
-				return plugin_dir_url( nbpc()->get_main_file() ) . "assets/js/$rel_path";
+				return plugin_dir_url( nbpc_main_file() ) . "assets/js/$rel_path";
 			}
 		}
 	}

@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Widget reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-widget.php
  */
 
 /* ABSPATH check */
@@ -11,17 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'NBPC_Reg_Widget' ) ) {
 	class NBPC_Reg_Widget implements NBPC_Reg {
 		/**
-		 * @var object|string
-		 */
-		public $widget;
-
-		/**
 		 * Constructor method
 		 *
-		 * @param string|object $widget
+		 * @param WP_Widget|string| $widget String is class name of Widget subclass.
 		 */
-		public function __construct( $widget ) {
-			$this->widget = $widget;
+		public function __construct(
+			public WP_Widget|string $widget
+		) {
 		}
 
 		public function register( $dispatch = null ): void {

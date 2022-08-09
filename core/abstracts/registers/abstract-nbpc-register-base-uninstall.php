@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Uninstall register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-uninstall.php
  */
 
 /* ABSPATH check */

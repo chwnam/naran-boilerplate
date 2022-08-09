@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Registrable interface
+ * Naran Boilerplate Core
+ *
+ * interfaces/interface-nbpc-reg.php
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -9,13 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! interface_exists( 'NBPC_Reg' ) ) {
 	interface NBPC_Reg {
-		/**
-		 * Register reg to core.
-		 *
-		 * @param mixed $dispatch Extra argument.
-		 *
-		 * @return mixed
-		 */
 		public function register( $dispatch = null );
 	}
 }

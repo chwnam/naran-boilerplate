@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Theme support register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-theme-support.php
  */
 
 /* ABSPATH check */

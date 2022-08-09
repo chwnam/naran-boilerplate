@@ -56,7 +56,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 			$this->assign_modules(
 				[
 					'activation'    => NBPC_Register_Activation::class,
-					'ajax'          => NBPC_Register_Ajax::class,
+					'ajax'          => NBPC_Register_AJAX::class,
 					'block'         => NBPC_Register_Block::class,
 					'cap'           => function () { return new NBPC_Register_Capability(); },
 					'comment_meta'  => NBPC_Register_Comment_Meta::class,
@@ -68,7 +68,7 @@ if ( ! class_exists( 'NBPC_Registers' ) ) {
 					'option'        => NBPC_Register_Option::class,
 					'post_meta'     => NBPC_Register_Post_Meta::class,
 					'post_type'     => NBPC_Register_Post_Type::class,
-					'rest_route'    => NBPC_Register_Rest_Route::class,
+					'rest_route'    => NBPC_Register_REST_Route::class,
 					'rewrite_rule'  => NBPC_Register_Rewrite_Rule::class,
 					'role'          => function () { return new NBPC_Register_Role(); },
 					'script'        => NBPC_Register_Script::class,

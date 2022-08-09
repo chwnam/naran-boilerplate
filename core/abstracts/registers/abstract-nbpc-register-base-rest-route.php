@@ -1,14 +1,17 @@
 <?php
 /**
- * NBPC: Rest route register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-rest-route.php
  */
+
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Register_Base_Rest_Route' ) ) {
-	abstract class NBPC_Register_Base_Rest_Route implements NBPC_Register {
+if ( ! class_exists( 'NBPC_Register_Base_REST_Route' ) ) {
+	abstract class NBPC_Register_Base_REST_Route implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
 		/**
@@ -50,7 +53,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Rest_Route' ) ) {
 			$index = 0;
 
 			foreach ( $this->get_items() as $item ) {
-				if ( $item instanceof NBPC_Reg_Rest_Route ) {
+				if ( $item instanceof NBPC_Reg_REST_Route ) {
 					$item->args['nbpc'] = $index;
 
 					// Switch callback.
@@ -79,14 +82,8 @@ if ( ! class_exists( 'NBPC_Register_Base_Rest_Route' ) ) {
 
 		/**
 		 * Call cached, real validator.
-		 *
-		 * @param mixed           $value
-		 * @param WP_REST_Request $request
-		 * @param string          $key
-		 *
-		 * @return bool|WP_error
 		 */
-		public function dispatch_validator( $value, WP_REST_Request $request, string $key ) {
+		public function dispatch_validator( mixed $value, WP_REST_Request $request, string $key ): bool|WP_Error {
 			$attributes = $request->get_attributes();
 
 			try {
@@ -111,13 +108,9 @@ if ( ! class_exists( 'NBPC_Register_Base_Rest_Route' ) ) {
 		/**
 		 * Call cached, real sanitizer.
 		 *
-		 * @param mixed           $value
-		 * @param WP_REST_Request $request
-		 * @param string          $key
-		 *
 		 * @return mixed|WP_Error
 		 */
-		public function dispatch_sanitizer( $value, WP_REST_Request $request, string $key ) {
+		public function dispatch_sanitizer( mixed $value, WP_REST_Request $request, string $key ): mixed {
 			$attributes = $request->get_attributes();
 
 			try {
@@ -146,7 +139,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Rest_Route' ) ) {
 		 *
 		 * @return mixed
 		 */
-		public function dispatch_request( WP_REST_Request $request ) {
+		public function dispatch_request( WP_REST_Request $request ): mixed {
 			$attributes = $request->get_attributes();
 
 			try {

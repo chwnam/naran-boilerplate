@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Meta reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-meta.php
  */
 
 /* ABSPATH check */
@@ -62,13 +64,13 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 		/**
 		 * Constructor method
 		 *
-		 * @param string $object_type meta field type.
-		 * @param string $meta_key    meta key name.
-		 * @param array  $args        meta field args.
+		 * @param string              $object_type meta field type.
+		 * @param string              $meta_key    meta key name.
+		 * @param object|array|string $args        meta field args.
 		 *
 		 * @see register_meta()
 		 */
-		public function __construct( string $object_type, string $meta_key, array $args = [] ) {
+		public function __construct( string $object_type, string $meta_key, object|array|string $args = [] ) {
 			$this->object_type = $object_type;
 			$this->meta_key    = $meta_key;
 			$this->args        = wp_parse_args(
@@ -90,7 +92,7 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 			if ( $this->object_type && $this->get_key() ) {
 				try {
 					if ( $this->args['sanitize_callback'] ) {
-						$this->args['sanitize_callback'] = nbpc_parse_callback( $this->args['sanitize_callback'] );
+						$this->args['sanitize_callback'] = NBPC_Main::get_instance()->parse_callback( $this->args['sanitize_callback'] );
 					}
 				} catch ( NBPC_Callback_Exception $e ) {
 					$error = new WP_Error();
@@ -98,7 +100,7 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 						'nbpc_meta_error',
 						sprintf(
 							'Meta sanitize_callback handler `%s` is invalid. Please check your meta register items.',
-							nbpc_format_callback( $this->args['sanitize_callback'] )
+							nbpc_format_callable( $this->args['sanitize_callback'] )
 						)
 					);
 					// $error is a WP_Error instance.
@@ -108,7 +110,7 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 
 				try {
 					if ( $this->args['auth_callback'] ) {
-						$this->args['auth_callback'] = nbpc_parse_callback( $this->args['auth_callback'] );
+						$this->args['auth_callback'] = NBPC_Main::get_instance()->parse_callback( $this->args['auth_callback'] );
 					}
 				} catch ( NBPC_Callback_Exception $e ) {
 					$error = new WP_Error();
@@ -116,7 +118,7 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 						'nbpc_meta_error',
 						sprintf(
 							'Meta auth_callback handler `%s` is invalid. Please check your meta register items.',
-							nbpc_format_callback( $this->args['auth_callback'] )
+							nbpc_format_callable( $this->args['auth_callback'] )
 						)
 					);
 					// $error is a WP_Error instance.
@@ -174,44 +176,35 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 		 *
 		 * @return mixed
 		 */
-		public function get_value( $object_id ) {
-			switch ( $this->object_type ) {
-				case 'comment':
-					return get_comment_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$this->single ?? false
-					);
-
-				case 'post':
-					return get_post_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$this->single ?? false
-					);
-
-				case 'term':
-					return get_term_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$this->single ?? false
-					);
-
-				case 'user':
-					return get_user_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$this->single ?? false
-					);
-
-				default:
-					return get_metadata(
-						$this->object_type,
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$this->args['single'] ?? false
-					);
-			}
+		public function get_value( mixed $object_id ): mixed {
+			return match ( $this->object_type ) {
+				'comment' => get_comment_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$this->single ?? false
+				),
+				'post'    => get_post_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$this->single ?? false
+				),
+				'term'    => get_term_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$this->single ?? false
+				),
+				'user'    => get_user_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$this->single ?? false
+				),
+				default   => get_metadata(
+					$this->object_type,
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$this->args['single'] ?? false
+				),
+			};
 		}
 
 		/**
@@ -223,141 +216,103 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 		 *
 		 * @return bool|int|WP_Error
 		 */
-		public function add( $object_id, $meta_value, bool $unique = false ) {
-			switch ( $this->object_type ) {
-				case 'comment':
-					return add_comment_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$meta_value,
-						$unique
-					);
-
-				case 'post':
-					return add_post_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$meta_value,
-						$unique
-					);
-
-				case 'term':
-					return add_term_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$meta_value,
-						$unique
-					);
-
-				case 'user':
-					return add_user_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$meta_value,
-						$unique
-					);
-
-				default:
-					return add_metadata(
-						$this->object_type,
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$meta_value,
-						$unique
-					);
-			}
+		public function add( mixed $object_id, mixed $meta_value, bool $unique = false ): int|bool|WP_Error {
+			return match ( $this->object_type ) {
+				'comment' => add_comment_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$meta_value,
+					$unique
+				),
+				'post'    => add_post_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$meta_value,
+					$unique
+				),
+				'term'    => add_term_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$meta_value,
+					$unique
+				),
+				'user'    => add_user_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$meta_value,
+					$unique
+				),
+				default   => add_metadata(
+					$this->object_type,
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$meta_value,
+					$unique
+				),
+			};
 		}
 
 		/**
 		 * Update meta field.
-		 *
-		 * @param mixed $object_id
-		 * @param mixed $meta_value
-		 * @param mixed $prev_value
-		 *
-		 * @return bool|int|WP_Error
 		 */
-		public function update( $object_id, $meta_value, $prev_value = '' ) {
-			switch ( $this->object_type ) {
-				case 'comment':
-					return update_comment_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$meta_value,
-						$prev_value
-					);
-
-				case 'post':
-					return update_post_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$meta_value,
-						$prev_value
-					);
-
-				case 'term':
-					return update_term_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$meta_value,
-						$prev_value
-					);
-
-				case 'user':
-					return update_user_meta(
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$meta_value,
-						$prev_value
-					);
-
-				default:
-					return update_metadata(
-						$this->object_type,
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$meta_value,
-						$prev_value
-					);
-			}
+		public function update( mixed $object_id, mixed $meta_value, mixed $prev_value = '' ): int|bool|WP_Error {
+			return match ( $this->object_type ) {
+				'comment' => update_comment_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$meta_value,
+					$prev_value
+				),
+				'post'    => update_post_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$meta_value,
+					$prev_value
+				),
+				'term'    => update_term_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$meta_value,
+					$prev_value
+				),
+				'user'    => update_user_meta(
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$meta_value,
+					$prev_value
+				),
+				default   => update_metadata(
+					$this->object_type,
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$meta_value,
+					$prev_value
+				),
+			};
 		}
 
 		/**
 		 * Delete meta value of an object.
-		 *
-		 * @param mixed $object_id
-		 * @param mixed $meta_value
-		 *
-		 * @return bool
 		 */
-		public function delete( $object_id, $meta_value = '' ): bool {
-			switch ( $this->object_type ) {
-				case 'comment':
-					return delete_comment_meta( $this->safe_get_id( $object_id ), $this->meta_key, $meta_value );
-				case 'post':
-					return delete_post_meta( $this->safe_get_id( $object_id ), $this->meta_key, $meta_value );
-				case 'taxonomy':
-					return delete_term_meta( $this->safe_get_id( $object_id ), $this->meta_key, $meta_value );
-				case 'user':
-					return delete_user_meta( $this->safe_get_id( $object_id ), $this->meta_key, $meta_value );
-				default:
-					return delete_metadata(
-						$this->object_type,
-						$this->safe_get_id( $object_id ),
-						$this->meta_key,
-						$meta_value
-					);
-			}
+		public function delete( mixed $object_id, mixed $meta_value = '' ): bool {
+			return match ( $this->object_type ) {
+				'comment'  => delete_comment_meta( $this->safe_get_id( $object_id ), $this->meta_key, $meta_value ),
+				'post'     => delete_post_meta( $this->safe_get_id( $object_id ), $this->meta_key, $meta_value ),
+				'taxonomy' => delete_term_meta( $this->safe_get_id( $object_id ), $this->meta_key, $meta_value ),
+				'user'     => delete_user_meta( $this->safe_get_id( $object_id ), $this->meta_key, $meta_value ),
+				default    => delete_metadata(
+					$this->object_type,
+					$this->safe_get_id( $object_id ),
+					$this->meta_key,
+					$meta_value
+				),
+			};
 		}
 
 		/**
 		 * Update meta field with value form request.
-		 *
-		 * @param mixed $object_id Object, or object ID to update.
-		 *
-		 * @return bool|int|WP_Error
 		 */
-		public function update_from_request( $object_id ) {
+		public function update_from_request( mixed $object_id ): int|false|WP_Error {
 			// Boilerplate code cannot check nonce values.
 			// phpcs:disable WordPress.Security.NonceVerification.Recommended
 
@@ -374,12 +329,8 @@ if ( ! class_exists( 'NBPC_Reg_Meta' ) ) {
 
 		/**
 		 * Get save object ID.
-		 *
-		 * @param mixed $object_id
-		 *
-		 * @return false|int
 		 */
-		protected function safe_get_id( $object_id ) {
+		protected function safe_get_id( mixed $object_id ): int|false {
 			if ( is_int( $object_id ) || is_numeric( $object_id ) ) {
 				return (int) $object_id;
 			}

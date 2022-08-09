@@ -1,0 +1,27 @@
+# 'frotz':  directory or file at any level
+frotz
+
+# relative to the root
+tv-show/simpson
+/radio/channel
+
+# directory only
+dir/
+
+# Any level README.md
+doc/**/README.md
+
+# Double asterisks.
+**/actions
+filters/**
+hooks/**/names.js
+
+# Single asterisk
+excel/*.xlsx
+
+# Question
+database/?nap.db
+
+# fnmatch
+fnmatch/*.[tj]sx.map
+fnmatch/[!ap]t.js

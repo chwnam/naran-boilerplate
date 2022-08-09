@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: HTML output helper
+ * Naran Boilerplate Core
+ *
+ * etc/class-nbpc-html.php
  */
 
 /* ABSPATH check */

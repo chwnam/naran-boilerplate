@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Cron register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-cron.php
  */
 
 /* ABSPATH check */

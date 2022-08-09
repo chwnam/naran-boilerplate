@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: template trait
+ * Naran Boilerplate Core
+ *
+ * traits/trait-nbpc-template-impl.php
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -9,14 +11,47 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 	trait NBPC_Template_Impl {
-		protected function locate_file( string $tmpl_type, string $relpath, string $variant = '', $ext = 'php' ) {
+		/**
+		 * Current block key.
+		 */
+		protected string $current_key = '';
+
+		/**
+		 * Check if template is started.
+		 */
+		protected bool $template_started = false;
+
+		/**
+		 * Template parents. Relative paths to template.
+		 */
+		protected array $template_parents = [];
+
+		/**
+		 * Assigned values in templates.
+		 */
+		protected array $template_assigned = [];
+
+		/**
+		 * @param string $tmpl_type Template type.
+		 * @param string $relpath   Relative path to template.
+		 * @param string $variant   Varaition.
+		 * @param string $ext       Extension.
+		 *
+		 * @return string|false
+		 */
+		protected function locate_file(
+			string $tmpl_type,
+			string $relpath,
+			string $variant = '',
+			string $ext = 'php'
+		): string|false {
 			$tmpl_type = trim( $tmpl_type, '\\/' );
 			$relpath   = trim( $relpath, '\\/' );
 			$variant   = sanitize_key( $variant );
 			$ext       = ltrim( $ext, '.' );
 
 			$cache_name = "$tmpl_type:$relpath:$variant:$ext";
-			$cache      = nbpc()->get( 'nbpc:locate_file', [] );
+			$cache      = NBPC_Main_Base::get_instance()->get( 'nbpc:locate_file', [] );
 
 			if ( isset( $cache[ $cache_name ] ) ) {
 				$located = $cache[ $cache_name ];
@@ -30,7 +65,7 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 
 				$styl = get_stylesheet_directory();
 				$tmpl = get_template_directory();
-				$plug = nbpc_is_plugin() ? dirname( nbpc()->get_main_file() ) : false;
+				$plug = nbpc_is_plugin() ? dirname( nbpc_main_file() ) : false;
 
 				if ( nbpc_is_theme() ) {
 					$paths = [
@@ -64,43 +99,74 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 
 				$cache[ $cache_name ] = $located;
 
-				nbpc()->set( 'nbpc:locate_file', $cache );
+				NBPC_Main_Base::get_instance()->set( 'nbpc:locate_file', $cache );
 			}
 
 			return $located;
 		}
 
 		protected function render_file( string $___file_name___, array $context = [], bool $echo = true ): string {
-			if ( file_exists( $___file_name___ ) && is_readable( $___file_name___ ) ) {
-				if ( ! $echo ) {
+			if ( ! file_exists( $___file_name___ ) || ! is_readable( $___file_name___ ) || $this->template_started ) {
+				return '';
+			}
+
+			$this->template_started  = true; // Lock.
+			$this->template_parents  = [];
+			$this->template_assigned = [];
+
+			if ( ! empty( $context ) ) {
+				// phpcs:ignore WordPress.PHP.DontExtract
+				extract( $context, EXTR_SKIP );
+			}
+			unset( $context );
+
+			// Include and get the bottomost template content.
+			ob_start();
+			include $___file_name___;
+			$this->assign( 'content', ob_get_clean() );
+
+			// Process enqueued parent templates.
+			$template_parents       = array_reverse( $this->template_parents );
+			$this->template_parents = [];
+			$buffered               = [];
+
+			for ( $i = 0; $i < count( $template_parents ); ++ $i ) {
+				$file = $this->locate_file( 'template', $template_parents[ $i ] );
+
+				if ( file_exists( $file ) && is_readable( $file ) ) {
+					// Process template file.
 					ob_start();
-				}
+					include $file;
+					$buffered[] = ob_get_clean();
 
-				// static lambda immediately invoked.
-				// This prevents from accessing from the template inside.
-				( static function () use ( $context, $___file_name___ ) {
-					if ( ! empty( $context ) ) {
-						// phpcs:ignore WordPress.PHP.DontExtract
-						extract( $context, EXTR_SKIP );
+					// If extend() is called in the $file, then $template_parents should have one or more template.
+					if ( $this->template_parents ) {
+						$template_parents       = [ ...$template_parents, ...array_reverse( $this->template_parents ) ];
+						$this->template_parents = [];
 					}
-					unset( $context );
-					include $___file_name___;
-				} )();
-
-				if ( ! $echo ) {
-					return ob_get_clean();
 				}
 			}
 
-			return '';
+			$this->template_started = false; // Release.
+
+			// $output is generated from file inclusion.
+			$output = implode( "\n", array_filter( array_map( 'trim', array_reverse( $buffered ) ) ) ) .
+			          "\n" . $this->fetch( 'content' );
+
+			if ( $echo ) {
+				echo $output;
+				return '';
+			}
+
+			return $output;
 		}
 
 		protected function enqueue_ejs( string $relpath, array $context = [], string $variant = '' ): self {
-			$ejs_queue = nbpc()->get( 'nbpc:ejs_queue' );
+			$ejs_queue = NBPC_Main_Base::get_instance()->get( 'nbpc:ejs_queue' );
 
 			if ( ! $ejs_queue ) {
 				$ejs_queue = new NBPC_EJS_Queue();
-				nbpc()->set( 'nbpc:ejs_queue', $ejs_queue );
+				NBPC_Main_Base::get_instance()->set( 'nbpc:ejs_queue', $ejs_queue );
 			}
 
 			$ejs_queue->enqueue( $relpath . ( $variant ? "-$variant" : '' ), compact( 'context', 'variant' ) );
@@ -111,26 +177,26 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 		/**
 		 * Render a template file.
 		 *
-		 * @param string $relpath Relative path to the theme. Do not append file extension.
-		 * @param array  $context Context array.
-		 * @param string $variant Variant slug.
-		 * @param bool   $echo
-		 * @param string $ext
+		 * @param string      $relpath Relative path to the theme. Do not append file extension.
+		 * @param array       $context Context array.
+		 * @param string|bool $variant Variant slug. If explicitly boolean, regarded as $echo.
+		 * @param bool        $echo
+		 * @param string      $ext
 		 *
 		 * @return string
 		 */
 		protected function render(
 			string $relpath,
 			array $context = [],
-			string $variant = '',
+			string|bool $variant = '',
 			bool $echo = true,
 			string $ext = 'php'
 		): string {
-			return $this->render_file(
-				$this->locate_file( 'template', $relpath, $variant, $ext ),
-				$context,
-				$echo
-			);
+			if ( is_bool( $variant ) ) {
+				$echo    = $variant;
+				$variant = '';
+			}
+			return $this->render_file( $this->locate_file( 'template', $relpath, $variant, $ext ), $context, $echo );
 		}
 
 		protected function enqueue_script( string $handle ): self {
@@ -169,6 +235,74 @@ if ( ! trait_exists( 'NBPC_Template_Impl' ) ) {
 		 */
 		protected function style( string $handle ): NBPC_Style_Helper {
 			return new NBPC_Style_Helper( $this, $handle );
+		}
+
+		/**
+		 * Extend parent template.
+		 *
+		 * @param string $parent Relative path to template directory.
+		 *
+		 * @return $this
+		 */
+		protected function extend( string $parent ): self {
+			$this->template_parents[] = $parent;
+
+			return $this;
+		}
+
+		/**
+		 * Assign a value.
+		 *
+		 * @param string $key
+		 * @param mixed  $value
+		 *
+		 * @return $this
+		 */
+		protected function assign( string $key, mixed $value ): self {
+			$this->template_assigned[ $key ] = $value;
+
+			return $this;
+		}
+
+		/**
+		 * Fetch a value.
+		 *
+		 * @param string     $key
+		 * @param mixed|null $default
+		 *
+		 * @return mixed
+		 */
+		protected function fetch( string $key, mixed $default = null ): mixed {
+			return $this->template_assigned[ $key ] ?? $default;
+		}
+
+		/**
+		 * Assign a value by block.
+		 *
+		 * @param string $key
+		 *
+		 * @return void
+		 * @throws RuntimeException
+		 */
+		protected function block_start( string $key ): void {
+			if ( $this->current_key ) {
+				throw new RuntimeException( 'Assign block cannot be nested.' );
+			}
+			$this->current_key = $key;
+			ob_start();
+		}
+
+		/**
+		 * Finish assign block.
+		 *
+		 * @throws RuntimeException
+		 */
+		protected function block_end(): void {
+			if ( ! $this->current_key ) {
+				throw new RuntimeException( 'No assign block started.' );
+			}
+			$this->assign( $this->current_key, ob_get_clean() );
+			$this->current_key = '';
 		}
 	}
 }

@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Submodule trait
+ * Naran Boilerplate Core
+ *
+ * traits/trait-nbpc-submodule-impl.php
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,9 +23,9 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		 *
 		 * @param string $name The name must be non-numeric.
 		 *
-		 * @return object|null
+		 * @return mixed
 		 */
-		public function __get( string $name ) {
+		public function __get( string $name ): mixed {
 			if ( ! is_numeric( $name ) ) {
 				$module = $this->modules[ $name ] ?? null;
 				if ( $module instanceof Closure ) {
@@ -51,12 +53,9 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		/**
 		 * Block __set() magic method.
 		 *
-		 * @param string $name  Module name.
-		 * @param mixed  $value Unused.
-		 *
 		 * @throws RuntimeException Do not assign.
 		 */
-		public function __set( string $name, $value ) {
+		public function __set( string $name, mixed $value ): void {
 			throw new RuntimeException( 'Assigning object at runtime is not allowed.' );
 		}
 
@@ -67,7 +66,7 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		 *
 		 * @return void
 		 */
-		public function touch( string $name ) {
+		public function touch( string $name ): void {
 			if ( $this->__isset( $name ) ) {
 				$this->__get( $name );
 			}
@@ -82,13 +81,13 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		 * @return self
 		 */
 		protected function assign_modules( array $modules, bool $auto_wrap = false ): self {
-			$cps = nbpc()->get_constructor_params();
+			$constructor_params = NBPC_Main_Base::get_instance()->get_constructor_params();
 
 			if ( $auto_wrap ) {
 				foreach ( $modules as $idx => $module ) {
-					$this->modules[ $idx ] = function () use ( $module, $cps ) {
+					$this->modules[ $idx ] = function () use ( $module, $constructor_params ) {
 						if ( is_string( $module ) && class_exists( $module ) ) {
-							return $this->new_instance( $module, $cps );
+							return $this->new_instance( $module, $constructor_params );
 						} else {
 							return $module;
 						}
@@ -97,7 +96,7 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 			} else {
 				foreach ( $modules as $idx => $module ) {
 					if ( is_string( $module ) && class_exists( $module ) ) {
-						$this->modules[ $idx ] = $this->new_instance( $module, $cps );
+						$this->modules[ $idx ] = $this->new_instance( $module, $constructor_params );
 					} else {
 						$this->modules[ $idx ] = $module;
 					}
@@ -117,7 +116,7 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		 */
 		protected function new_instance( string $class_name, ?array $constructor_args = null ) {
 			if ( is_null( $constructor_args ) ) {
-				$constructor_args = nbpc()->get_constructor_params();
+				$constructor_args = NBPC_Main_Base::get_instance()->get_constructor_params();
 			}
 
 			if ( $constructor_args ) {
@@ -153,10 +152,10 @@ if ( ! trait_exists( 'NBPC_Submodule_Impl' ) ) {
 		 * @return object|NBPC_Module
 		 */
 		protected function invoke_module( string $name, Closure $module ) {
-			$cps = nbpc()->get_constructor_params();
+			$constructor_paramss = NBPC_Main_Base::get_instance()->get_constructor_params();
 
-			if ( isset( $cps[ $name ] ) ) {
-				$params = $this->call_if_callable_or_as_is( $cps[ $name ] );
+			if ( isset( $constructor_paramss[ $name ] ) ) {
+				$params = $this->call_if_callable_or_as_is( $constructor_paramss[ $name ] );
 				return $module( ...$params );
 			}
 

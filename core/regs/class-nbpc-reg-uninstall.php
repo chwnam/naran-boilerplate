@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Uninstall reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-uninstall.php
  */
 
 /* ABSPATH check */
@@ -10,24 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Reg_Uninstall' ) ) {
 	class NBPC_Reg_Uninstall implements NBPC_Reg {
-		/** @var Closure|array|string */
-		public $callback;
-
-		public array $args;
-
-		public bool $error_log;
-
 		/**
 		 * Constructor method
-		 *
-		 * @param Closure|array|string $callback
-		 * @param array                $args
-		 * @param bool                 $error_log
 		 */
-		public function __construct( $callback, array $args = [], bool $error_log = false ) {
-			$this->callback  = $callback;
-			$this->args      = $args;
-			$this->error_log = $error_log;
+		public function __construct(
+			public Closure|array|string $callback,
+			public array $args = [],
+			public bool $error_log = false
+		) {
 		}
 
 		/**

@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Capability register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-capability.php
  */
 
 /* ABSPATH check */

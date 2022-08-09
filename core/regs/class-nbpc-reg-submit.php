@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Submit (admin-post.php) reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-submit.php
  */
 
 /* ABSPATH check */
@@ -10,17 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Reg_Submit' ) ) {
 	class NBPC_Reg_Submit implements NBPC_Reg {
-		/** @var string */
-		public string $action;
-
-		/** @var Closure|array|string */
-		public $callback;
-
-		/** @var string|bool */
-		public $allow_nopriv;
-
-		public int $priority;
-
 		/**
 		 * Constructor method
 		 *
@@ -30,15 +21,12 @@ if ( ! class_exists( 'NBPC_Reg_Submit' ) ) {
 		 * @param int|null             $priority     Priority number. Defaults to NBPC_PRIORITY.
 		 */
 		public function __construct(
-			string $action,
-			$callback,
-			$allow_nopriv = false,
-			?int $priority = null
+			public string $action,
+			public Closure|array|string $callback,
+			public string|bool $allow_nopriv = false,
+			public ?int $priority = null
 		) {
-			$this->action       = $action;
-			$this->callback     = $callback;
-			$this->allow_nopriv = $allow_nopriv;
-			$this->priority     = is_null( $priority ) ? nbpc()->get_priority() : $priority;
+			$this->priority = is_null( $priority ) ? nbpc_priority() : $priority;
 		}
 
 		public function register( $dispatch = null ): void {

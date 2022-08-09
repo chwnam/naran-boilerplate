@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Block reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-block.php
  */
 
 /* ABSPATH check */
@@ -33,10 +35,6 @@ if ( ! class_exists( 'NBPC_Reg_Block' ) ) {
 	 * @property string|null   $style            Block type front end style handle.
 	 */
 	class NBPC_Reg_Block implements NBPC_Reg {
-		public string $block_type;
-
-		public array $args;
-
 		/**
 		 * Constructor method
 		 *
@@ -45,9 +43,10 @@ if ( ! class_exists( 'NBPC_Reg_Block' ) ) {
 		 *
 		 * @see WP_Block_Type::__construct() for details
 		 */
-		public function __construct( string $block_type, array $args = [] ) {
-			$this->block_type = $block_type;
-			$this->args       = $args;
+		public function __construct(
+			public string $block_type,
+			public array $args = []
+		) {
 		}
 
 		public function __get( string $key ) {

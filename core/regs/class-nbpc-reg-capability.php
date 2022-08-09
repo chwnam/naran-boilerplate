@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Capability reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-capability.php
  */
 
 /* ABSPATH check */
@@ -10,19 +12,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Reg_Capability' ) ) {
 	class NBPC_Reg_Capability implements NBPC_Reg {
-		public string $role;
-
-		public array $capabilities;
-
 		/**
 		 * Constructor method
 		 *
 		 * @param string $role
 		 * @param array  $capabilities
 		 */
-		public function __construct( string $role, array $capabilities ) {
-			$this->role         = $role;
-			$this->capabilities = $capabilities;
+		public function __construct(
+			public string $role,
+			public array $capabilities
+		) {
 		}
 
 		public function register( $dispatch = null ): void {

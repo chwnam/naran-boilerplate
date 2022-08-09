@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Fallback front module.
+ * Naran Boilerplate Core
+ *
+ * etc/class-nbpc-front-fallback.php
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

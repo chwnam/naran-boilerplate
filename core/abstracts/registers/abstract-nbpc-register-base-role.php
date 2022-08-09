@@ -1,8 +1,9 @@
 <?php
 /**
- * NBPC: Role register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-role.php
  */
-
 /* ABSPATH check */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

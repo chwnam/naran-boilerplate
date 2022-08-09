@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Rewrite rule reg
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-rewrite-rule.php
  */
 
 /* ABSPATH check */
@@ -29,18 +31,18 @@ if ( ! class_exists( 'NBPC_Reg_Rewrite_Rule' ) ) {
 		/**
 		 * Constructor method
 		 *
-		 * @param string               $regex      Regular expression for URL matching.
-		 * @param string               $query      Rewrite query string.
-		 * @param string               $after      'top', 'bottom'.
-		 * @param callable|string|null $binding    Callback method for 'template_redirect' action.
-		 * @param string|array         $query_vars Public query variables to append.
+		 * @param string                    $regex      Regular expression for URL matching.
+		 * @param string                    $query      Rewrite query string.
+		 * @param string                    $after      'top', 'bottom'.
+		 * @param Closure|array|string|null $binding    Callback method for 'template_redirect' action.
+		 * @param string|array              $query_vars Public query variables to append.
 		 */
 		public function __construct(
 			string $regex,
 			string $query,
 			string $after = 'bottom',
-			$binding = null,
-			$query_vars = ''
+			Closure|array|string|null $binding = null,
+			array|string $query_vars = ''
 		) {
 			$this->regex      = $regex;
 			$this->query      = $query;

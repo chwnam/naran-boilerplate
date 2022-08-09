@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Custom post type reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-post-type.php
  */
 
 /* ABSPATH check */
@@ -10,19 +12,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Reg_Post_Type' ) ) {
 	class NBPC_Reg_Post_Type implements NBPC_Reg {
-		public string $post_type;
-
-		public array $args;
-
 		/**
 		 * Constructor method
 		 *
 		 * @param string $post_type
 		 * @param array  $args
 		 */
-		public function __construct( string $post_type, array $args ) {
-			$this->post_type = $post_type;
-			$this->args      = $args;
+		public function __construct(
+			public string $post_type,
+			public array $args
+		) {
 		}
 
 		public function register( $dispatch = null ): void {

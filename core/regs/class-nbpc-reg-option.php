@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Option reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-option.php
  */
 
 /* ABSPATH check */
@@ -44,15 +46,11 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 
 		/**
 		 * Constructor method
-		 *
-		 * @param string $option_group
-		 * @param string $option_name
-		 * @param array  $args
 		 */
 		public function __construct(
 			string $option_group,
 			string $option_name,
-			array $args = []
+			object|array|string $args = []
 		) {
 			$this->option_group = $option_group;
 			$this->option_name  = $option_name;
@@ -95,14 +93,14 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 			if ( $this->option_group && $this->option_name ) {
 				if ( $this->args['sanitize_callback'] ) {
 					try {
-						$this->args['sanitize_callback'] = nbpc_parse_callback( $this->args['sanitize_callback'] );
+						$this->args['sanitize_callback'] = NBPC_Main::get_instance()->parse_callback( $this->args['sanitize_callback'] );
 					} catch ( NBPC_Callback_Exception $e ) {
 						$error = new WP_Error();
 						$error->add(
 							'nbpc_option_error',
 							sprintf(
 								'Option sanitize callback handler `%s` is invalid. Please check your option register items.',
-								nbpc_format_callback( $this->args['sanitize_callback'] )
+								nbpc_format_callable( $this->args['sanitize_callback'] )
 							)
 						);
 						// $error is a WP_Error instance.
@@ -122,7 +120,7 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 			return $this->option_name;
 		}
 
-		public function get_value( $default = false ) {
+		public function get_value( mixed $default = false ) {
 			if ( func_num_args() > 0 ) {
 				return get_option( $this->get_option_name(), $default );
 			}
@@ -134,7 +132,7 @@ if ( ! class_exists( 'NBPC_Reg_Option' ) ) {
 			return $this->args['autoload'];
 		}
 
-		public function update( $value ): bool {
+		public function update( mixed $value ): bool {
 			return update_option( $this->get_option_name(), $value, $this->is_autoload() );
 		}
 

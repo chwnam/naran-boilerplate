@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: AJAX (admin-ajax.php, or wc-ajax) register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-ajax.php
  */
 
 /* ABSPATH check */
@@ -8,8 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Register_Base_Ajax' ) ) {
-	abstract class NBPC_Register_Base_Ajax implements NBPC_Register {
+if ( ! class_exists( 'NBPC_Register_Base_AJAX' ) ) {
+	abstract class NBPC_Register_Base_AJAX implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
 		private array $inner_handlers = [];
@@ -34,7 +36,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Ajax' ) ) {
 		public function register(): void {
 			foreach ( $this->get_items() as $item ) {
 				if (
-					$item instanceof NBPC_Reg_Ajax &&
+					$item instanceof NBPC_Reg_AJAX &&
 					$item->action &&
 					! isset( $this->inner_handlers[ $item->action ] )
 				) {
@@ -60,7 +62,6 @@ if ( ! class_exists( 'NBPC_Register_Base_Ajax' ) ) {
 			// Action value may come from wc-ajax.
 			if ( ! $action ) {
 				$wc_ajax = sanitize_key( $_GET['wc-ajax'] ?? '' );
-
 				if ( isset( $this->wc_ajax[ $wc_ajax ] ) ) {
 					$action = $wc_ajax;
 				}
@@ -68,7 +69,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Ajax' ) ) {
 
 			if ( $action && isset( $this->inner_handlers[ $action ] ) ) {
 				try {
-					$callback = nbpc_parse_callback( $this->inner_handlers[ $action ] );
+					$callback = NBPC_Main::get_instance()->parse_callback( $this->inner_handlers[ $action ] );
 					if ( is_callable( $callback ) ) {
 						$callback();
 					}
@@ -78,10 +79,10 @@ if ( ! class_exists( 'NBPC_Register_Base_Ajax' ) ) {
 						'nbpc_ajax_error',
 						sprintf(
 							'AJAX callback handler `%s` is invalid. Please check your AJAX register items.',
-							nbpc_format_callback( $this->inner_handlers[ $action ] )
+							nbpc_format_callable( $this->inner_handlers[ $action ] )
 						)
 					);
-					wp_send_json_error( $error, 404 );
+					wp_send_json_error( $error, 400 );
 				}
 			}
 

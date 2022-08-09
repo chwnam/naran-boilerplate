@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Submit (admin-post.php) register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-submit.php
  */
 
 /* ABSPATH check */
@@ -59,7 +61,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Submit' ) ) {
 						'nbpc_submit_error',
 						sprintf(
 							'Submit callback handler `%s` is invalid. Please check your submit register items.',
-							nbpc_format_callback( $this->inner_handlers[ $action ] )
+							nbpc_format_callable( $this->inner_handlers[ $action ] )
 						)
 					);
 					// $error is a WP_Error instance.

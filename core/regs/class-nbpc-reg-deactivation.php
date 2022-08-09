@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Deactivation reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-deactivation.php
  */
 
 /* ABSPATH check */
@@ -10,24 +12,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Reg_Deactivation' ) ) {
 	class NBPC_Reg_Deactivation implements NBPC_Reg {
-		/** @var Closure|array|string */
-		public $callback;
-
-		public array $args;
-
-		public bool $error_log;
-
 		/**
 		 * Constructor method
-		 *
-		 * @param Closure|array|string $callback
-		 * @param array                $args
-		 * @param bool                 $error_log
 		 */
-		public function __construct( $callback, array $args = [], bool $error_log = true ) {
-			$this->callback  = $callback;
-			$this->args      = $args;
-			$this->error_log = $error_log;
+		public function __construct(
+			public Closure|array|string $callback,
+			public array $args = [],
+			public bool $error_log = false
+		) {
 		}
 
 		/**
@@ -39,14 +31,14 @@ if ( ! class_exists( 'NBPC_Reg_Deactivation' ) ) {
 		 */
 		public function register( $dispatch = null ): void {
 			try {
-				$callback = nbpc_parse_callback( $this->callback );
+				$callback = NBPC_Main::get_instance()->parse_callback( $this->callback );
 			} catch ( NBPC_Callback_Exception $e ) {
 				$error = new WP_Error();
 				$error->add(
 					'nbpc_deactivation_error',
 					sprintf(
 						'Deactivation callback handler `%s` is invalid. Please check your deactivation register items.',
-						nbpc_format_callback( $this->callback )
+						nbpc_format_callable( $this->callback )
 					)
 				);
 				// $error is a WP_Error instance.
@@ -56,13 +48,13 @@ if ( ! class_exists( 'NBPC_Reg_Deactivation' ) ) {
 
 			if ( $callback ) {
 				if ( $this->error_log ) {
-					error_log( sprintf( 'Deactivation callback started: %s', nbpc_format_callback( $this->callback ) ) );
+					error_log( sprintf( 'Deactivation callback started: %s', nbpc_format_callable( $this->callback ) ) );
 				}
 
 				call_user_func_array( $callback, $this->args );
 
 				if ( $this->error_log ) {
-					error_log( sprintf( 'Deactivation callback finished: %s', nbpc_format_callback( $this->callback ) ) );
+					error_log( sprintf( 'Deactivation callback finished: %s', nbpc_format_callable( $this->callback ) ) );
 				}
 			}
 		}

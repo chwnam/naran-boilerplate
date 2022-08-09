@@ -1,8 +1,9 @@
 <?php
 /**
- * NBPC: EJS enqueue
+ * Naran Boilerplate Core
+ *
+ * etc/class-nbpc-ejs-queue.php
  */
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -17,7 +18,7 @@ if ( ! class_exists( 'NBPC_EJS_Queue' ) ) {
 		 * - Key: relative template path.
 		 * - Value: array. 'context', and 'variant' keys are stored.
 		 *
-		 * @var array<string, array>
+		 * @var array{string: array{string: mixed}}
 		 */
 		private array $queue = [];
 
@@ -27,10 +28,10 @@ if ( ! class_exists( 'NBPC_EJS_Queue' ) ) {
 		public function __construct() {
 			if ( is_admin() ) {
 				if ( ! has_action( 'admin_print_footer_scripts', [ $this, 'do_template' ] ) ) {
-					add_action( 'admin_print_footer_scripts', [ $this, 'do_template' ], nbpc()->get_priority() );
+					add_action( 'admin_print_footer_scripts', [ $this, 'do_template' ], nbpc_priority() );
 				}
 			} elseif ( ! has_action( 'wp_print_footer_scripts', [ $this, 'do_template' ] ) ) {
-				add_action( 'wp_print_footer_scripts', [ $this, 'do_template' ], nbpc()->get_priority() );
+				add_action( 'wp_print_footer_scripts', [ $this, 'do_template' ], nbpc_priority() );
 			}
 		}
 
@@ -67,9 +68,17 @@ if ( ! class_exists( 'NBPC_EJS_Queue' ) ) {
 				$content = trim( str_replace( '> <', '><', $content ) );
 
 				if ( ! empty( $content ) ) {
-					echo "\n<script type='text/template' id='" . esc_attr( $tmpl_id ) . "'>\n";
-					echo $content;
-					echo "\n</script>\n";
+					echo wp_kses(
+						"\n<script id='" . esc_attr( $tmpl_id ) . "' type='text/template'>\n" .
+						$content .
+						"\n</script>\n",
+						[
+							'script' => [
+								'id'   => true,
+								'type' => true,
+							],
+						]
+					);
 				}
 			}
 

@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Menu register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-menu.php
  */
 
 /* ABSPATH check */

@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Style reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-style.php
  */
 
 /* ABSPATH check */
@@ -17,30 +19,24 @@ if ( ! class_exists( 'NBPC_Reg_Style' ) ) {
 		public array $deps;
 
 		/** @var string|bool */
-		public $ver;
+		public string|bool $ver;
 
 		public string $media;
 
 		/**
 		 * Constructor method
-		 *
-		 * @param string           $handle
-		 * @param string           $src
-		 * @param array            $deps
-		 * @param string|bool|null $ver null: Use plugin version / true: Use WordPress version / false: No version.
-		 * @param string           $media
 		 */
 		public function __construct(
 			string $handle,
 			string $src,
 			array $deps = [],
-			$ver = null,
+			string|bool|null $ver = null,
 			string $media = 'all'
 		) {
 			$this->handle = $handle;
 			$this->src    = $src;
 			$this->deps   = $deps;
-			$this->ver    = is_null( $ver ) ? nbpc()->get_version() : $ver;
+			$this->ver    = is_null( $ver ) ? nbpc_version() : $ver;
 			$this->media  = $media;
 		}
 

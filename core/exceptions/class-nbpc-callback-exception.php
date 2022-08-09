@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Callback exception
+ * Naran Boilerplate Core
+ *
+ * exceptions/class-nbpc-callback-exception.php
  */
 
 /* ABSPATH check */

@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+// TODO: Port to WP-CLI.
 
 /**
  * Recursively remove files and directories.

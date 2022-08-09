@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Custom table register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-custom-table.php
  */
 
 /* ABSPATH check */
@@ -51,7 +53,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 		 *
 		 * @return void
 		 */
-		public function initial_setup() {
+		public function initial_setup(): void {
 			global $wpdb;
 
 			$install_initial_data = apply_filters( 'nbpc_install_initial_data', true, $this->get_current_version(), $this->get_installed_version() );
@@ -72,10 +74,8 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 
 		/**
 		 * Perform table update.
-		 *
-		 * @return void
 		 */
-		public function update_table() {
+		public function update_table(): void {
 			$old_version = $this->get_installed_version();
 			$new_version = $this->get_current_version();
 
@@ -90,8 +90,6 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 
 		/**
 		 * Current version of DB table.
-		 *
-		 * @return string
 		 */
 		public function get_current_version(): string {
 			return static::DB_VERSION;
@@ -100,8 +98,6 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 		/**
 		 * Currently installed DB table version, read from option table.
 		 * Probably this version is equal or behind to the current version.
-		 *
-		 * @return string
 		 */
 		public function get_installed_version(): string {
 			return get_option( 'nbpc_db_version', '' );
@@ -109,10 +105,6 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 
 		/**
 		 * Update the db version.
-		 *
-		 * @param string $version
-		 *
-		 * @return void
 		 */
 		public function update_version( string $version ): void {
 			update_option( 'nbpc_db_version', $version );
@@ -120,8 +112,6 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 
 		/**
 		 * Delete version. Use when uninstalling.
-		 *
-		 * @return void
 		 */
 		public function delete_version(): void {
 			delete_option( 'nbpc_db_version' );
@@ -129,12 +119,8 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 
 		/**
 		 * Keep dbDelta() result.
-		 *
-		 * @param array $result
-		 *
-		 * @return void
 		 */
-		protected function keep_delta_result( array $result ) {
+		protected function keep_delta_result( array $result ): void {
 			$lines = [];
 
 			foreach ( $result as $table => $message ) {
@@ -146,10 +132,8 @@ if ( ! class_exists( 'NBPC_Register_Base_Custom_Table' ) ) {
 
 		/**
 		 * Log dbDelta() result.
-		 *
-		 * @return void
 		 */
-		protected function log_delta_result() {
+		protected function log_delta_result(): void {
 			if ( $this->delta_result ) {
 				$version = $this->get_installed_version();
 				error_log( "dbDelta() updated 'nbpc_db_version' to $version.\n" . $this->delta_result );

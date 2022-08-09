@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: AJAX (admin-ajax.php, or wc-ajax) reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-ajax.php
  */
 
 /* ABSPATH check */
@@ -8,21 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'NBPC_Reg_Ajax' ) ) {
-	class NBPC_Reg_Ajax implements NBPC_Reg {
-		/** @var string */
-		public string $action;
-
-		/** @var Closure|array|string */
-		public $callback;
-
-		/** @var string|bool */
-		public $allow_nopriv;
-
-		public bool $is_wc_ajax;
-
-		public int $priority;
-
+if ( ! class_exists( 'NBPC_Reg_AJAX' ) ) {
+	class NBPC_Reg_AJAX implements NBPC_Reg {
 		/**
 		 * Constructor method
 		 *
@@ -33,17 +22,13 @@ if ( ! class_exists( 'NBPC_Reg_Ajax' ) ) {
 		 * @param int|null             $priority     Priority number. Defaults to NBPC_PRIORITY.
 		 */
 		public function __construct(
-			string $action,
-			$callback,
-			$allow_nopriv = false,
-			bool $is_wc_ajax = false,
-			?int $priority = null
+			public string $action,
+			public Closure|array|string $callback,
+			public string|bool $allow_nopriv = false,
+			public bool $is_wc_ajax = false,
+			public int|null $priority = null
 		) {
-			$this->action       = $action;
-			$this->callback     = $callback;
-			$this->allow_nopriv = $allow_nopriv;
-			$this->is_wc_ajax   = $is_wc_ajax;
-			$this->priority     = is_null( $priority ) ? nbpc()->get_priority() : $priority;
+			$this->priority = is_null( $priority ) ? nbpc_priority() : $priority;
 		}
 
 		public function register( $dispatch = null ): void {

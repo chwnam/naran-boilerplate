@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Cron reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-cron.php
  */
 
 /* ABSPATH check */
@@ -10,45 +12,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Reg_Cron' ) ) {
 	class NBPC_Reg_Cron implements NBPC_Reg {
-		/** @var int */
-		public int $timestamp;
-
-		/** @var string */
-		public string $schedule;
-
-		/** @var string */
-		public string $hook;
-
-		public array $args;
-
-		public bool $wp_error;
-
-		public int $is_single_event;
-
 		/**
 		 * Constructor method
-		 *
-		 * @param int    $timestamp
-		 * @param string $schedule
-		 * @param string $hook
-		 * @param array  $args
-		 * @param bool   $wp_error
-		 * @param bool   $is_single_event
 		 */
 		public function __construct(
-			int $timestamp,
-			string $schedule,
-			string $hook,
-			array $args = [],
-			bool $wp_error = false,
-			bool $is_single_event = false
+			public int $timestamp,
+			public string $schedule,
+			public string $hook,
+			public array $args = [],
+			public bool $wp_error = false,
+			public bool $is_single_event = false
 		) {
-			$this->timestamp       = $timestamp;
-			$this->schedule        = $schedule;
-			$this->hook            = $hook;
-			$this->args            = $args;
-			$this->wp_error        = $wp_error;
-			$this->is_single_event = $is_single_event;
 		}
 
 		public function register( $dispatch = null ): void {

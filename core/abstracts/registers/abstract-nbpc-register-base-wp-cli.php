@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: WP CLI register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-wp-cli.php
  */
 
 /* ABSPATH check */

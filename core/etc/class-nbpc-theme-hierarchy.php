@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Theme hierarchy
+ * Naran Boilerplate Core
+ *
+ * etc/class-nbpc-theme-hierarchy.php
  */
 
 /* ABSPATH check */

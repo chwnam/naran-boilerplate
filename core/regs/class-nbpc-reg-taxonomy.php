@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Custom taxonomy reg.
+ * Naran Boilerplate Core
+ *
+ * regs/class-nbpc-reg-taxonomy.php
  */
 
 /* ABSPATH check */
@@ -11,37 +13,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'NBPC_Reg_Taxonomy' ) ) {
 	class NBPC_Reg_Taxonomy implements NBPC_Reg {
 		/**
-		 * Taxonomy name.
-		 *
-		 * @var string
-		 */
-		public string $taxonomy;
-
-		/**
-		 * Related object types.
-		 *
-		 * @var array
-		 */
-		public array $object_type;
-
-		/**
-		 * Arguments array.
-		 *
-		 * @var array
-		 */
-		public array $args;
-
-		/**
 		 * Constructor method.
 		 *
 		 * @param string       $taxonomy    Taxonomy.
 		 * @param string|array $object_type Related objects.
 		 * @param array        $args        Arguments array.
 		 */
-		public function __construct( string $taxonomy, $object_type, array $args ) {
-			$this->taxonomy    = $taxonomy;
+		public function __construct(
+			public string $taxonomy,
+			public array|string $object_type,
+			public array $args
+		) {
 			$this->object_type = (array) $object_type;
-			$this->args        = $args;
 		}
 
 		/**

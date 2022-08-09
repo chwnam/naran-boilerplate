@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Option register base
+ * Naran Boilerplate Core
+ *
+ * abstracts/registers/abstract-nbpc-register-base-option.php
  */
 
 /* ABSPATH check */
@@ -12,13 +14,17 @@ if ( ! class_exists( 'NBPC_Register_Base_Option' ) ) {
 	abstract class NBPC_Register_Base_Option implements NBPC_Register {
 		use NBPC_Hook_Impl;
 
-		/** @var array Key: alias, value: option_name */
+		/**
+		 * Registered fields.
+		 *
+		 * @var array{string: NBPC_Reg_Option}
+		 */
 		private array $fields = [];
 
 		/**
 		 * Keys are autoload 'no' options.
 		 *
-		 * @var array<string, true>
+		 * @var array{0: string, 1: true}
 		 */
 		private array $autoload_no = [];
 
@@ -74,12 +80,8 @@ if ( ! class_exists( 'NBPC_Register_Base_Option' ) ) {
 
 		/**
 		 * Forcibly fix autoload field.
-		 *
-		 * @param string $option
-		 *
-		 * @return void
 		 */
-		public function fix_autoload( string $option ) {
+		public function fix_autoload( string $option ): void {
 			global $wpdb;
 
 			if ( isset( $this->autoload_no[ $option ] ) ) {

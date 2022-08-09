@@ -1,6 +1,8 @@
 <?php
 /**
- * NBPC: Style method chain helper
+ * Naran Boilerplate Core
+ *
+ * etc/class-nbpc-style-helper.php
  */
 
 /* ABSPATH check */
