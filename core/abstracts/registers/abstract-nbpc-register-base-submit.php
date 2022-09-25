@@ -12,7 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Register_Base_Submit' ) ) {
 	abstract class NBPC_Register_Base_Submit implements NBPC_Register {
+		use NBPC_Autobind_Impl;
 		use NBPC_Hook_Impl;
+
+		/** 'admin-post.php' autobinding feature. */
+		protected bool $autobind = true;
 
 		private array $inner_handlers = [];
 
@@ -20,7 +24,9 @@ if ( ! class_exists( 'NBPC_Register_Base_Submit' ) ) {
 		 * Constructor method.
 		 */
 		public function __construct() {
-			$this->add_action( 'init', 'register' );
+			if ( nbpc_doing_submit() ) {
+				$this->add_action( 'init', 'register' );
+			}
 		}
 
 		/**
@@ -30,8 +36,6 @@ if ( ! class_exists( 'NBPC_Register_Base_Submit' ) ) {
 		 * @return void
 		 */
 		public function register(): void {
-			$dispatch = [ $this, 'dispatch' ];
-
 			foreach ( $this->get_items() as $item ) {
 				if (
 					$item instanceof NBPC_Reg_Submit &&
@@ -39,8 +43,14 @@ if ( ! class_exists( 'NBPC_Register_Base_Submit' ) ) {
 					! isset( $this->inner_handlers[ $item->action ] )
 				) {
 					$this->inner_handlers[ $item->action ] = $item->callback;
-					$item->register( $dispatch );
+					$item->register( [ $this, 'dispatch' ] );
 				}
+			}
+
+			// Autobind.
+			if ( $this->is_autobind_enabled() ) {
+				/** @uses handle_autobind() */
+				$this->add_action( 'admin_init', 'handle_autobind' );
 			}
 		}
 
@@ -71,6 +81,36 @@ if ( ! class_exists( 'NBPC_Register_Base_Submit' ) ) {
 			}
 
 			// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		}
+
+		/**
+		 * Return autobind enabled.
+		 *
+		 * @return bool
+		 */
+		public function is_autobind_enabled(): bool {
+			return apply_filters( 'nbpc_submit_autobind_enabled', $this->autobind );
+		}
+
+		/**
+		 * Handle autobind.
+		 */
+		public function handle_autobind(): void {
+			$autobind = $this->parse_autobind();
+
+			if ( $autobind ) {
+				$dispatch = function () use ( $autobind ) {
+					// Append NONCE check routine.
+					if ( ! $autobind['exempt_nonce'] ) {
+						check_admin_referer( $autobind['nonce_action'], '_nbpc_nonce' );
+					}
+					$autobind['callback']();
+				};
+				if ( $autobind['allow_nopriv'] ) {
+					$this->add_action( "admin_post_nopriv_{$autobind['action']}", $dispatch );
+				}
+				$this->add_action( "admin_post_{$autobind['action']}", $dispatch );
+			}
 		}
 	}
 }

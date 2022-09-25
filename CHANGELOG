@@ -1,3 +1,13 @@
+1.6.1
+-----
+2022-10-09
+
+- Add: NBPC_Register_Rest_Route supports WP_REST_Controller subclassing. (#103)
+- Add: 'admin-ajax.php', 'admin-post.php' autobind feature. (#104)
+- Add: NBPC_Register_Base_Shortcode::find_shortcode() also stores shortcode atts, enclosed texts. (#105)
+- Mod: Resolve issue #100.
+
+
 1.6.0
 -----
 2022-09-25

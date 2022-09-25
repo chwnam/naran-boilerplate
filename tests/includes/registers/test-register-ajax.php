@@ -13,6 +13,8 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 	private $register;
 
 	public function setUp(): void {
+		add_filter( 'wp_doing_ajax', '__return_true' );
+
 		$this->register = new class() extends NBPC_Register_AJAX {
 			public function get_items(): Generator {
 				yield new NBPC_Reg_AJAX( 'action_normal', 'callback_0' );
@@ -165,5 +167,49 @@ class Test_Register_Ajax extends WP_UnitTestCase {
 		do_action( 'wc_ajax_action_wc_ajax_test' );
 
 		$this->assertTrue( $this->register->test_called );
+	}
+
+	public function test_autobind() {
+		$action = 'nbpc:foo@bar?id*';
+
+		$_REQUEST['action']      = $action;
+		$_REQUEST['id']          = '1';
+		$_REQUEST['_nbpc_nonce'] = wp_create_nonce( '_nbpc_nonce' . $_REQUEST['id'] );
+
+		NBPC_Main::set_instance(
+			new class( $this ) extends NBPC_Main {
+				public Test_Register_Ajax $tester;
+
+				public bool $called = false;
+
+				public function __construct( Test_Register_Ajax $tester ) {
+					parent::__construct();
+					$this->tester = $tester;
+				}
+
+				protected function get_early_modules(): array {
+					return [
+						'foo' => new class( $this->tester ) {
+							public Test_Register_Ajax $tester;
+
+							public function __construct( Test_Register_Ajax $tester ) {
+								$this->tester = $tester;
+							}
+
+							public function bar(): void {
+								NBPC_Main::get_instance()->called = true;
+							}
+						},
+					];
+				}
+			}
+		);
+
+		$this->register->handle_autobind();
+		$this->assertTrue( has_action( 'wp_ajax_' . $action ) );
+		$this->assertTrue( has_action( 'wp_ajax_nopriv_' . $action ) );
+
+		do_action( 'wp_ajax_' . $action );
+		$this->assertTrue( NBPC_Main::get_instance()->called );
 	}
 }

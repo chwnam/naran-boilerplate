@@ -72,10 +72,11 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 		public function heading_actions_handler(): void {
 			if ( $this->heading_actions && is_singular() ) {
 				$this->find_shortcode( get_post_field( 'post_content', null, 'raw' ) );
-				foreach ( array_unique( $this->found_tags ) as $tag ) {
+				foreach ( array_unique( $this->found_tags ) as $tag_info ) {
+					[ $tag, $atts, $enclosed ] = $tag_info;
 					$callback = NBPC_Main::get_instance()->parse_callback( $this->heading_actions[ $tag ] );
 					if ( is_callable( $callback ) ) {
-						$callback( $tag );
+						$callback( $atts, $enclosed, $tag );
 					}
 				}
 			}
@@ -106,7 +107,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 		 * @return void
 		 */
 		protected function find_shortcode( string $content ): void {
-			if ( false === strpos( $content, '[' ) ) {
+			if ( ! str_contains( $content, '[' ) ) {
 				return;
 			}
 
@@ -116,6 +117,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 
 			/**
 			 * @var array $matches idx 2: shortcode name. (tag)
+			 *                     idx 3: shortcode atts.
 			 *                     idx 5: enclosed text.
 			 *
 			 * @see get_shortcode_regex()
@@ -123,7 +125,7 @@ if ( ! class_exists( 'NBPC_Register_Base_Shortcode' ) ) {
 			if ( preg_match_all( $this->regex, $content, $matches, PREG_SET_ORDER ) ) {
 				foreach ( $matches as $shortcode ) {
 					if ( isset( $this->heading_actions[ $shortcode[2] ] ) ) {
-						$this->found_tags[] = $shortcode[2];
+						$this->found_tags[] = [ $shortcode[2], shortcode_parse_atts( $shortcode[3] ), $shortcode[5] ];
 					}
 					if ( ! empty( $shortcode[5] ) ) {
 						$this->find_shortcode( $shortcode[5] );

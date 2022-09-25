@@ -76,6 +76,9 @@ if ( ! class_exists( 'NBPC_Register_Base_REST_Route' ) ) {
 					$item->register();
 
 					++ $index;
+				} elseif ( is_string( $item ) && is_subclass_of( $item, 'WP_REST_Controller' ) ) {
+					$instance = new $item();
+					$instance->register_routes();
 				}
 			}
 		}

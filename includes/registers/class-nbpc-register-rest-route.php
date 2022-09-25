@@ -34,6 +34,7 @@ if ( ! class_exists( 'NBPC_Register_REST_Route' ) ) {
 		 */
 		public function get_items(): Generator {
 			yield; // yield new NBPC_Reg_REST_Route();
+			       // yield WP_REST_Controller_Subclass::class;
 		}
 	}
 }

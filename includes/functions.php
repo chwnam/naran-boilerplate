@@ -117,3 +117,15 @@ if ( ! function_exists( 'nbpc_get_front_module' ) ) {
 		return $front_module;
 	}
 }
+
+
+if ( ! function_exists( 'nbpc_doing_submit' ) ) {
+	/**
+	 * Chekc if request is from 'admin-post.php'
+	 *
+	 * @return bool
+	 */
+	function nbpc_doing_submit(): bool {
+		return apply_filters( 'nbpc_doing_submit', is_admin() && str_ends_with( $_SERVER['SCRIPT_NAME'] ?? '', '/wp-admin/admin-post.php' ) );
+	}
+}

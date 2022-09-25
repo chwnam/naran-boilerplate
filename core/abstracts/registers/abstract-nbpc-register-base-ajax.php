@@ -12,7 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Register_Base_AJAX' ) ) {
 	abstract class NBPC_Register_Base_AJAX implements NBPC_Register {
+		use NBPC_Autobind_Impl;
 		use NBPC_Hook_Impl;
+
+		/** AJAX autobinding feature. */
+		protected bool $autobind = true;
 
 		private array $inner_handlers = [];
 
@@ -22,7 +26,9 @@ if ( ! class_exists( 'NBPC_Register_Base_AJAX' ) ) {
 		 * Constructor method
 		 */
 		public function __construct() {
-			$this->add_action( 'init', 'register' );
+			if ( wp_doing_ajax() ) {
+				$this->add_action( 'init', 'register' );
+			}
 		}
 
 		/**
@@ -46,6 +52,12 @@ if ( ! class_exists( 'NBPC_Register_Base_AJAX' ) ) {
 					}
 					$item->register( [ $this, 'dispatch' ] );
 				}
+			}
+
+			// Autobind.
+			if ( $this->is_autobind_enabled() ) {
+				/** @uses handle_autobind() */
+				$this->add_action( 'admin_init', 'handle_autobind' );
 			}
 		}
 
@@ -87,6 +99,36 @@ if ( ! class_exists( 'NBPC_Register_Base_AJAX' ) ) {
 			}
 
 			// phpcs:enable WordPress.Security.NonceVerification.Recommended
+		}
+
+		/**
+		 * Handle autobind as admin_init callback.
+		 */
+		public function handle_autobind(): void {
+			$autobind = $this->parse_autobind();
+
+			if ( $autobind ) {
+				$dispatch = function () use ( $autobind ) {
+					// Append NONCE check routine.
+					if ( ! $autobind['exempt_nonce'] ) {
+						check_ajax_referer( $autobind['nonce_action'], '_nbpc_nonce' );
+					}
+					$autobind['callback']();
+				};
+				if ( $autobind['allow_nopriv'] ) {
+					$this->add_action( "wp_ajax_nopriv_{$autobind['action']}", $dispatch );
+				}
+				$this->add_action( "wp_ajax_{$autobind['action']}", $dispatch );
+			}
+		}
+
+		/**
+		 * Return autobind enabled.
+		 *
+		 * @return bool
+		 */
+		public function is_autobind_enabled(): bool {
+			return apply_filters( 'nbpc_ajax_autobind_enabled', $this->autobind );
 		}
 	}
 }

@@ -8,6 +8,8 @@ class Test_Register_Submit extends WP_UnitTestCase {
 	private $register;
 
 	public function setUp(): void {
+		add_filter( 'nbpc_doing_submit', '__return_true' );
+
 		$this->register = new class() extends NBPC_Register_Submit {
 			public function get_items(): Generator {
 				yield new NBPC_Reg_Submit( 'action_normal', 'callback_0' );

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'NBPC_Theme_Hierarchy' ) ) {
 	final class NBPC_Theme_Hierarchy {
-		private string $post_type = '';
+		private string|array $post_type = '';
 
 		private string $taxonomy = '';
 
@@ -22,9 +22,7 @@ if ( ! class_exists( 'NBPC_Theme_Hierarchy' ) ) {
 
 		private bool $is_singular = false;
 
-		/**
-		 * @var NBPC_Front_Module|string|false|null
-		 */
+		/** @var NBPC_Front_Module|string|false|null */
 		private $front_module = null;
 
 		private static ?NBPC_Theme_Hierarchy $instance = null;
